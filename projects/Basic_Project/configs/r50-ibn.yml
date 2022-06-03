@@ -1,0 +1,14 @@
+_BASE_: Base-cnn.yml
+
+MODEL:
+  BACKBONE:
+    DEPTH: "50x"
+    FEAT_DIM: 2048
+    WITH_IBN: True
+    PRETRAIN: True
+    PRETRAIN_PATH: /mnt/nvme0n1/ducanh/__data__/__model__/r50_ibna.pth
+
+
+
+
+OUTPUT_DIR: projects/LOGS/basemodel/r50
