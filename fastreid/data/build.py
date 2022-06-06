@@ -28,7 +28,7 @@ def build_reid_train_loader(cfg, mapper=None, **kwargs):
     train_items1 = list()
     for d in cfg.DATASETS.NAMES:
         dataset = DATASET_REGISTRY.get(d)(root=_root, combineall=cfg.DATASETS.COMBINEALL, **kwargs)
-        if d != 'YouTube':
+        if d != "PRAI":#if d != 'YouTube':
             if comm.is_main_process():
                 dataset.show_train()
             train_items.extend(dataset.train)

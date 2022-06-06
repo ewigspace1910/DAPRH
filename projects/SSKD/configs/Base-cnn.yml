@@ -38,11 +38,11 @@ INPUT:
   AUTOAUG_PROB: 0.1
 
   REA:
-    ENABLED: False
+    ENABLED: True
     PROB: 0.5
 
   CJ:
-    ENABLED: True
+    ENABLED: False
     PROB: 0.5
     BRIGHTNESS: 0.15
     CONTRAST: 0.1
@@ -80,8 +80,8 @@ TEST:
   IMS_PER_BATCH: 512
 
 DATASETS:
-  NAMES: ("PKU","LPW", "CAVIARa", "PRAI", "iLIDS", "MSMT17","Market1501", "DukeMTMC", ) #must contains Youtube
-  TESTS: ("Market1501","DukeMTMC",)
+  NAMES: ("PKU","LPW", "CAVIARa", "PRAI", "MSMT17","Market1501", "DukeMTMC", "iLIDS",) #must contains Youtube or edit file fastid/dataset/build.py to change unnable dataset
+  TESTS: ("Market1501",)
   COMBINEALL: True
   
 #DATASETS:
