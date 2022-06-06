@@ -64,7 +64,7 @@ SOLVER:
   MAX_EPOCH: 80
   BASE_LR: 0.04
   WEIGHT_DECAY: 0.0005
-  IMS_PER_BATCH: 256
+  IMS_PER_BATCH: 64
 
   ETA_MIN_LR: 0.00004
 
@@ -77,7 +77,7 @@ SOLVER:
 
 TEST:
   EVAL_PERIOD: 10
-  IMS_PER_BATCH: 512
+  IMS_PER_BATCH: 32
 
 DATASETS:
   NAMES: ("PKU","LPW", "CAVIARa", "PRAI", "MSMT17","Market1501", "DukeMTMC", "iLIDS",) #must contains Youtube or edit file fastid/dataset/build.py to change unnable dataset

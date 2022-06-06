@@ -73,14 +73,14 @@ SOLVER:
   WARMUP_FACTOR: 0.1
   WARMUP_ITERS: 500
 
-  CHECKPOINT_PERIOD: 10
+  CHECKPOINT_PERIOD: 2
 
 TEST:
-  EVAL_PERIOD: 5
-  IMS_PER_BATCH: 64
+  EVAL_PERIOD: 2
+  IMS_PER_BATCH: 32
 
 DATASETS:
-  NAMES: ("PKU","LPW", "CAVIARa", "PRAI", "MSMT17","Market1501", "DukeMTMC", "iLIDS",) #must contains Youtube or edit file fastid/dataset/build.py to change unnable dataset
+  NAMES: ("LPW", "CAVIARa", "MSMT17","Market1501", "DukeMTMC", "iLIDS",) #must contains Youtube or edit file fastid/dataset/build.py to change unnable dataset
   TESTS: ("Market1501",)
   COMBINEALL: False
 
