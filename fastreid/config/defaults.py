@@ -186,6 +186,7 @@ _C.INPUT.RPT.PROB = 0.5
 _C.DATASETS = CN()
 # List of the dataset names for training
 _C.DATASETS.NAMES = ("Market1501",)
+_C.DATASETS.NAMES1 = "Youtube"
 # List of the dataset names for testing
 _C.DATASETS.TESTS = ("Market1501",)
 # Combine trainset and testset joint training
