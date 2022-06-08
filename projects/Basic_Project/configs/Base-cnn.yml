@@ -80,8 +80,8 @@ TEST:
   IMS_PER_BATCH: 32
 
 DATASETS:
-  NAMES: ("LPW", "CAVIARa", "MSMT17","Market1501", "DukeMTMC", "iLIDS",) #must contains Youtube or edit file fastid/dataset/build.py to change unnable dataset
-  NAMES1: "PRAI"  #unlabeled dataset
+  NAMES: ("PRAI", "CAVIARa", "MSMT17", "DukeMTMC", "iLIDS") #must contains Youtube or edit file fastid/dataset/build.py to change unnable dataset
+  NAMES1: "LPW"  #unlabeled dataset
   TESTS: ("Market1501",)
   COMBINEALL: False
 
