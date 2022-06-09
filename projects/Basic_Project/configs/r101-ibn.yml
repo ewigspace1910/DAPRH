@@ -6,7 +6,7 @@ MODEL:
     FEAT_DIM: 2048
     WITH_IBN: True
     PRETRAIN: True
-    PRETRAIN_PATH: /content/models/lup_moco_r101.pth
+    PRETRAIN_PATH: /content/models/resnet101_ibn_a-d9d0bb7b.pth
 
 
 OUTPUT_DIR: /content/drive/MyDrive/Colab Notebooks/Nautilus/projects/LOGS/basemodel/r101
