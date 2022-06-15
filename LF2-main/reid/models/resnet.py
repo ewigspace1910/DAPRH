@@ -123,6 +123,7 @@ class ResNet(nn.Module):
         self.ca_low = ChannelAttention(2048, reduction=4)  
 
         if not self.cut_at_pooling:
+            print("==>not using cut at pooling! \n\t num_features : {} \n\t num_classes".format(num_features, num_classes))
             self.num_features = num_features
             self.norm = norm
             self.dropout = dropout
@@ -154,6 +155,7 @@ class ResNet(nn.Module):
             if self.dropout > 0:
                 self.drop = nn.Dropout(self.dropout)
             if self.num_classes > 0:
+                print("==> create 3 linear layer")
                 self.classifier = nn.Linear(self.num_features, self.num_classes, bias=False)   
 
                 self.adativeFC_upper = nn.Linear(self.num_features, self.num_features)        
@@ -192,39 +194,55 @@ class ResNet(nn.Module):
             x_embed_x = x_gap + x_map                         
             x_embed_x = x_embed_x.view(x_embed_x.size(0), -1) 
             x_embed_x = self.BN_g(x_embed_x)
+            print("\t\t===> x_embed_x size:", x_embed_x.size())
             x1.append(x_embed_x)
             # split
             x1_split = [x[:, :, h // self.num_split * s: h // self.num_split * (s+1), :] for s in range(self.num_split)]
-            channel_embed_upper = self.ca_upper(x1_split[0]) 
-            channel_embed_low = self.ca_low(x1_split[1])
+            
+            print("\n\t\tsplit")
+            for x in x1_split: print("\t\t\t==>", x.size())
+            
+            ############################################
+            #input for fusion module
+            ############################################
+            channel_embed_upper = self.ca_upper(x1_split[0]) #F(Pj)
+            channel_embed_low = self.ca_low(x1_split[1])     #F(Pj)
+            print("\n\tchannel_upper: ", channel_embed_upper.size())
+            print("\n\tchannel_low: ", channel_embed_lower.size())
 
+
+            ############################################
+            #Expert-j
+            ############################################
             # upper feature map
-            upper = F.avg_pool2d(x1_split[0], x1_split[0].size()[2:])  
+            upper = F.avg_pool2d(x1_split[0], x1_split[0].size()[2:])  # [bs, 2048, 1, 1] due to kernel size = (prelayer size HxW)
             upper_map = F.max_pool2d(x1_split[0], x1_split[0].size()[2:])
-            upper_embed_upper_1 = upper + upper_map           
+            upper_embed_upper_1 = upper + upper_map
 
             # residual structure
-            channel_embed_upper_1 = upper_embed_upper_1 * channel_embed_upper  
+            channel_embed_upper_1 = upper_embed_upper_1 * channel_embed_upper              
             upper_embed_upper = upper_embed_upper_1.view(upper_embed_upper_1.size(0), -1)
             upper_embed_upper = self.adativeFC_upper(upper_embed_upper) ##  [bs, ]-->[bs, 2048]
             upper_embed_upper = self.BN_u(upper_embed_upper)
 
             # low feature map
-            low = F.avg_pool2d(x1_split[1], x1_split[1].size()[2:])  # [bs, 2048, 1, 1]
+            low = F.avg_pool2d(x1_split[1], x1_split[1].size()[2:])  # [bs, 2048, 1, 1] due to kernel size = (prelayer size HxW)
             low_map = F.max_pool2d(x1_split[1], x1_split[1].size()[2:])
             low_embed_low_1 = low + low_map
 
             # residual structure
             channel_embed_low_1 = low_embed_low_1 * channel_embed_low
             low_embed_low = low_embed_low_1.view(low_embed_low_1.size(0), -1)
-            low_embed_low = self.adativeFC_low(low_embed_low)
+            low_embed_low = self.adativeFC_low(low_embed_low) ##  [bs, ]-->[bs, 2048]
             low_embed_low = self.BN_l(low_embed_low)
 
-            x1.append(upper_embed_upper)
-            x1.append(low_embed_low)
+            x1.append(upper_embed_upper) #f(Pj)
+            x1.append(low_embed_low) #f(Pj)
+            
         else:
             x1 = F.avg_pool2d(x, x.size()[2:])
-            x1 = x1.view(x1.size(0), -1)
+            x1 = x1.view(x1.size(0), -1) 
+            print("x1 not split size: ", x1.size())
 
         if self.extract_feat:
             return x1
