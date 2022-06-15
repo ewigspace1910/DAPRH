@@ -23,7 +23,7 @@ class DukeMTMC(BaseImageDataset):
     # images:16522 (train) + 2228 (query) + 17661 (gallery)
     # cameras: 8
     """
-    dataset_dir = '.'
+    dataset_dir = 'DukeMTMC-reID'
 
     def __init__(self, root="./datasets", verbose=True, **kwargs):
         super(DukeMTMC, self).__init__()
@@ -34,7 +34,7 @@ class DukeMTMC(BaseImageDataset):
         self.query_dir = osp.join(self.dataset_dir, 'query')
         self.gallery_dir = osp.join(self.dataset_dir, 'bounding_box_test')
 
-        self._download_data()
+        #self._download_data()
         self._check_before_run()
 
         train = self._process_dir(self.train_dir, relabel=True)
@@ -53,6 +53,8 @@ class DukeMTMC(BaseImageDataset):
         self.num_query_pids, self.num_query_imgs, self.num_query_cams = self.get_imagedata_info(self.query)
         self.num_gallery_pids, self.num_gallery_imgs, self.num_gallery_cams = self.get_imagedata_info(self.gallery)
 
+        self._for_merge = self.process_train(self.train_dir)
+        
     def _download_data(self):
         if osp.exists(self.dataset_dir):
             print("This dataset has been downloaded.")
@@ -100,3 +102,20 @@ class DukeMTMC(BaseImageDataset):
             dataset.append((img_path, pid, camid))
 
         return dataset
+
+
+
+    def process_train(self, dir_path, is_train=True):
+        img_paths = glob.glob(osp.join(dir_path, '*.jpg'))
+        pattern = re.compile(r'([-\d]+)_c(\d)')
+        data = []
+        for img_path in img_paths:
+            pid, camid = map(int, pattern.search(img_path).groups())
+            assert 1 <= camid <= 8
+            camid -= 1  # index starts from 0
+            if is_train:
+                pid = self.dataset_name + "_" + str(pid)
+                camid = self.dataset_name + "_" + str(camid)
+            data.append((img_path, pid, camid))
+
+        return data
