@@ -23,10 +23,11 @@ class DukeMTMC(BaseImageDataset):
     # images:16522 (train) + 2228 (query) + 17661 (gallery)
     # cameras: 8
     """
-    dataset_dir = ''
+    dataset_dir = '.'
 
-    def __init__(self, root, verbose=True, **kwargs):
+    def __init__(self, root="./datasets", verbose=True, **kwargs):
         super(DukeMTMC, self).__init__()
+        self.dataset_name = 'duke'
         self.dataset_dir = osp.join(root, self.dataset_dir)
         self.dataset_url = 'http://vision.cs.duke.edu/DukeMTMC/data/misc/DukeMTMC-reID.zip'
         self.train_dir = osp.join(self.dataset_dir, 'bounding_box_train')
