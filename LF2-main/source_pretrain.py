@@ -33,7 +33,7 @@ from reid.utils.lr_scheduler import WarmupMultiStepLR
 start_epoch = best_mAP = 0
 
 def get_data(name, data_dir, height, width, batch_size, workers, num_instances, iters=200):
-    root = osp.join(data_dir, name)
+    root = osp.join(data_dir) #osp.join(data_dir, name)
 
     dataset = datasets.create(name, root)
 
