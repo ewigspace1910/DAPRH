@@ -5,13 +5,14 @@ from .dukemtmc import DukeMTMC
 from .market1501 import Market1501
 from .msmt17 import MSMT17
 from .cuhk03 import CUHK03
-
+from .custome import C
 
 __factory = {
     'market': Market1501,
     'duke': DukeMTMC,
     'msmt17': MSMT17,
     'cuhk03': CUHK03,
+    'custome': CustomData
 }
 
 
