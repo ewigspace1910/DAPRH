@@ -4,7 +4,7 @@ import os.path as osp
 import random
 import numpy as np
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 import copy
 
 import sys
