@@ -350,7 +350,7 @@ def main_worker(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="MMT Training")
-    # data
+    # dataset
     parser.add_argument('-dt', '--dataset-target', type=str, default='market1501',
                         choices=datasets.names())
     parser.add_argument('-b', '--batch-size', type=int, default=64)
