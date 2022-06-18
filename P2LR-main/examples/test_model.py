@@ -22,7 +22,7 @@ from P2LR.utils.serialization import load_checkpoint, save_checkpoint, copy_stat
 
 
 def get_data(name, data_dir, height, width, batch_size, workers):
-    root = osp.join(data_dir, name)
+    root = osp.join(data_dir)
 
     dataset = datasets.create(name, root)
 
