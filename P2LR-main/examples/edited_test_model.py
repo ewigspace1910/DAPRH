@@ -71,11 +71,11 @@ def main_worker(args):
     # Create model
     model1 = models.create(args.arch, pretrained=False, num_features=args.features, dropout=args.dropout, num_classes=0)
     model1.cuda()
-    model1 = nn.DataParallel(model)    
+    model1 = nn.DataParallel(model1)    
     
     model2 = models.create(args.arch, pretrained=False, num_features=args.features, dropout=args.dropout, num_classes=0)
     model2.cuda()
-    model2 = nn.DataParallel(model)
+    model2 = nn.DataParallel(model2)
 
     # Load from checkpoint
     checkpoint = load_checkpoint(args.model1)
@@ -114,6 +114,7 @@ if __name__ == '__main__':
     # testing configs
     parser.add_argument('--model1', type=str, required=True, metavar='PATH')
     parser.add_argument('--model2', type=str, required=True, metavar='PATH')
+    parser.add_argument('--resume', type=str, required=True, metavar='PATH')
     
     parser.add_argument('--rerank', action='store_true',
                         help="evaluation only")

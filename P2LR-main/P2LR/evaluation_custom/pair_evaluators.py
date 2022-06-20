@@ -7,9 +7,9 @@ import numpy as np
 import torch
 
 #from .evaluation_metrics import cmc, mean_ap
-from .feature_extraction import extract_cnn_feature
-from .utils.meters import AverageMeter
-from .utils.rerank import re_ranking
+from ..feature_extraction import extract_cnn_feature
+from ..utils.meters import AverageMeter
+from ..utils.rerank import re_ranking
 
 from collections import defaultdict
 import threading
@@ -18,7 +18,7 @@ import multiprocessing
 import numpy as np
 from sklearn.metrics import average_precision_score
 
-from .utils import to_numpy
+from ..utils import to_numpy
 
 def _unique_sample(ids_dict, num):
     mask = np.zeros(num, dtype=np.bool)
@@ -121,11 +121,12 @@ class Evaluator(object):
         self.model2 = model2
 
     def evaluate(self, data_loader, query, gallery, metric=None, cmc_flag=False, rerank=False, pre_features1=None, pre_features2=None):
-        if (pre_features is None):
+        if (pre_features1 is None or pre_features2 is None):
             features1, _ = extract_features(self.model1, data_loader)
             features2, _ = extract_features(self.model2, data_loader)
         else:
-            features = pre_features
+            features1 = pre_features1
+            features2 = pre_features2
             
         distmat1, query_features, gallery_features = pairwise_distance(features1, query, gallery, metric=metric)
         distmat2, _, _                             = pairwise_distance(features2, query, gallery, metric=metric)
