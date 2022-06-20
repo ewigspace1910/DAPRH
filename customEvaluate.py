@@ -203,13 +203,15 @@ def evaluate_all(query_features, gallery_features, distmat, query=None, gallery=
                 and query_cams is not None and gallery_cams is not None)
 
     # Compute mean AP
-    indices, matches = mean_ap(distmat, query_ids, gallery_ids, query_cams, gallery_cams, n_threads=workers)
-    with open("result.txt", 'wt') as f:
+    with open("result.txt", 'wt') as f, open("dismat.txt", "wt") as d:
         for i, query in enumerate(query_path):
             f.write(query+":")
+            d.write(query+":")
             for index in indices[i][:top_k]:
                f.write(gallery_path[index]+";")
+               d.write(str(float(distmat[i][index].sum())) + ";")
             f.write("\n")
+            d.write("\n")
     print("result matches was store in result.txt")
     return indices, matches
 

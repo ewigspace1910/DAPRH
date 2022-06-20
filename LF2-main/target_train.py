@@ -225,7 +225,10 @@ def main_worker(args):
                 'best_mAP': best_mAP,
             }, is_best, fpath=osp.join(args.logs_dir, 'model'+str(mid)+'_checkpoint.pth.tar'))
 
-        if ((epoch+1)%args.eval_step==0 or (epoch==args.epochs-1)):
+        if args.offline_test:
+            save_model(encoder, is_best=False, best_mAP=0.0, mid=(epoch+1)*10+1)
+            
+        elif ((epoch+1)%args.eval_step==0 or (epoch==args.epochs-1)):
             mAP = evaluator_.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, cmc_flag=False, source=False)
             is_best = mAP > best_mAP
             best_mAP = max([mAP] + [best_mAP])  
@@ -279,4 +282,7 @@ if __name__ == '__main__':
                         default=osp.join(os.getcwd(),'/home/dj/reid/data'))
     parser.add_argument('--logs-dir', type=str, metavar='PATH',
                         default=osp.join(os.getcwd(), 'logs_d2m')) 
+                        
+    parser.add_argument('--offline_test', action='store_true',
+                        help='offline test models')
     main()
