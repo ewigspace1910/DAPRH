@@ -203,6 +203,7 @@ def evaluate_all(query_features, gallery_features, distmat, query=None, gallery=
                 and query_cams is not None and gallery_cams is not None)
 
     # Compute mean AP
+    indices = np.argsort(distmat, axis=1)
     with open("result.txt", 'wt') as f, open("dismat.txt", "wt") as d:
         for i, query in enumerate(query_path):
             f.write(query+":")
@@ -213,7 +214,7 @@ def evaluate_all(query_features, gallery_features, distmat, query=None, gallery=
             f.write("\n")
             d.write("\n")
     print("result matches was store in result.txt")
-    return indices, matches
+    return indices
 
 
 class Evaluator(object):
@@ -233,8 +234,8 @@ class Evaluator(object):
         if (not rerank):
             return results
 
-#        print('Applying person re-ranking ...')
-#        distmat_qq = pairwise_distance(features, query, query, metric=metric)
-#        distmat_gg = pairwise_distance(features, gallery, gallery, metric=metric)
-#        distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
-#        return evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag)
+        print('Applying person re-ranking ...')
+        distmat_qq, _, _ = pairwise_distance(features, query, query, metric=metric)
+        distmat_gg, _, _ = pairwise_distance(features, gallery, gallery, metric=metric)
+        distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
+        return evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag)
