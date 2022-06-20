@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader
 
 from P2LR import datasets
 from P2LR import models
-from P2LR.pair_evaluators import Evaluator
+from P2LR.evaluation_custom.pair_evaluators import Evaluator
 from P2LR.utils.data import transforms as T
 from P2LR.utils.data.preprocessor import Preprocessor
 from P2LR.utils.logging import Logger
