@@ -17,7 +17,7 @@ from .lpw import LPW
 from .caviara import CAVIARa
 
 
-class CustomeData(BaseImageDataset):
+class CustomData(BaseImageDataset):
     """
     CustomDataset: custom person ReID dataset
     """

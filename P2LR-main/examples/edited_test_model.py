@@ -91,10 +91,10 @@ def main_worker(args):
     print("=> Checkpoint 2 of epoch {}  best mAP {:.1%}".format(start_epoch, best_mAP))
 
     # Evaluator
-    evaluator = Evaluator(model1, model2)
+    evaluator = Evaluator(model1, model2, args)
     print("Test on the target domain of {}:".format(args.dataset_target))
     evaluator.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, 
-            cmc_flag=False, rerank=args.rerank)
+            cmc_flag=False, rerank=args.rerank, use_kmean=args.kmeans)
     return
 
 if __name__ == '__main__':
@@ -116,8 +116,10 @@ if __name__ == '__main__':
     parser.add_argument('--model2', type=str, required=True, metavar='PATH')
     parser.add_argument('--resume', type=str, required=True, metavar='PATH')
     
-    parser.add_argument('--rerank', action='store_true',
-                        help="evaluation only")
+    
+    parser.add_argument('--rerank', action='store_true',help="evaluation only")
+    parser.add_argument('--kmean', action='store_true',help="evaluation only")
+    parser.add_argument('--num_clusters', type=int, default=0, help="evaluation only")
     parser.add_argument('--seed', type=int, default=1)
     # path
     working_dir = osp.dirname(osp.abspath(__file__))

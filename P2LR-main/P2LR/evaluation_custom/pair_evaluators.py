@@ -6,6 +6,8 @@ from collections import OrderedDict
 import numpy as np
 import torch
 
+from sklearn.cluster import KMeans
+
 #from .evaluation_metrics import cmc, mean_ap
 from ..feature_extraction import extract_cnn_feature
 from ..utils.meters import AverageMeter
@@ -17,7 +19,7 @@ import multiprocessing
 
 import numpy as np
 from sklearn.metrics import average_precision_score
-
+from sklearn.preprocessing import normalize
 from ..utils import to_numpy
 
 def _unique_sample(ids_dict, num):
@@ -110,17 +112,18 @@ def evaluate_all(query_features, gallery_features, distmat, query=None, gallery=
             f.write("\n")
             d.write("\n")
     print("result matches was store in result.txt")
-    return indices
+    return indices, dismat, gallery_path, query_path
 
 
 class Evaluator(object):
     "Edited Evaluator from orginal Evaluator for ensemble solutions"
-    def __init__(self, model1, model2):
+    def __init__(self, model1, model2, args):
         super(Evaluator, self).__init__()
         self.model1 = model1
         self.model2 = model2
+        self.args = args
 
-    def evaluate(self, data_loader, query, gallery, metric=None, cmc_flag=False, rerank=False, pre_features1=None, pre_features2=None):
+    def evaluate(self, data_loader, query, gallery, metric=None, cmc_flag=False, rerank=False, pre_features1=None, pre_features2=None, use_kmean=False):
         if (pre_features1 is None or pre_features2 is None):
             features1, _ = extract_features(self.model1, data_loader)
             features2, _ = extract_features(self.model2, data_loader)
@@ -135,18 +138,28 @@ class Evaluator(object):
         results = evaluate_all(query_features, gallery_features, mean_distmat, query=query, gallery=gallery, cmc_flag=cmc_flag, workers=4)
         
         
-        if (not rerank):
-            return results
-
-        print('Applying person re-ranking ...')
-        distmat_qq1, _, _ = pairwise_distance(features1, query, query, metric=metric)
-        distmat_gg1, _, _ = pairwise_distance(features1, gallery, gallery, metric=metric)
+        if rerank:
+            print('Applying person re-ranking ...')
+            distmat_qq1, _, _ = pairwise_distance(features1, query, query, metric=metric)
+            distmat_gg1, _, _ = pairwise_distance(features1, gallery, gallery, metric=metric)
         
-        distmat_qq2, _, _ = pairwise_distance(features2, query, query, metric=metric)
-        distmat_gg2, _, _ = pairwise_distance(features2, gallery, gallery, metric=metric)
+            distmat_qq2, _, _ = pairwise_distance(features2, query, query, metric=metric)
+            distmat_gg2, _, _ = pairwise_distance(features2, gallery, gallery, metric=metric)
         
-        dismat_qq = (distmat_qq1 + distmat_qq2) / 2
-        dismat_gg = (distmat_gg1 + distmat_gg2) / 2
+            distmat_qq = (distmat_qq1 + distmat_qq2) / 2
+            distmat_gg = (distmat_gg1 + distmat_gg2) / 2
         
-        distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
-        return evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag)
+            distmat = re_ranking(mean_distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
+            reusults =  evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag)
+            
+        if use_kmean:
+            assert self.args.num_clusters > 0, "num_clusters arg must be larger than 0"
+            cf = normalize((features1+features2)/2, axis=1)
+            km = KMeans(n_clusters=self.args.num_clusters, random_state=args.seed, n_jobs=8,max_iter=300).fit(cf)
+            centers = normalize(km.cluster_centers_, axis=1)
+            target_label = km.labels_
+            
+            print(centers.size())
+            print(target_label)
+           
+        return results
