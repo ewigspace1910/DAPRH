@@ -26,12 +26,12 @@ class CAVIARa(BaseImageDataset):
         required_files = [self.train_path]
         #self.check_before_run(required_files)
 
-        self._for_merge = self.process_train(self.train_path, [], [])
+        self._for_merge = self.process_train(self.train_path)
 
         super().__init__(**kwargs)
         if verbose:
             print("=> Caviara loaded")
-            self.print_dataset_statistics(self._for_merge)
+            self.print_dataset_statistics(self._for_merge, [], [])
             
     def process_train(self, train_path):
         data = []
