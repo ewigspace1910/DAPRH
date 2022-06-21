@@ -31,9 +31,9 @@ class CustomData(BaseImageDataset):
     'lpw' : LPW
     }
 
-    def __init__(self, list=['market1501', 'dukemtmc', 'msmt17', 'lpw','prai','caviara'], verbose=True, **kwargs):
+    def __init__(self, root, list=['market1501', 'dukemtmc', 'msmt17', 'lpw','prai','caviara'], verbose=True, **kwargs):
         super(CustomData, self).__init__()
-        assert 'dukemtmc' in list, "must using duke"
+        #assert 'dukemtmc' in list, "must using duke"
     
         self.train_dir = []
         for name in list : self.train_dir += self.factory_[name](verbose=True)._for_merge
