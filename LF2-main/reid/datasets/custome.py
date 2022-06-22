@@ -31,7 +31,7 @@ class CustomData(BaseImageDataset):
     'lpw' : LPW
     }
 
-    def __init__(self, root, list=['market1501', 'dukemtmc', 'msmt17', 'lpw','prai','caviara'], verbose=True, **kwargs):
+    def __init__(self, root, list=['dukemtmc', 'msmt17', 'lpw','prai','caviara'], verbose=True, **kwargs):
         super(CustomData, self).__init__()
         #assert 'dukemtmc' in list, "must using duke"
     
