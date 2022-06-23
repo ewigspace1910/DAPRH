@@ -99,7 +99,7 @@ def main_worker(args):
 
     # Evaluator
     print("Test on the target domain of {}:".format(args.dataset_target))
-    evaluator_ = Evaluator(encoder)
+    evaluator_ = Evaluator(encoder, args)
     evaluator_.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, 
             rerank=args.rerank, use_kmean=args.kmean)
     return
@@ -123,6 +123,7 @@ if __name__ == '__main__':
                          default='logs_d2m/model_best.pth.tar')
     parser.add_argument('--rerank', action='store_true', help="evaluation only")
     parser.add_argument('--kmean', action='store_true', help="evaluation only")
+    parser.add_argument('--clusters', type=int, default=0)
     parser.add_argument('--seed', type=int, default=1)
     # path
     working_dir = osp.dirname(osp.abspath(__file__))

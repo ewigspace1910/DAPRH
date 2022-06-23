@@ -119,7 +119,7 @@ if __name__ == '__main__':
     
     parser.add_argument('--rerank', action='store_true',help="evaluation only")
     parser.add_argument('--kmean', action='store_true',help="evaluation only")
-    parser.add_argument('--num_clusters', type=int, default=0, help="evaluation only")
+    parser.add_argument('--clusters', type=int, default=0, help="evaluation only")
     parser.add_argument('--seed', type=int, default=1)
     # path
     working_dir = osp.dirname(osp.abspath(__file__))

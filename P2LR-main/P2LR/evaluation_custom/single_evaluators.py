@@ -17,6 +17,8 @@ import multiprocessing
 
 import numpy as np
 from sklearn.metrics import average_precision_score
+from sklearn.preprocessing import normalize
+from sklearn.cluster import KMeans
 
 from ..utils import to_numpy
 
@@ -218,11 +220,12 @@ def evaluate_all(query_features, gallery_features, distmat, query=None, gallery=
 
 
 class Evaluator(object):
-    def __init__(self, model):
+    def __init__(self, model, args):
         super(Evaluator, self).__init__()
         self.model = model
+        self.args = args
 
-    def evaluate(self, data_loader, query, gallery, metric=None, cmc_flag=False, rerank=False, pre_features=None, use_kmeans=False):
+    def evaluate(self, data_loader, query, gallery, metric=None, cmc_flag=False, rerank=False, pre_features=None, use_kmean=False):
         if (pre_features is None):
             features, _ = extract_features(self.model, data_loader)
         else:
@@ -231,21 +234,25 @@ class Evaluator(object):
         results = evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag, workers=16)
         
         
-        if (not rerank):
-            return results
+        if rerank:
+            print('Applying person re-ranking ...')
+            distmat_qq, _, _ = pairwise_distance(features, query, query, metric=metric)
+            distmat_gg, _, _ = pairwise_distance(features, gallery, gallery, metric=metric)
+            distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
+        
+            distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
+            reusults =  evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag)
+            
             
         if use_kmean:
-            assert self.args.num_clusters > 0, "num_clusters arg must be larger than 0"
+            print("using kmeans")
+            assert self.args.clusters > 0, "num_clusters arg must be larger than 0"
             cf = normalize(features, axis=1)
-            km = KMeans(n_clusters=self.args.num_clusters, random_state=args.seed, n_jobs=8,max_iter=300).fit(cf)
+            km = KMeans(n_clusters=self.args.clusters, random_state=self.args.seed, n_jobs=8,max_iter=300).fit(cf)
             centers = normalize(km.cluster_centers_, axis=1)
             target_label = km.labels_
             
             print(centers.size())
             print(target_label)
 
-        print('Applying person re-ranking ...')
-        distmat_qq, _, _ = pairwise_distance(features, query, query, metric=metric)
-        distmat_gg, _, _ = pairwise_distance(features, gallery, gallery, metric=metric)
-        distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
-        return evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag)
+        return results

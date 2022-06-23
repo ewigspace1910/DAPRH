@@ -153,13 +153,12 @@ class Evaluator(object):
             reusults =  evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag)
             
         if use_kmean:
+            print("using kmeans")
             assert self.args.num_clusters > 0, "num_clusters arg must be larger than 0"
             cf = normalize((features1+features2)/2, axis=1)
-            km = KMeans(n_clusters=self.args.num_clusters, random_state=args.seed, n_jobs=8,max_iter=300).fit(cf)
+            km = KMeans(n_clusters=self.args.clusters, random_state=self.args.seed, n_jobs=8,max_iter=300).fit(cf)
             centers = normalize(km.cluster_centers_, axis=1)
             target_label = km.labels_
-            
-            print(centers.size())
-            print(target_label)
+
            
         return results
