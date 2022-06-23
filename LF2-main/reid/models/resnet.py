@@ -197,9 +197,7 @@ class ResNet(nn.Module):
             x1.append(x_embed_x)
             # split
             x1_split = [x[:, :, h // self.num_split * s: h // self.num_split * (s+1), :] for s in range(self.num_split)]
-            
-            print("\n\t\tsplit")
-            for x in x1_split: print("\t\t\t==>", x.size())
+           
             
             ############################################
             #input for fusion module
