@@ -14,7 +14,8 @@ from torch.utils.data import DataLoader
 
 from P2LR import datasets
 from P2LR import models
-from P2LR.evaluators import Evaluator
+#from P2LR.evaluators import Evaluator
+from P2LR.evaluation_custom.single_evaluators import Evaluator
 from P2LR.utils.data import transforms as T
 from P2LR.utils.data.preprocessor import Preprocessor
 from P2LR.utils.logging import Logger
@@ -83,7 +84,8 @@ def main_worker(args):
     # Evaluator
     evaluator = Evaluator(model)
     print("Test on the target domain of {}:".format(args.dataset_target))
-    evaluator.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, cmc_flag=True, rerank=args.rerank)
+    evaluator.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, 
+            cmc_flag=True, rerank=args.rerank, use_kmean=args.kmean)
     return
 
 if __name__ == '__main__':
@@ -102,8 +104,8 @@ if __name__ == '__main__':
     parser.add_argument('--dropout', type=float, default=0)
     # testing configs
     parser.add_argument('--resume', type=str, required=True, metavar='PATH')
-    parser.add_argument('--rerank', action='store_true',
-                        help="evaluation only")
+    parser.add_argument('--rerank', action='store_true', help="evaluation only")
+    parser.add_argument('--kmean', action='store_true', help="evaluation only")
     parser.add_argument('--seed', type=int, default=1)
     # path
     working_dir = osp.dirname(osp.abspath(__file__))

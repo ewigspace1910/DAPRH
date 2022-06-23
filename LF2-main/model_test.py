@@ -20,7 +20,8 @@ from torch.utils.data import DataLoader
 
 from reid import datasets
 from reid import models
-from reid.evaluators import Evaluator
+#from reid.evaluators import Evaluator
+from reid.evaluation_custom.single_evaluators import Evaluator
 from reid.utils.data import transforms as T
 from reid.utils.data.preprocessor import Preprocessor
 from reid.utils.logging import Logger
@@ -30,7 +31,7 @@ from reid.models.resnet import Encoder
 device_ids = [0,1]
 
 def get_data(name, data_dir, height, width, batch_size, workers):
-    root = osp.join(data_dir, name)
+    root = osp.join(data_dir)
     dataset = datasets.create(name, root)
 
     normalizer = T.Normalize(mean=[0.485, 0.456, 0.406],
@@ -50,9 +51,9 @@ def get_data(name, data_dir, height, width, batch_size, workers):
 
 def create_model(args, extract_feat_):  
     arch = args.arch
-    model_student = models.create(arch, num_features=args.features, dropout=args.dropout, \
+    model_student = models.create(arch, num_features=args.features, dropout=args.dropout, num_classes=args.num_clusters, \
                                   num_split=args.split_parts, extract_feat=extract_feat_).cuda()
-    model_teacher = models.create(arch, num_features=args.features, dropout=args.dropout, \
+    model_teacher = models.create(arch, num_features=args.features, dropout=args.dropout, num_classes=args.num_clusters,\
                                   num_split=args.split_parts, extract_feat=extract_feat_).cuda()
     model_student = nn.DataParallel(model_student)  
     model_teacher = nn.DataParallel(model_teacher)
@@ -99,7 +100,8 @@ def main_worker(args):
     # Evaluator
     print("Test on the target domain of {}:".format(args.dataset_target))
     evaluator_ = Evaluator(encoder)
-    evaluator_.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, cmc_flag=True, source=False)
+    evaluator_.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, 
+            rerank=args.rerank, use_kmean=args.kmean)
     return
 
 if __name__ == '__main__':
@@ -108,6 +110,7 @@ if __name__ == '__main__':
     parser.add_argument('-dt', '--dataset-target', type=str,  default='market',choices=datasets.names())
     parser.add_argument('-b', '--batch-size', type=int, default=64)
     parser.add_argument('-j', '--workers', type=int, default=4)
+    parser.add_argument('--num-clusters', type=int, default=700)
     parser.add_argument('--height', type=int, default=256, help="input height")
     parser.add_argument('--width', type=int, default=128, help="input width")
     # model
@@ -118,6 +121,8 @@ if __name__ == '__main__':
     # testing configs
     parser.add_argument('--resume', type=str, metavar='PATH',\
                          default='logs_d2m/model_best.pth.tar')
+    parser.add_argument('--rerank', action='store_true', help="evaluation only")
+    parser.add_argument('--kmean', action='store_true', help="evaluation only")
     parser.add_argument('--seed', type=int, default=1)
     # path
     working_dir = osp.dirname(osp.abspath(__file__))
