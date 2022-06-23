@@ -236,7 +236,7 @@ class Evaluator(object):
             
         if use_kmean:
             assert self.args.num_clusters > 0, "num_clusters arg must be larger than 0"
-            cf = normalize((features1+features2)/2, axis=1)
+            cf = normalize(features, axis=1)
             km = KMeans(n_clusters=self.args.num_clusters, random_state=args.seed, n_jobs=8,max_iter=300).fit(cf)
             centers = normalize(km.cluster_centers_, axis=1)
             target_label = km.labels_
