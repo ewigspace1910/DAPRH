@@ -7,9 +7,9 @@ import numpy as np
 import torch
 
 #from .evaluation_metrics import cmc, mean_ap
-from .feature_extraction import extract_cnn_feature
-from .utils.meters import AverageMeter
-from .utils.rerank import re_ranking
+from ..feature_extraction import extract_cnn_feature
+from ..utils.meters import AverageMeter
+from ..utils.rerank import re_ranking
 
 from collections import defaultdict
 import threading
@@ -18,7 +18,7 @@ import multiprocessing
 import numpy as np
 from sklearn.metrics import average_precision_score
 
-from .utils import to_numpy
+from ..utils import to_numpy
 
 def _unique_sample(ids_dict, num):
     mask = np.zeros(num, dtype=np.bool)
