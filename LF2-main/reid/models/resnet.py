@@ -194,7 +194,6 @@ class ResNet(nn.Module):
             x_embed_x = x_gap + x_map                         
             x_embed_x = x_embed_x.view(x_embed_x.size(0), -1) 
             x_embed_x = self.BN_g(x_embed_x)
-            print("\t\t===> x_embed_x size:", x_embed_x.size())
             x1.append(x_embed_x)
             # split
             x1_split = [x[:, :, h // self.num_split * s: h // self.num_split * (s+1), :] for s in range(self.num_split)]
@@ -207,8 +206,6 @@ class ResNet(nn.Module):
             ############################################
             channel_embed_upper = self.ca_upper(x1_split[0]) #F(Pj)
             channel_embed_low = self.ca_low(x1_split[1])     #F(Pj)
-            print("\n\tchannel_upper: ", channel_embed_upper.size())
-            print("\n\tchannel_low: ", channel_embed_lower.size())
 
 
             ############################################
@@ -242,7 +239,6 @@ class ResNet(nn.Module):
         else:
             x1 = F.avg_pool2d(x, x.size()[2:])
             x1 = x1.view(x1.size(0), -1) 
-            print("x1 not split size: ", x1.size())
 
         if self.extract_feat:
             return x1
