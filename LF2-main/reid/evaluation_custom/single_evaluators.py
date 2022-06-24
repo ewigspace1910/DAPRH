@@ -192,7 +192,7 @@ def pairwise_distance(features, query=None, gallery=None, metric=None):
 def evaluate_all(query_features, gallery_features, distmat, query=None, gallery=None,
                  query_ids=None, gallery_ids=None, workers=0,
                  query_cams=None, gallery_cams=None,
-                 cmc_topk=(1, 5, 10), cmc_flag=False, top_k = 10):
+                 cmc_topk=(1, 5, 10), cmc_flag=False, top_k = 10, label_clusters=None):
     if query is not None and gallery is not None:
         query_path = [pid for  pid,_ , _ in query]
         gallery_path = [pid for pid,_, _ in gallery]
@@ -206,15 +206,18 @@ def evaluate_all(query_features, gallery_features, distmat, query=None, gallery=
 
     # Compute mean AP
     indices = np.argsort(distmat, axis=1)
-    with open("result.txt", 'wt') as f, open("dismat.txt", "wt") as d:
+    with open("result.txt", 'wt') as f, open("dismat.txt", "wt") as d, open("target_label.txt", "wt") as l:
         for i, query in enumerate(query_path):
             f.write(query+":")
             d.write(query+":")
+            l.write(query+":")
             for index in indices[i][:top_k]:
                f.write(gallery_path[index]+";")
                d.write(str(float(distmat[i][index].sum())) + ";")
+               l.write(str(label_clusters[index])+";")
             f.write("\n")
             d.write("\n")
+            l.write("\n")
     print("result matches was store in result.txt")
     return indices
 
@@ -230,8 +233,21 @@ class Evaluator(object):
             features, _ = extract_features(self.model, data_loader)
         else:
             features = pre_features
+        
+        target_label = None
+        
+        if use_kmean:
+            print("using kmeans")
+            assert self.args.clusters > 0, "num_clusters arg must be larger than 0"
+            cf = normalize(features, axis=1)
+            km = KMeans(n_clusters=self.args.clusters, random_state=self.args.seed, n_jobs=4,max_iter=400).fit(cf)
+            centers = normalize(km.cluster_centers_, axis=1)
+            target_label = km.labels_              
+        
+        #calculate dismat
         distmat, query_features, gallery_features = pairwise_distance(features, query, gallery, metric=metric)
-        results = evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag, workers=16)
+        results = evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, 
+                cmc_flag=cmc_flag, workers=16, label_clusters=target_label)
         
         
         if rerank:
@@ -241,18 +257,8 @@ class Evaluator(object):
             distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
         
             distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
-            reusults =  evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, cmc_flag=cmc_flag)
-            
-            
-        if use_kmean:
-            print("using kmeans")
-            assert self.args.clusters > 0, "num_clusters arg must be larger than 0"
-            cf = normalize(features, axis=1)
-            km = KMeans(n_clusters=self.args.clusters, random_state=self.args.seed, n_jobs=8,max_iter=300).fit(cf)
-            centers = normalize(km.cluster_centers_, axis=1)
-            target_label = km.labels_
-            
-            print(centers.size())
-            print(target_label)
+            reusults =  evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, 
+                cmc_flag=cmc_flag, label_clusters=target_label)      
+          
 
         return results
