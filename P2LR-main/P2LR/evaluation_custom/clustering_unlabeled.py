@@ -143,7 +143,7 @@ def clustering_all(dismat_gg, gallery=None, top_k = 5, label_clusters=None):
             #j<>i must in top k of i => i (= cluster(j)
             sorter_dismat_i = np.argsort(dismat_i) 
             rank_i = sorter_dismat_i[np.searchsorted(dismat_i, tmp_cp, sorter=sorter_dismat_i)] #rank other k-point to i-point
-            if np.sum(rank_i < top_k) >  len(tmp_index) \\ 2:
+            if np.sum(rank_i < top_k) >  len(tmp_index) // 2:
                 new_clusters[cluster].append(i) 
             
             
@@ -170,7 +170,7 @@ class DSCluster(object):
         features, _ = extract_features(self.model, data_loader)
 
         #distmat, query_features, gallery_features = pairwise_distance(features, query, gallery, metric=metric)
-        distmat_gg, _, _ = pairwise_distance(features, gallery, gallery, metric=metric)
+        distmat_gg, _, gallery_features = pairwise_distance(features, gallery, gallery, metric=metric)
    
         print("run kmeans")
         assert self.args.clusters > 0, "num_clusters arg must be larger than 0"
