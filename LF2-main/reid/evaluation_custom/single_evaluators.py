@@ -206,7 +206,13 @@ def evaluate_all(query_features, gallery_features, distmat, query=None, gallery=
 
     # Compute mean AP
     indices = np.argsort(distmat, axis=1)
-    with open("result.txt", 'wt') as f, open("dismat.txt", "wt") as d, open("target_label.txt", "wt") as l:
+    if label_clusters is None:
+        target_label_name = "null.txt"
+        label_clusters = [-1] * len(gallery_features)
+    else:
+        target_label_name = "target_label.txt"
+    
+    with open("result.txt", 'wt') as f, open("dismat.txt", "wt") as d, open(target_label_name, "wt") as l:
         for i, query in enumerate(query_path):
             f.write(query+":")
             d.write(query+":")
@@ -235,19 +241,19 @@ class Evaluator(object):
             features = pre_features
         
         target_label = None
+        distmat, query_features, gallery_features = pairwise_distance(features, query, gallery, metric=metric)
         
         if use_kmean:
             print("using kmeans")
             assert self.args.clusters > 0, "num_clusters arg must be larger than 0"
-            cf = normalize(features, axis=1)
+            cf = normalize(gallery_features, axis=1)
             km = KMeans(n_clusters=self.args.clusters, random_state=self.args.seed, n_jobs=4,max_iter=400).fit(cf)
             centers = normalize(km.cluster_centers_, axis=1)
             target_label = km.labels_              
         
         #calculate dismat
-        distmat, query_features, gallery_features = pairwise_distance(features, query, gallery, metric=metric)
         results = evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, 
-                cmc_flag=cmc_flag, workers=16, label_clusters=target_label)
+                cmc_flag=cmc_flag, workers=8, label_clusters=target_label)
         
         
         if rerank:
