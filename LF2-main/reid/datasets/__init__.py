@@ -7,14 +7,15 @@ from .msmt17 import MSMT17
 from .cuhk03 import CUHK03
 from .custome import CustomData
 from .unlabel import UnlabelDs
-
+from .unlabel_wcam import UnlabelwCamDs
 __factory = {
     'market': Market1501,
     'duke': DukeMTMC,
     'msmt17': MSMT17,
     'cuhk03': CUHK03,
     'custome': CustomData,
-    'unlabel': UnlabelDs
+    'unlabel': UnlabelDs,
+    'unlabel_wcam': UnlabelwCamDs
 }
 
 

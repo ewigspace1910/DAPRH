@@ -7,6 +7,7 @@ from .msmt17 import MSMT17
 from .custom import CustomData
 from .merge import MergedData
 from .unlabel import UnlabelDs
+from .unlabel_wcam import UnlabelwCamDs
 
 __factory = {
     'market1501': Market1501,
@@ -14,7 +15,8 @@ __factory = {
     'msmt17': MSMT17,
     'custom': CustomData,
     'merged' : MergedData,
-    'unlabel': UnlabelDs
+    'unlabel': UnlabelDs,
+    'unlabelwCam': UnlabelwCamDs
 }
 
 
