@@ -21,7 +21,7 @@ P2LR is the clustering-based method contructed by 3 components:
 3. Fine-tuning with target domain attached pseudo labels. To Continue training two model and update mean teacher on Refined Samples.
 
 ## II. Mean Teacher
-*  Inspired in [MMT](https://github.com/yxgeee/MMT), Mean Teacher is composed two the exponential moving average of student models (pretrain model) over interations - $\overline{M_{1}}$ and $\overline{M_{2}}$.
+*  Inspired in [MMT](https://github.com/yxgeee/MMT), Mean Teacher is composed two the exponential moving average of student models (pretrain model) over interations -  $\overline{M_{1}}$ and $\overline{M_{2}}$.
 
 MT Inference is computed: 
 ```python
@@ -51,7 +51,7 @@ MT Inference is computed:
 
 ## IV. Uncertainty guided sample selection
 
-Through probabilistic uncertainty in III., we will choose all samples ($x_{i}$) having U value is smaller than a threshold ${\beta}$, which a muable scalar. ${\beta}$ can update(increase) over interators.
+Through probabilistic uncertainty in III., we will choose all samples ($x_{i}$) having U value is smaller than a threshold ${\beta}$ , which a muable scalar. ${\beta}$ can update(increase) over interators.
 
 ## V. Training
 Split to 2 stage: 
