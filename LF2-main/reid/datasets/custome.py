@@ -15,6 +15,7 @@ from .msmt17 import MSMT17
 from .prai import PRAI
 from .lpw import LPW
 from .caviara import CAVIARa
+from .noisyshoppingmall import NSMall
 
 
 class CustomData(BaseImageDataset):
