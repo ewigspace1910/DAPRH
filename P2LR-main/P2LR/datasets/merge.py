@@ -33,7 +33,7 @@ class MergedData(BaseImageDataset):
     }
 
     def __init__(self, list=['market1501', 'dukemtmc', 'msmt17', 'lpw','prai','caviara'], verbose=True, **kwargs):
-        super(MergedData, self).__init__()
+        super(NSMall, self).__init__()
         assert 'dukemtmc' in list, "must using duke"
     
         self.train_dir = []
