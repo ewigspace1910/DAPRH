@@ -15,7 +15,7 @@ from .msmt17 import MSMT17
 from .prai import PRAI
 from .lpw import LPW
 from .caviara import CAVIARa
-
+from .noisyshoppingmall import NSMall
 
 class MergedData(BaseImageDataset):
     """
@@ -28,7 +28,8 @@ class MergedData(BaseImageDataset):
     'msmt17': MSMT17,
     'prai': PRAI,
     'caviara': CAVIARa,
-    'lpw' : LPW
+    'lpw' : LPW,
+    'noisy_shoppingmall' : NSMall
     }
 
     def __init__(self, list=['market1501', 'dukemtmc', 'msmt17', 'lpw','prai','caviara'], verbose=True, **kwargs):

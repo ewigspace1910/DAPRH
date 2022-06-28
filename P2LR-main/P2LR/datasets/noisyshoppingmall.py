@@ -1,0 +1,61 @@
+from __future__ import print_function, absolute_import
+import os.path as osp
+import glob
+import re
+import urllib
+import zipfile
+
+from ..utils.data import BaseImageDataset
+from ..utils.osutils import mkdir_if_missing
+from ..utils.serialization import write_json
+import json
+
+class NSMall(BaseImageDataset):
+    dataset_dir = 'NoisyShoppingMall'
+
+    def __init__(self, root="./datasets", verbose=True, **kwargs):
+        super(UnlabelDs, self).__init__()
+        self.dataset_name = 'Noisy_ShoppingMall'
+        self.dataset_dir = osp.join(root, self.dataset_dir)
+        self.train_dir = osp.join(self.dataset_dir, 'images')
+
+        train = self._process_dir(self.train_dir, relabel=True)
+
+
+        if verbose:
+            print("=> Noisy shopping mall dataset loaded")
+            self.print_dataset_statistics(train, [], [])
+
+        self._for_merge = self.train = train
+
+
+        self.num_train_pids, self.num_train_imgs, self.num_train_cams = self.get_imagedata_info(self.train)
+        
+    def _process_dir(self, dir_path, relabel=False):
+        folder_paths = [p.path for p in os.scandir(dir_path)]
+        img_paths = []
+        for x in folder_paths:
+            img_path += glob.glob(osp.join(x, '*.jpg'))
+        #pattern = re.compile(r'([-\d]+)_c(\d)')
+
+        pid_container = set()
+        for img_path in img_paths:
+            #pid, _ = map(int, pattern.search(img_path).groups())
+            #if pid == -1: continue  # junk images are just ignored
+            pid = img_path.split("\\")[0]
+            pid_container.add(pid)
+        pid2label = {pid: label for label, pid in enumerate(pid_container)}
+
+        dataset = []
+        for img_path in img_paths:
+            #pid, camid = map(int, pattern.search(img_path).groups())
+            #if pid == -1: continue  # junk images are just ignored
+            #assert 0 <= pid <= 1501  # pid == 0 means background
+            #assert 1 <= camid <= 6
+            #camid -= 1  # index starts from 0
+            camid = int(1)
+            pid = img_path.split("\\")[0]
+            if relabel: pid = pid2label[pid]
+            dataset.append((img_path, pid, camid))
+
+        return dataset

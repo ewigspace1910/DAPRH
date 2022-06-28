@@ -1,5 +1,6 @@
 # Paper title
-This is template format
+This is template format. _Month year_
+
 * Official paper: [name](www.google.com)
 * Official code: [Github](www.google.com)
 
