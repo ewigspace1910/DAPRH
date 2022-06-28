@@ -51,7 +51,7 @@ MT Inference is computed:
 
 ## IV. Uncertainty guided sample selection
 
-Through probabilistic uncertainty in III.#43, we will choose all samples ($x_{i}$) having $U$ value is smaller than a threshold $\beta$, which a muable scalar. $\beta$ can update(increase) over interators.
+Through probabilistic uncertainty in III., we will choose all samples ($x_{i}$) having U value is smaller than a threshold $\beta$, which a muable scalar. $\beta$ can update(increase) over interators.
 
 ## V. Training
 Split to 2 stage: 
