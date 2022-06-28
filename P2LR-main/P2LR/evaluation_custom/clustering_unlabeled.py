@@ -113,7 +113,7 @@ def pairwise_distance(features, query=None, gallery=None, metric=None):
     dist_m.addmm_(1, -2, x, y.t())
     return dist_m, x.numpy(), y.numpy()
 
-def clustering_all(distmat_gg, gallery=None, top_k = 15, label_clusters=None):
+def clustering_all(distmat_gg, gallery=None, top_k = 15, label_clusters=None, hardmore=False, minimum_sample=2):
     if gallery is not None:
         gallery_path = [pid for pid,_, _ in gallery]
     else:
@@ -136,17 +136,26 @@ def clustering_all(distmat_gg, gallery=None, top_k = 15, label_clusters=None):
             tmp_cp =  tmp_index.copy()
             tmp_cp.remove(i) 
             distvec_i = indices[i]  #rank k-nearest of i
-            #j<>i must in top k of i => i (= cluster(j)
+            #with j<>i must in top k of i => j (= cluster(i)
             sorter_dismat_i = np.argsort(distvec_i) 
             rank_tmp_in_dv_i = sorter_dismat_i[np.searchsorted(distvec_i, tmp_cp, sorter=sorter_dismat_i)] #rank other k-point to i-point
             rank_tmp_in_dv_i = rank_tmp_in_dv_i < top_k
-            print(rank_tmp_in_dv_i)
-            if np.sum(rank_tmp_in_dv_i.numpy()) >  len(tmp_cp) // 3 * 2:
+            
+            num_j_accept_i = len(tmp_cp)
+            if hardmore:
+                #i must in top k/2 of j => i (= cluster(j)  ~  significantly same reranking
+                distvec_j = indices[j]
+                if np.where(distvec_j == i)[0][0] > top_k // 2: num_j_accept_i-= 1             
+                       
+            #print(rank_tmp_in_dv_i)
+            constrain_1 = len(tmp_cp) // 3 * 2   #empritical belief :>>
+            constrain_2 = len(tmp_cp) // 3       #empritical belief :>>
+            if np.sum(rank_tmp_in_dv_i.numpy()) > constrain_1  and num_j_accept_i  > constrain_2: 
                 new_clusters[cluster].append(i)         
             
     with open("cluster_result.txt", 'wt') as f:
         for cluster in new_clusters:
-            if len(new_clusters[cluster]) < 2: continue
+            if len(new_clusters[cluster]) < minimum_sample: continue
             f.write("{}:".format(cluster))
             for index in new_clusters[cluster]:
                f.write(gallery_path[index]+";")
@@ -176,7 +185,8 @@ class DSCluster(object):
         target_label = km.labels_              
         
         #calculate dismat
-        results = clustering_all(distmat_gg, gallery=gallery, label_clusters=target_label)
+        results = clustering_all(distmat_gg, gallery=gallery, label_clusters=target_label, 
+                                hardmore=args.hard_sample, minimum_sample=3)
         
         
         if rerank:

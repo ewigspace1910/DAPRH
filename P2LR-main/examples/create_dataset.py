@@ -105,6 +105,7 @@ if __name__ == '__main__':
     # testing configs
     parser.add_argument('--resume', type=str, required=True, metavar='PATH')
     parser.add_argument('--rerank', action='store_true', help="evaluation only")
+    parser.add_argument('--hard_sample', action='store_true', help="evaluation only, strictly choose samples in clusters")
     parser.add_argument('--clusters', type=int, default=0)
     parser.add_argument('--seed', type=int, default=1)
     # path

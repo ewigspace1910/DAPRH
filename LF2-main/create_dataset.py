@@ -119,8 +119,8 @@ if __name__ == '__main__':
     parser.add_argument('--dropout', type=float, default=0)
     parser.add_argument('--split-parts', type=int, default=2)       # splitted parts
     # testing configs
-    parser.add_argument('--resume', type=str, metavar='PATH',\
-                         default='logs_d2m/model_best.pth.tar')
+    parser.add_argument('--resume', type=str, metavar='PATH', default='logs_d2m/model_best.pth.tar')
+    parser.add_argument('--hard_sample', action='store_true', help="evaluation only, strictly choose samples in clusters")
     parser.add_argument('--rerank', action='store_true', help="evaluation only")
     parser.add_argument('--clusters', type=int, default=0, help="number cluster for kmeans")
     parser.add_argument('--seed', type=int, default=1)
