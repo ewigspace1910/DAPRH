@@ -261,8 +261,6 @@ class Evaluator(object):
             distmat_qq, _, _ = pairwise_distance(features, query, query, metric=metric)
             distmat_gg, _, _ = pairwise_distance(features, gallery, gallery, metric=metric)
             distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
-        
-            distmat = re_ranking(distmat.numpy(), distmat_qq.numpy(), distmat_gg.numpy())
             reusults =  evaluate_all(query_features, gallery_features, distmat, query=query, gallery=gallery, 
                 cmc_flag=cmc_flag, label_clusters=target_label)      
           

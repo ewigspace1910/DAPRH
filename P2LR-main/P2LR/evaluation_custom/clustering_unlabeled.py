@@ -113,7 +113,7 @@ def pairwise_distance(features, query=None, gallery=None, metric=None):
     dist_m.addmm_(1, -2, x, y.t())
     return dist_m, x.numpy(), y.numpy()
 
-def clustering_all(dismat_gg, gallery=None, top_k = 5, label_clusters=None):
+def clustering_all(distmat_gg, gallery=None, top_k = 15, label_clusters=None):
     if gallery is not None:
         gallery_path = [pid for pid,_, _ in gallery]
     else:
@@ -122,37 +122,33 @@ def clustering_all(dismat_gg, gallery=None, top_k = 5, label_clusters=None):
     
     clusters = {i:[] for i in set(label_clusters)}
     for index, cluster in enumerate(label_clusters):
-        cluster[cluster].append(index)
+        clusters[cluster].append(index)
     
     new_clusters = {} #shape path
-    # Compute mean AP
     indices = np.argsort(distmat_gg, axis=1)
-    
     
     for cluster in clusters:
         new_clusters[cluster] = []
             
-        match = np.zeros((len(clusters[cluster]), len(clusters[cluster])))
-        tmp_index = [i for i, l in label_clusters if l==cluster]
-        
+        #match = np.zeros((len(clusters[cluster]), len(clusters[cluster])))
+        tmp_index = [i for i in clusters[cluster]]
         for i in tmp_index:
             tmp_cp =  tmp_index.copy()
-            tmp_cp.remove(i)
-                
-            dismat_i = indices[i][tmp_cp]  #rank k-nearest of i
+            tmp_cp.remove(i) 
+            distvec_i = indices[i]  #rank k-nearest of i
             #j<>i must in top k of i => i (= cluster(j)
-            sorter_dismat_i = np.argsort(dismat_i) 
-            rank_i = sorter_dismat_i[np.searchsorted(dismat_i, tmp_cp, sorter=sorter_dismat_i)] #rank other k-point to i-point
-            if np.sum(rank_i < top_k) >  len(tmp_index) // 2:
-                new_clusters[cluster].append(i) 
-            
-            
+            sorter_dismat_i = np.argsort(distvec_i) 
+            rank_tmp_in_dv_i = sorter_dismat_i[np.searchsorted(distvec_i, tmp_cp, sorter=sorter_dismat_i)] #rank other k-point to i-point
+            rank_tmp_in_dv_i = rank_tmp_in_dv_i < top_k
+            print(rank_tmp_in_dv_i)
+            if np.sum(rank_tmp_in_dv_i.numpy()) >  len(tmp_cp) // 3 * 2:
+                new_clusters[cluster].append(i)         
             
     with open("cluster_result.txt", 'wt') as f:
         for cluster in new_clusters:
             if len(new_clusters[cluster]) < 2: continue
             f.write("{}:".format(cluster))
-            for i in new_clusters[cluster]:
+            for index in new_clusters[cluster]:
                f.write(gallery_path[index]+";")
             f.write("\n")
     
@@ -171,7 +167,7 @@ class DSCluster(object):
 
         #distmat, query_features, gallery_features = pairwise_distance(features, query, gallery, metric=metric)
         distmat_gg, _, gallery_features = pairwise_distance(features, gallery, gallery, metric=metric)
-   
+
         print("run kmeans")
         assert self.args.clusters > 0, "num_clusters arg must be larger than 0"
         cf = normalize(gallery_features, axis=1)
