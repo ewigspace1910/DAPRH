@@ -6,7 +6,7 @@ Clustering-based unsupervised domain adaptive (UDA) person re-identification (Re
 * Official code: [Github](https://github.com/JeyesHan/P2LR)
 
 ## Overview
-Paper contain the following criterians:
+Paper contain the following criterions:
 1. Architecture of UDA
 2. Mean Teacher
 3. Probabilistic Uncertainty Modeling (PUM)
