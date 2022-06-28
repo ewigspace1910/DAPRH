@@ -143,10 +143,11 @@ def clustering_all(distmat_gg, gallery=None, top_k = 15, label_clusters=None, ha
             
             num_j_accept_i = len(tmp_cp)
             if hardmore:
-                print("using hard samples")
+                print("using hard sample")
                 #i must in top k/2 of j => i (= cluster(j)  ~  significantly same reranking
-                distvec_j = indices[j]
-                if np.where(distvec_j == i)[0][0] > top_k // 2: num_j_accept_i-= 1             
+                for j in tmp_cp:
+                    distvec_j = indices[j]
+                    if np.where(distvec_j == i)[0][0] > top_k // 2: num_j_accept_i-= 1             
                        
             #print(rank_tmp_in_dv_i)
             constrain_1 = len(tmp_cp) // 5 * 4   #empritical belief :>>
