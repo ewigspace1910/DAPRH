@@ -328,7 +328,7 @@ def main_worker(args):
                 centers, target_label = train_kmeans(cf, args.num_clusters, niter=40, nredo=20, ngpu=1, verbose=True)
                 centers = normalize(centers, axis=1)
             else:
-                km = KMeans(n_clusters=args.num_clusters, random_state=args.seed, n_jobs=16,max_iter=300).fit(cf)
+                km = KMeans(n_clusters=args.num_clusters, random_state=args.seed, n_jobs=4,max_iter=300).fit(cf)
                 centers = normalize(km.cluster_centers_, axis=1)
                 target_label = km.labels_
                 

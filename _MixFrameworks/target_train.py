@@ -226,7 +226,7 @@ def main_worker(args):
             }, is_best, fpath=osp.join(args.logs_dir, 'model'+str(mid)+'_checkpoint.pth.tar'))
 
         if args.offline_test:
-            save_model(encoder, is_best=False, best_mAP=0.0, mid=(epoch+1))
+            save_model(encoder, is_best=False, best_mAP=0.0, mid=(epoch+1)*10+1)
             
         elif ((epoch+1)%args.eval_step==0 or (epoch==args.epochs-1)):
             mAP = evaluator_.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, cmc_flag=False, source=False)

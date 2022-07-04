@@ -1,0 +1,1506 @@
+==========
+Args:Namespace(arch='resnet50', batch_size=256, data_dir='../SpCL-hard-master/data', dataset_source='duke', dataset_target='market1501', dropout=0, epochs=70, eps=0.5, eps_gap=0.1, eval_step=1, features=0, height=256, iters=100, k1=30, k2=6, logs_dir='logs/d2m', lr=0.00035, momentum=0.2, num_instances=16, print_freq=10, seed=1, step_size=30, temp=0.05, weight_decay=0.0005, width=128, workers=4)
+==========
+==> Load source-domain dataset
+=> DukeMTMC loaded
+Dataset statistics:
+  ----------------------------------------
+  subset   | # ids | # images | # cameras
+  ----------------------------------------
+  train    |   702 |    16522 |         8
+  query    |   702 |     2228 |         8
+  gallery  |  1110 |    17661 |         8
+  ----------------------------------------
+==> Load target-domain dataset
+=> Market1501 loaded
+Dataset statistics:
+  ----------------------------------------
+  subset   | # ids | # images | # cameras
+  ----------------------------------------
+  train    |   751 |    12936 |         6
+  query    |   750 |     3368 |         6
+  gallery  |   751 |    15913 |         6
+  ----------------------------------------
+==> Initialize source-domain class centroids in the hybrid memory
+Extract Features: [50/65]	Time 0.181 (0.394)	Data 0.000 (0.033)	
+==> Initialize target-domain instance features in the hybrid memory
+Extract Features: [50/51]	Time 0.133 (0.168)	Data 0.000 (0.014)	
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.70689058303833
+==> Statistics for epoch 0: 195 clusters, 11419 un-clustered instances
+Epoch: [0][10/100]	Time 3.34 (4.43)	Loss_s 8.94 (8.97)	Loss_t 6.84 (7.05)	Loss_ms 0.04 (0.04)	Loss_mt 0.09 (0.06)
+Epoch: [0][20/100]	Time 3.31 (3.89)	Loss_s 9.01 (8.99)	Loss_t 7.33 (7.16)	Loss_ms 0.04 (0.04)	Loss_mt 0.08 (0.06)
+Epoch: [0][30/100]	Time 3.34 (3.70)	Loss_s 9.14 (9.00)	Loss_t 7.22 (7.15)	Loss_ms 0.03 (0.04)	Loss_mt 0.05 (0.06)
+Epoch: [0][40/100]	Time 3.13 (3.60)	Loss_s 9.06 (9.01)	Loss_t 7.31 (7.15)	Loss_ms 0.03 (0.04)	Loss_mt 0.04 (0.05)
+Epoch: [0][50/100]	Time 3.22 (3.58)	Loss_s 7.17 (8.84)	Loss_t 7.24 (7.14)	Loss_ms 0.04 (0.04)	Loss_mt 0.05 (0.05)
+Epoch: [0][60/100]	Time 3.61 (3.57)	Loss_s 7.49 (8.70)	Loss_t 3.19 (6.97)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.05)
+Epoch: [0][70/100]	Time 3.27 (3.54)	Loss_s 8.31 (8.57)	Loss_t 3.76 (6.52)	Loss_ms 0.03 (0.04)	Loss_mt 0.03 (0.05)
+Epoch: [0][80/100]	Time 3.44 (3.51)	Loss_s 7.53 (8.44)	Loss_t 3.07 (6.14)	Loss_ms 0.05 (0.04)	Loss_mt 0.04 (0.05)
+Epoch: [0][90/100]	Time 3.42 (3.52)	Loss_s 6.69 (8.32)	Loss_t 5.72 (5.89)	Loss_ms 0.05 (0.04)	Loss_mt 0.04 (0.05)
+Epoch: [0][100/100]	Time 3.45 (3.51)	Loss_s 6.82 (8.14)	Loss_t 4.59 (5.68)	Loss_ms 0.04 (0.04)	Loss_mt 0.05 (0.05)
+Extract Features: [50/76]	Time 0.168 (0.196)	Data 0.000 (0.028)	
+Mean AP: 6.7%
+Extract Features: [50/76]	Time 0.168 (0.177)	Data 0.000 (0.021)	
+Mean AP: 8.4%
+
+ * Finished epoch   0  model mAP:  6.7%  model_ema mAP:  8.4%  best:  8.4% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 22.41384220123291
+==> Statistics for epoch 1: 243 clusters, 11184 un-clustered instances
+Epoch: [1][10/100]	Time 3.48 (3.75)	Loss_s 6.42 (6.23)	Loss_t 1.96 (2.77)	Loss_ms 0.04 (0.04)	Loss_mt 0.05 (0.05)
+Epoch: [1][20/100]	Time 3.27 (3.50)	Loss_s 6.61 (6.21)	Loss_t 3.63 (2.79)	Loss_ms 0.05 (0.05)	Loss_mt 0.05 (0.05)
+Epoch: [1][30/100]	Time 3.60 (3.46)	Loss_s 6.68 (6.16)	Loss_t 3.28 (2.84)	Loss_ms 0.05 (0.05)	Loss_mt 0.05 (0.05)
+Epoch: [1][40/100]	Time 3.13 (3.41)	Loss_s 6.57 (6.19)	Loss_t 2.95 (2.83)	Loss_ms 0.04 (0.05)	Loss_mt 0.05 (0.05)
+Epoch: [1][50/100]	Time 3.13 (3.41)	Loss_s 4.85 (5.98)	Loss_t 3.29 (2.86)	Loss_ms 0.05 (0.05)	Loss_mt 0.06 (0.05)
+Epoch: [1][60/100]	Time 3.31 (3.42)	Loss_s 4.31 (5.77)	Loss_t 2.27 (2.80)	Loss_ms 0.05 (0.05)	Loss_mt 0.05 (0.05)
+Epoch: [1][70/100]	Time 3.45 (3.42)	Loss_s 5.36 (5.67)	Loss_t 2.60 (2.72)	Loss_ms 0.05 (0.05)	Loss_mt 0.05 (0.05)
+Epoch: [1][80/100]	Time 3.16 (3.39)	Loss_s 4.89 (5.60)	Loss_t 2.21 (2.71)	Loss_ms 0.04 (0.05)	Loss_mt 0.05 (0.05)
+Epoch: [1][90/100]	Time 3.47 (3.41)	Loss_s 3.55 (5.48)	Loss_t 2.73 (2.65)	Loss_ms 0.05 (0.05)	Loss_mt 0.04 (0.05)
+Epoch: [1][100/100]	Time 3.50 (3.41)	Loss_s 4.60 (5.39)	Loss_t 2.45 (2.62)	Loss_ms 0.04 (0.05)	Loss_mt 0.05 (0.05)
+Extract Features: [50/76]	Time 0.128 (0.171)	Data 0.000 (0.021)	
+Mean AP: 8.7%
+Extract Features: [50/76]	Time 0.162 (0.166)	Data 0.000 (0.019)	
+Mean AP: 9.7%
+
+ * Finished epoch   1  model mAP:  8.7%  model_ema mAP:  9.7%  best:  9.7% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 19.307714700698853
+==> Statistics for epoch 2: 383 clusters, 9978 un-clustered instances
+Epoch: [2][10/100]	Time 3.19 (3.41)	Loss_s 3.36 (3.88)	Loss_t 1.46 (2.73)	Loss_ms 0.04 (0.05)	Loss_mt 0.04 (0.03)
+Epoch: [2][20/100]	Time 3.28 (3.29)	Loss_s 3.77 (4.10)	Loss_t 3.07 (2.62)	Loss_ms 0.04 (0.05)	Loss_mt 0.04 (0.03)
+Epoch: [2][30/100]	Time 3.07 (3.28)	Loss_s 3.76 (4.25)	Loss_t 2.37 (2.65)	Loss_ms 0.04 (0.04)	Loss_mt 0.04 (0.04)
+Epoch: [2][40/100]	Time 3.05 (3.28)	Loss_s 3.42 (4.22)	Loss_t 2.90 (2.66)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.03)
+Epoch: [2][50/100]	Time 2.99 (3.29)	Loss_s 3.84 (4.16)	Loss_t 3.07 (2.71)	Loss_ms 0.04 (0.04)	Loss_mt 0.04 (0.04)
+Epoch: [2][60/100]	Time 3.14 (3.26)	Loss_s 4.40 (4.13)	Loss_t 3.47 (2.72)	Loss_ms 0.05 (0.04)	Loss_mt 0.04 (0.03)
+Epoch: [2][70/100]	Time 3.10 (3.27)	Loss_s 3.82 (4.11)	Loss_t 1.82 (2.72)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.03)
+Epoch: [2][80/100]	Time 3.34 (3.28)	Loss_s 3.60 (4.11)	Loss_t 2.50 (2.71)	Loss_ms 0.04 (0.04)	Loss_mt 0.04 (0.03)
+Epoch: [2][90/100]	Time 3.18 (3.29)	Loss_s 3.77 (4.09)	Loss_t 2.04 (2.70)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.03)
+Epoch: [2][100/100]	Time 3.10 (3.29)	Loss_s 3.49 (4.04)	Loss_t 2.30 (2.69)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.03)
+Extract Features: [50/76]	Time 0.131 (0.178)	Data 0.000 (0.020)	
+Mean AP: 12.7%
+Extract Features: [50/76]	Time 0.143 (0.177)	Data 0.000 (0.018)	
+Mean AP: 12.1%
+
+ * Finished epoch   2  model mAP: 12.7%  model_ema mAP: 12.1%  best: 12.7% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 21.258492708206177
+==> Statistics for epoch 3: 520 clusters, 8732 un-clustered instances
+Epoch: [3][10/100]	Time 3.14 (3.15)	Loss_s 3.56 (3.66)	Loss_t 2.80 (3.17)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.03)
+Epoch: [3][20/100]	Time 2.87 (3.08)	Loss_s 3.58 (3.61)	Loss_t 3.11 (3.06)	Loss_ms 0.05 (0.04)	Loss_mt 0.03 (0.03)
+Epoch: [3][30/100]	Time 2.87 (3.07)	Loss_s 3.68 (3.62)	Loss_t 3.31 (3.15)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.03)
+Epoch: [3][40/100]	Time 3.03 (3.06)	Loss_s 3.94 (3.62)	Loss_t 3.31 (3.13)	Loss_ms 0.03 (0.04)	Loss_mt 0.03 (0.03)
+Epoch: [3][50/100]	Time 3.04 (3.11)	Loss_s 3.41 (3.61)	Loss_t 3.69 (3.18)	Loss_ms 0.05 (0.04)	Loss_mt 0.03 (0.03)
+Epoch: [3][60/100]	Time 2.79 (3.09)	Loss_s 2.97 (3.59)	Loss_t 4.05 (3.17)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.03)
+Epoch: [3][70/100]	Time 2.93 (3.10)	Loss_s 4.10 (3.58)	Loss_t 3.10 (3.16)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.03)
+Epoch: [3][80/100]	Time 2.86 (3.09)	Loss_s 3.07 (3.58)	Loss_t 4.38 (3.16)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.03)
+Epoch: [3][90/100]	Time 3.08 (3.10)	Loss_s 2.99 (3.52)	Loss_t 3.06 (3.20)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [3][100/100]	Time 3.04 (3.10)	Loss_s 4.00 (3.50)	Loss_t 3.91 (3.22)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.153 (0.171)	Data 0.000 (0.019)	
+Mean AP: 15.8%
+Extract Features: [50/76]	Time 0.140 (0.177)	Data 0.000 (0.021)	
+Mean AP: 14.9%
+
+ * Finished epoch   3  model mAP: 15.8%  model_ema mAP: 14.9%  best: 15.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 18.11355447769165
+==> Statistics for epoch 4: 638 clusters, 7382 un-clustered instances
+Epoch: [4][10/100]	Time 2.84 (3.00)	Loss_s 3.15 (2.90)	Loss_t 3.18 (3.56)	Loss_ms 0.04 (0.05)	Loss_mt 0.02 (0.02)
+Epoch: [4][20/100]	Time 2.89 (2.90)	Loss_s 3.83 (3.07)	Loss_t 4.35 (3.74)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [4][30/100]	Time 2.70 (2.87)	Loss_s 3.18 (3.07)	Loss_t 3.21 (3.71)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [4][40/100]	Time 2.69 (2.83)	Loss_s 3.52 (3.04)	Loss_t 3.22 (3.65)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [4][50/100]	Time 2.78 (2.88)	Loss_s 3.57 (3.07)	Loss_t 3.54 (3.62)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [4][60/100]	Time 2.86 (2.88)	Loss_s 2.49 (3.04)	Loss_t 2.62 (3.64)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [4][70/100]	Time 2.92 (2.89)	Loss_s 2.74 (3.03)	Loss_t 3.91 (3.65)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [4][80/100]	Time 2.75 (2.88)	Loss_s 3.28 (3.03)	Loss_t 4.06 (3.63)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [4][90/100]	Time 2.96 (2.89)	Loss_s 3.58 (3.05)	Loss_t 3.64 (3.65)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [4][100/100]	Time 2.94 (2.90)	Loss_s 2.30 (3.05)	Loss_t 3.46 (3.68)	Loss_ms 0.04 (0.04)	Loss_mt 0.01 (0.02)
+Extract Features: [50/76]	Time 0.142 (0.170)	Data 0.000 (0.016)	
+Mean AP: 19.8%
+Extract Features: [50/76]	Time 0.163 (0.180)	Data 0.000 (0.022)	
+Mean AP: 17.7%
+
+ * Finished epoch   4  model mAP: 19.8%  model_ema mAP: 17.7%  best: 19.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 17.029815673828125
+==> Statistics for epoch 5: 692 clusters, 6451 un-clustered instances
+Epoch: [5][10/100]	Time 2.87 (3.07)	Loss_s 2.98 (2.87)	Loss_t 3.27 (4.20)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [5][20/100]	Time 2.73 (2.95)	Loss_s 3.07 (2.84)	Loss_t 4.03 (4.05)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [5][30/100]	Time 2.61 (2.85)	Loss_s 3.42 (2.83)	Loss_t 3.43 (3.96)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [5][40/100]	Time 2.71 (2.81)	Loss_s 3.14 (2.81)	Loss_t 3.79 (3.96)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [5][50/100]	Time 2.66 (2.82)	Loss_s 2.98 (2.80)	Loss_t 4.22 (3.90)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [5][60/100]	Time 2.85 (2.80)	Loss_s 2.85 (2.79)	Loss_t 4.04 (3.91)	Loss_ms 0.06 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [5][70/100]	Time 2.61 (2.80)	Loss_s 2.39 (2.79)	Loss_t 3.52 (3.92)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [5][80/100]	Time 2.80 (2.79)	Loss_s 3.13 (2.79)	Loss_t 4.02 (3.92)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [5][90/100]	Time 2.92 (2.82)	Loss_s 2.80 (2.77)	Loss_t 5.19 (3.97)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [5][100/100]	Time 2.76 (2.83)	Loss_s 3.75 (2.79)	Loss_t 3.72 (3.98)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.187 (0.171)	Data 0.000 (0.018)	
+Mean AP: 27.8%
+Extract Features: [50/76]	Time 0.144 (0.178)	Data 0.000 (0.023)	
+Mean AP: 20.8%
+
+ * Finished epoch   5  model mAP: 27.8%  model_ema mAP: 20.8%  best: 27.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 20.384286165237427
+==> Statistics for epoch 6: 765 clusters, 5495 un-clustered instances
+Epoch: [6][10/100]	Time 2.50 (2.71)	Loss_s 3.54 (2.76)	Loss_t 4.16 (3.77)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [6][20/100]	Time 2.72 (2.66)	Loss_s 2.10 (2.75)	Loss_t 4.43 (3.86)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [6][30/100]	Time 2.61 (2.64)	Loss_s 3.30 (2.83)	Loss_t 3.93 (3.94)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [6][40/100]	Time 2.37 (2.62)	Loss_s 2.72 (2.79)	Loss_t 3.70 (4.03)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [6][50/100]	Time 2.40 (2.64)	Loss_s 2.42 (2.76)	Loss_t 3.91 (4.04)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [6][60/100]	Time 2.60 (2.64)	Loss_s 2.24 (2.75)	Loss_t 4.49 (4.09)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [6][70/100]	Time 4.44 (2.65)	Loss_s 2.56 (2.74)	Loss_t 4.98 (4.12)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [6][80/100]	Time 2.64 (2.63)	Loss_s 1.78 (2.73)	Loss_t 3.59 (4.12)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [6][90/100]	Time 2.46 (2.64)	Loss_s 2.45 (2.75)	Loss_t 5.10 (4.15)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [6][100/100]	Time 2.59 (2.63)	Loss_s 2.82 (2.73)	Loss_t 4.72 (4.17)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.169 (0.182)	Data 0.000 (0.021)	
+Mean AP: 30.2%
+Extract Features: [50/76]	Time 0.195 (0.176)	Data 0.000 (0.019)	
+Mean AP: 24.1%
+
+ * Finished epoch   6  model mAP: 30.2%  model_ema mAP: 24.1%  best: 30.2% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 19.34520649909973
+==> Statistics for epoch 7: 785 clusters, 4591 un-clustered instances
+Epoch: [7][10/100]	Time 2.34 (2.58)	Loss_s 2.21 (2.38)	Loss_t 4.79 (4.64)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [7][20/100]	Time 2.36 (2.50)	Loss_s 2.31 (2.50)	Loss_t 4.64 (4.34)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [7][30/100]	Time 2.42 (2.47)	Loss_s 2.49 (2.59)	Loss_t 4.61 (4.27)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [7][40/100]	Time 2.42 (2.43)	Loss_s 2.39 (2.56)	Loss_t 4.51 (4.21)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [7][50/100]	Time 2.61 (2.48)	Loss_s 2.49 (2.54)	Loss_t 4.36 (4.29)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [7][60/100]	Time 2.24 (2.47)	Loss_s 1.79 (2.53)	Loss_t 5.29 (4.36)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [7][70/100]	Time 2.47 (2.48)	Loss_s 2.63 (2.57)	Loss_t 4.72 (4.34)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [7][80/100]	Time 2.28 (2.47)	Loss_s 2.52 (2.56)	Loss_t 4.31 (4.35)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [7][90/100]	Time 2.37 (2.48)	Loss_s 2.06 (2.53)	Loss_t 5.09 (4.38)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [7][100/100]	Time 2.63 (2.48)	Loss_s 1.93 (2.52)	Loss_t 4.24 (4.37)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.155 (0.170)	Data 0.000 (0.019)	
+Mean AP: 36.7%
+Extract Features: [50/76]	Time 0.141 (0.179)	Data 0.000 (0.022)	
+Mean AP: 27.0%
+
+ * Finished epoch   7  model mAP: 36.7%  model_ema mAP: 27.0%  best: 36.7% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 19.057392358779907
+==> Statistics for epoch 8: 792 clusters, 3945 un-clustered instances
+Epoch: [8][10/100]	Time 2.34 (2.55)	Loss_s 2.58 (2.31)	Loss_t 3.52 (4.20)	Loss_ms 0.04 (0.04)	Loss_mt 0.01 (0.02)
+Epoch: [8][20/100]	Time 2.26 (2.45)	Loss_s 2.13 (2.22)	Loss_t 3.61 (4.13)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [8][30/100]	Time 2.26 (2.41)	Loss_s 2.88 (2.26)	Loss_t 3.98 (4.26)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [8][40/100]	Time 2.40 (2.40)	Loss_s 2.84 (2.32)	Loss_t 4.32 (4.35)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [8][50/100]	Time 3.29 (2.48)	Loss_s 2.08 (2.30)	Loss_t 4.63 (4.38)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [8][60/100]	Time 2.40 (2.51)	Loss_s 2.49 (2.29)	Loss_t 3.89 (4.38)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [8][70/100]	Time 3.13 (2.56)	Loss_s 2.59 (2.32)	Loss_t 4.65 (4.43)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [8][80/100]	Time 2.30 (2.57)	Loss_s 1.74 (2.32)	Loss_t 4.57 (4.44)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [8][90/100]	Time 2.34 (2.58)	Loss_s 2.34 (2.34)	Loss_t 3.57 (4.44)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [8][100/100]	Time 2.48 (2.58)	Loss_s 2.23 (2.34)	Loss_t 4.71 (4.48)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.126 (0.179)	Data 0.000 (0.022)	
+Mean AP: 44.1%
+Extract Features: [50/76]	Time 0.171 (0.179)	Data 0.000 (0.020)	
+Mean AP: 30.4%
+
+ * Finished epoch   8  model mAP: 44.1%  model_ema mAP: 30.4%  best: 44.1% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 17.722145080566406
+==> Statistics for epoch 9: 806 clusters, 3410 un-clustered instances
+Epoch: [9][10/100]	Time 2.59 (2.45)	Loss_s 2.06 (2.32)	Loss_t 4.67 (4.31)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [9][20/100]	Time 2.44 (2.49)	Loss_s 2.61 (2.28)	Loss_t 3.89 (4.38)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [9][30/100]	Time 2.19 (2.42)	Loss_s 2.08 (2.19)	Loss_t 4.47 (4.41)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [9][40/100]	Time 2.21 (2.37)	Loss_s 2.41 (2.25)	Loss_t 4.66 (4.44)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [9][50/100]	Time 2.23 (2.41)	Loss_s 1.75 (2.21)	Loss_t 4.61 (4.48)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [9][60/100]	Time 2.22 (2.39)	Loss_s 2.26 (2.21)	Loss_t 5.30 (4.52)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [9][70/100]	Time 2.24 (2.39)	Loss_s 2.44 (2.23)	Loss_t 4.73 (4.58)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [9][80/100]	Time 2.18 (2.38)	Loss_s 1.97 (2.24)	Loss_t 4.14 (4.58)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [9][90/100]	Time 2.18 (2.38)	Loss_s 2.40 (2.24)	Loss_t 4.25 (4.60)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [9][100/100]	Time 2.12 (2.36)	Loss_s 1.84 (2.25)	Loss_t 5.19 (4.65)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.150 (0.169)	Data 0.000 (0.017)	
+Mean AP: 44.2%
+Extract Features: [50/76]	Time 0.144 (0.187)	Data 0.000 (0.023)	
+Mean AP: 33.9%
+
+ * Finished epoch   9  model mAP: 44.2%  model_ema mAP: 33.9%  best: 44.2% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.002938508987427
+==> Statistics for epoch 10: 801 clusters, 3001 un-clustered instances
+Epoch: [10][10/100]	Time 2.25 (2.34)	Loss_s 2.34 (2.07)	Loss_t 4.41 (4.68)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [10][20/100]	Time 2.17 (2.29)	Loss_s 2.01 (1.96)	Loss_t 4.53 (4.62)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [10][30/100]	Time 2.35 (2.28)	Loss_s 2.35 (2.14)	Loss_t 4.41 (4.56)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [10][40/100]	Time 2.17 (2.26)	Loss_s 2.34 (2.17)	Loss_t 4.60 (4.61)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [10][50/100]	Time 2.36 (2.29)	Loss_s 2.26 (2.19)	Loss_t 4.34 (4.60)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [10][60/100]	Time 2.18 (2.27)	Loss_s 2.85 (2.19)	Loss_t 5.07 (4.60)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [10][70/100]	Time 2.15 (2.29)	Loss_s 1.60 (2.16)	Loss_t 3.85 (4.61)	Loss_ms 0.03 (0.04)	Loss_mt 0.01 (0.02)
+Epoch: [10][80/100]	Time 2.25 (2.29)	Loss_s 1.83 (2.15)	Loss_t 4.77 (4.65)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [10][90/100]	Time 2.12 (2.29)	Loss_s 2.94 (2.13)	Loss_t 4.55 (4.66)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [10][100/100]	Time 2.24 (2.29)	Loss_s 1.55 (2.10)	Loss_t 4.84 (4.67)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.131 (0.173)	Data 0.000 (0.016)	
+Mean AP: 48.6%
+Extract Features: [50/76]	Time 0.163 (0.173)	Data 0.000 (0.024)	
+Mean AP: 37.5%
+
+ * Finished epoch  10  model mAP: 48.6%  model_ema mAP: 37.5%  best: 48.6% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.563575744628906
+==> Statistics for epoch 11: 795 clusters, 2534 un-clustered instances
+Epoch: [11][10/100]	Time 2.42 (2.50)	Loss_s 2.60 (2.13)	Loss_t 4.47 (4.52)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [11][20/100]	Time 2.73 (2.44)	Loss_s 1.46 (1.97)	Loss_t 4.36 (4.61)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [11][30/100]	Time 2.57 (2.41)	Loss_s 1.84 (2.04)	Loss_t 5.67 (4.68)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [11][40/100]	Time 2.25 (2.40)	Loss_s 1.81 (2.01)	Loss_t 4.87 (4.67)	Loss_ms 0.03 (0.04)	Loss_mt 0.01 (0.02)
+Epoch: [11][50/100]	Time 2.22 (2.43)	Loss_s 1.47 (2.01)	Loss_t 4.91 (4.72)	Loss_ms 0.04 (0.04)	Loss_mt 0.01 (0.02)
+Epoch: [11][60/100]	Time 3.88 (2.45)	Loss_s 2.19 (2.02)	Loss_t 4.68 (4.73)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [11][70/100]	Time 2.26 (2.44)	Loss_s 1.83 (2.03)	Loss_t 5.58 (4.78)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [11][80/100]	Time 2.36 (2.44)	Loss_s 2.33 (2.06)	Loss_t 5.24 (4.75)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [11][90/100]	Time 2.88 (2.44)	Loss_s 1.88 (2.06)	Loss_t 5.75 (4.78)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [11][100/100]	Time 2.15 (2.44)	Loss_s 1.29 (2.05)	Loss_t 4.60 (4.82)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.148 (0.173)	Data 0.000 (0.017)	
+Mean AP: 52.2%
+Extract Features: [50/76]	Time 0.163 (0.173)	Data 0.000 (0.023)	
+Mean AP: 40.4%
+
+ * Finished epoch  11  model mAP: 52.2%  model_ema mAP: 40.4%  best: 52.2% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.306477546691895
+==> Statistics for epoch 12: 780 clusters, 2260 un-clustered instances
+Epoch: [12][10/100]	Time 2.31 (2.51)	Loss_s 1.67 (1.73)	Loss_t 5.04 (4.93)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [12][20/100]	Time 2.29 (2.41)	Loss_s 1.64 (1.85)	Loss_t 4.73 (4.92)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [12][30/100]	Time 2.34 (2.39)	Loss_s 2.09 (1.89)	Loss_t 4.95 (4.84)	Loss_ms 0.04 (0.04)	Loss_mt 0.01 (0.02)
+Epoch: [12][40/100]	Time 2.10 (2.35)	Loss_s 1.84 (1.92)	Loss_t 4.56 (4.82)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [12][50/100]	Time 2.00 (2.36)	Loss_s 1.62 (1.90)	Loss_t 4.76 (4.79)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [12][60/100]	Time 2.82 (2.38)	Loss_s 1.45 (1.89)	Loss_t 5.19 (4.79)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [12][70/100]	Time 2.29 (2.37)	Loss_s 1.83 (1.89)	Loss_t 5.08 (4.75)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [12][80/100]	Time 2.26 (2.36)	Loss_s 1.90 (1.90)	Loss_t 5.02 (4.78)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [12][90/100]	Time 2.21 (2.37)	Loss_s 1.25 (1.90)	Loss_t 5.13 (4.79)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [12][100/100]	Time 2.11 (2.36)	Loss_s 1.81 (1.90)	Loss_t 4.75 (4.83)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.143 (0.164)	Data 0.000 (0.017)	
+Mean AP: 57.1%
+Extract Features: [50/76]	Time 0.145 (0.175)	Data 0.000 (0.029)	
+Mean AP: 43.7%
+
+ * Finished epoch  12  model mAP: 57.1%  model_ema mAP: 43.7%  best: 57.1% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.618452787399292
+==> Statistics for epoch 13: 743 clusters, 2080 un-clustered instances
+Epoch: [13][10/100]	Time 2.14 (2.40)	Loss_s 1.54 (1.78)	Loss_t 4.80 (4.68)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [13][20/100]	Time 2.19 (2.30)	Loss_s 1.48 (1.84)	Loss_t 4.14 (4.71)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [13][30/100]	Time 2.36 (2.30)	Loss_s 1.50 (1.88)	Loss_t 5.04 (4.69)	Loss_ms 0.04 (0.04)	Loss_mt 0.01 (0.02)
+Epoch: [13][40/100]	Time 2.16 (2.27)	Loss_s 1.67 (1.87)	Loss_t 5.02 (4.68)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [13][50/100]	Time 2.21 (2.30)	Loss_s 2.49 (1.89)	Loss_t 4.82 (4.72)	Loss_ms 0.04 (0.04)	Loss_mt 0.01 (0.02)
+Epoch: [13][60/100]	Time 2.37 (2.32)	Loss_s 1.66 (1.86)	Loss_t 4.76 (4.71)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [13][70/100]	Time 2.14 (2.30)	Loss_s 1.11 (1.85)	Loss_t 5.13 (4.81)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [13][80/100]	Time 2.19 (2.30)	Loss_s 1.33 (1.86)	Loss_t 5.49 (4.84)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [13][90/100]	Time 2.05 (2.29)	Loss_s 1.70 (1.86)	Loss_t 5.04 (4.84)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [13][100/100]	Time 1.90 (2.27)	Loss_s 1.42 (1.85)	Loss_t 4.02 (4.81)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.144 (0.177)	Data 0.000 (0.022)	
+Mean AP: 59.6%
+Extract Features: [50/76]	Time 0.158 (0.179)	Data 0.000 (0.020)	
+Mean AP: 47.3%
+
+ * Finished epoch  13  model mAP: 59.6%  model_ema mAP: 47.3%  best: 59.6% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.624232769012451
+==> Statistics for epoch 14: 736 clusters, 1769 un-clustered instances
+Epoch: [14][10/100]	Time 2.19 (2.18)	Loss_s 2.04 (1.86)	Loss_t 4.56 (4.91)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [14][20/100]	Time 2.01 (2.12)	Loss_s 1.49 (1.92)	Loss_t 4.11 (4.79)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [14][30/100]	Time 2.09 (2.09)	Loss_s 2.06 (1.85)	Loss_t 4.50 (4.82)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [14][40/100]	Time 1.94 (2.06)	Loss_s 1.71 (1.84)	Loss_t 4.71 (4.79)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [14][50/100]	Time 1.94 (2.07)	Loss_s 1.77 (1.86)	Loss_t 4.74 (4.76)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [14][60/100]	Time 1.90 (2.10)	Loss_s 2.18 (1.86)	Loss_t 5.51 (4.78)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [14][70/100]	Time 1.90 (2.08)	Loss_s 1.92 (1.85)	Loss_t 5.68 (4.78)	Loss_ms 0.04 (0.04)	Loss_mt 0.01 (0.02)
+Epoch: [14][80/100]	Time 1.86 (2.07)	Loss_s 1.31 (1.82)	Loss_t 6.05 (4.82)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [14][90/100]	Time 1.91 (2.08)	Loss_s 1.46 (1.82)	Loss_t 4.96 (4.84)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [14][100/100]	Time 1.92 (2.07)	Loss_s 1.85 (1.82)	Loss_t 5.23 (4.86)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.148 (0.174)	Data 0.000 (0.021)	
+Mean AP: 61.0%
+Extract Features: [50/76]	Time 0.143 (0.173)	Data 0.000 (0.019)	
+Mean AP: 50.6%
+
+ * Finished epoch  14  model mAP: 61.0%  model_ema mAP: 50.6%  best: 61.0% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.724082231521606
+==> Statistics for epoch 15: 722 clusters, 1655 un-clustered instances
+Epoch: [15][10/100]	Time 2.17 (2.31)	Loss_s 2.14 (1.73)	Loss_t 4.85 (4.77)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [15][20/100]	Time 2.14 (2.20)	Loss_s 1.34 (1.73)	Loss_t 5.27 (4.71)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [15][30/100]	Time 2.10 (2.19)	Loss_s 1.30 (1.79)	Loss_t 5.07 (4.74)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [15][40/100]	Time 1.91 (2.16)	Loss_s 1.66 (1.77)	Loss_t 4.13 (4.73)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [15][50/100]	Time 2.22 (2.19)	Loss_s 0.84 (1.77)	Loss_t 5.27 (4.74)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [15][60/100]	Time 2.06 (2.22)	Loss_s 1.61 (1.77)	Loss_t 5.74 (4.75)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [15][70/100]	Time 2.10 (2.20)	Loss_s 2.19 (1.77)	Loss_t 5.63 (4.76)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [15][80/100]	Time 1.98 (2.20)	Loss_s 1.51 (1.76)	Loss_t 5.51 (4.77)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [15][90/100]	Time 2.22 (2.22)	Loss_s 1.43 (1.76)	Loss_t 4.47 (4.78)	Loss_ms 0.04 (0.04)	Loss_mt 0.01 (0.02)
+Epoch: [15][100/100]	Time 2.14 (2.21)	Loss_s 1.71 (1.73)	Loss_t 5.19 (4.81)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.131 (0.172)	Data 0.000 (0.016)	
+Mean AP: 64.5%
+Extract Features: [50/76]	Time 0.160 (0.174)	Data 0.000 (0.023)	
+Mean AP: 54.1%
+
+ * Finished epoch  15  model mAP: 64.5%  model_ema mAP: 54.1%  best: 64.5% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.1353600025177
+==> Statistics for epoch 16: 706 clusters, 1516 un-clustered instances
+Epoch: [16][10/100]	Time 2.00 (2.19)	Loss_s 1.36 (1.49)	Loss_t 5.35 (4.65)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [16][20/100]	Time 2.09 (2.19)	Loss_s 2.88 (1.65)	Loss_t 4.74 (4.66)	Loss_ms 0.03 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [16][30/100]	Time 2.18 (2.19)	Loss_s 1.55 (1.70)	Loss_t 5.68 (4.68)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [16][40/100]	Time 2.12 (2.18)	Loss_s 1.66 (1.72)	Loss_t 4.28 (4.69)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [16][50/100]	Time 1.92 (2.23)	Loss_s 1.55 (1.69)	Loss_t 4.27 (4.72)	Loss_ms 0.03 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [16][60/100]	Time 2.39 (2.26)	Loss_s 1.52 (1.68)	Loss_t 4.54 (4.75)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [16][70/100]	Time 2.07 (2.24)	Loss_s 1.69 (1.69)	Loss_t 4.96 (4.74)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [16][80/100]	Time 2.01 (2.21)	Loss_s 1.64 (1.70)	Loss_t 4.79 (4.74)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [16][90/100]	Time 1.91 (2.21)	Loss_s 1.37 (1.67)	Loss_t 5.24 (4.78)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [16][100/100]	Time 2.02 (2.20)	Loss_s 1.25 (1.66)	Loss_t 4.92 (4.79)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.126 (0.175)	Data 0.000 (0.019)	
+Mean AP: 66.1%
+Extract Features: [50/76]	Time 0.129 (0.170)	Data 0.000 (0.027)	
+Mean AP: 57.0%
+
+ * Finished epoch  16  model mAP: 66.1%  model_ema mAP: 57.0%  best: 66.1% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.460099697113037
+==> Statistics for epoch 17: 701 clusters, 1388 un-clustered instances
+Epoch: [17][10/100]	Time 2.06 (2.26)	Loss_s 1.18 (1.48)	Loss_t 4.32 (4.34)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [17][20/100]	Time 1.92 (2.13)	Loss_s 1.85 (1.57)	Loss_t 4.80 (4.51)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [17][30/100]	Time 2.00 (2.08)	Loss_s 2.80 (1.69)	Loss_t 5.00 (4.56)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [17][40/100]	Time 1.85 (2.07)	Loss_s 1.42 (1.66)	Loss_t 4.89 (4.63)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [17][50/100]	Time 3.70 (2.13)	Loss_s 1.65 (1.64)	Loss_t 5.21 (4.67)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [17][60/100]	Time 2.01 (2.12)	Loss_s 1.04 (1.65)	Loss_t 5.28 (4.68)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [17][70/100]	Time 2.06 (2.12)	Loss_s 2.00 (1.65)	Loss_t 4.70 (4.69)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [17][80/100]	Time 1.94 (2.12)	Loss_s 1.86 (1.63)	Loss_t 5.13 (4.73)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [17][90/100]	Time 2.07 (2.13)	Loss_s 1.83 (1.63)	Loss_t 4.85 (4.73)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [17][100/100]	Time 2.10 (2.15)	Loss_s 1.61 (1.62)	Loss_t 4.91 (4.75)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.168 (0.177)	Data 0.000 (0.024)	
+Mean AP: 67.6%
+Extract Features: [50/76]	Time 0.145 (0.186)	Data 0.000 (0.030)	
+Mean AP: 59.9%
+
+ * Finished epoch  17  model mAP: 67.6%  model_ema mAP: 59.9%  best: 67.6% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.22113609313965
+==> Statistics for epoch 18: 681 clusters, 1221 un-clustered instances
+Epoch: [18][10/100]	Time 1.93 (2.14)	Loss_s 1.50 (1.50)	Loss_t 4.61 (4.51)	Loss_ms 0.03 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [18][20/100]	Time 2.11 (2.10)	Loss_s 1.10 (1.55)	Loss_t 3.76 (4.60)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [18][30/100]	Time 1.93 (2.08)	Loss_s 1.38 (1.57)	Loss_t 4.86 (4.63)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [18][40/100]	Time 2.08 (2.07)	Loss_s 1.64 (1.59)	Loss_t 4.21 (4.60)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [18][50/100]	Time 2.43 (2.14)	Loss_s 0.99 (1.54)	Loss_t 4.93 (4.61)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [18][60/100]	Time 2.05 (2.12)	Loss_s 1.75 (1.56)	Loss_t 4.69 (4.60)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [18][70/100]	Time 1.92 (2.10)	Loss_s 2.03 (1.60)	Loss_t 4.77 (4.65)	Loss_ms 0.03 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [18][80/100]	Time 2.07 (2.10)	Loss_s 1.24 (1.59)	Loss_t 5.45 (4.64)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [18][90/100]	Time 2.11 (2.12)	Loss_s 1.42 (1.56)	Loss_t 4.70 (4.66)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [18][100/100]	Time 2.27 (2.13)	Loss_s 1.83 (1.56)	Loss_t 5.04 (4.66)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.139 (0.167)	Data 0.000 (0.021)	
+Mean AP: 69.6%
+Extract Features: [50/76]	Time 0.153 (0.174)	Data 0.000 (0.018)	
+Mean AP: 62.7%
+
+ * Finished epoch  18  model mAP: 69.6%  model_ema mAP: 62.7%  best: 69.6% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 14.996699810028076
+==> Statistics for epoch 19: 668 clusters, 1066 un-clustered instances
+Epoch: [19][10/100]	Time 1.89 (2.16)	Loss_s 1.51 (1.56)	Loss_t 4.90 (4.48)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [19][20/100]	Time 2.08 (2.06)	Loss_s 1.31 (1.46)	Loss_t 4.36 (4.48)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [19][30/100]	Time 2.08 (2.04)	Loss_s 1.80 (1.44)	Loss_t 4.05 (4.48)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [19][40/100]	Time 1.89 (2.03)	Loss_s 1.27 (1.45)	Loss_t 5.13 (4.45)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [19][50/100]	Time 1.98 (2.11)	Loss_s 1.37 (1.41)	Loss_t 3.84 (4.51)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [19][60/100]	Time 2.31 (2.09)	Loss_s 2.19 (1.42)	Loss_t 3.88 (4.50)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [19][70/100]	Time 2.03 (2.08)	Loss_s 1.92 (1.42)	Loss_t 5.49 (4.53)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [19][80/100]	Time 2.04 (2.07)	Loss_s 1.71 (1.43)	Loss_t 5.35 (4.55)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [19][90/100]	Time 1.96 (2.07)	Loss_s 1.49 (1.43)	Loss_t 4.31 (4.55)	Loss_ms 0.03 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [19][100/100]	Time 2.19 (2.09)	Loss_s 1.71 (1.45)	Loss_t 4.69 (4.57)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Extract Features: [50/76]	Time 0.152 (0.171)	Data 0.000 (0.016)	
+Mean AP: 71.0%
+Extract Features: [50/76]	Time 0.145 (0.179)	Data 0.000 (0.022)	
+Mean AP: 65.6%
+
+ * Finished epoch  19  model mAP: 71.0%  model_ema mAP: 65.6%  best: 71.0% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.148512363433838
+==> Statistics for epoch 20: 668 clusters, 1016 un-clustered instances
+Epoch: [20][10/100]	Time 2.01 (2.14)	Loss_s 1.41 (1.24)	Loss_t 4.45 (4.35)	Loss_ms 0.04 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [20][20/100]	Time 2.00 (2.05)	Loss_s 1.77 (1.33)	Loss_t 4.67 (4.36)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [20][30/100]	Time 1.89 (2.02)	Loss_s 2.19 (1.39)	Loss_t 4.17 (4.46)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [20][40/100]	Time 1.86 (1.99)	Loss_s 1.72 (1.45)	Loss_t 4.42 (4.38)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [20][50/100]	Time 1.92 (2.07)	Loss_s 1.56 (1.44)	Loss_t 4.99 (4.44)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [20][60/100]	Time 1.83 (2.04)	Loss_s 1.75 (1.47)	Loss_t 5.41 (4.47)	Loss_ms 0.05 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [20][70/100]	Time 1.87 (2.04)	Loss_s 1.78 (1.49)	Loss_t 4.78 (4.51)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [20][80/100]	Time 1.83 (2.03)	Loss_s 1.43 (1.49)	Loss_t 5.35 (4.51)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [20][90/100]	Time 2.21 (2.04)	Loss_s 1.12 (1.48)	Loss_t 4.49 (4.51)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [20][100/100]	Time 1.96 (2.05)	Loss_s 1.23 (1.49)	Loss_t 3.66 (4.49)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.145 (0.177)	Data 0.000 (0.022)	
+Mean AP: 72.0%
+Extract Features: [50/76]	Time 0.200 (0.176)	Data 0.000 (0.020)	
+Mean AP: 67.7%
+
+ * Finished epoch  20  model mAP: 72.0%  model_ema mAP: 67.7%  best: 72.0% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.32620882987976
+==> Statistics for epoch 21: 669 clusters, 948 un-clustered instances
+Epoch: [21][10/100]	Time 1.87 (2.16)	Loss_s 1.35 (1.46)	Loss_t 5.32 (4.30)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [21][20/100]	Time 1.91 (2.05)	Loss_s 1.48 (1.50)	Loss_t 4.33 (4.36)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [21][30/100]	Time 2.07 (2.04)	Loss_s 0.94 (1.47)	Loss_t 3.76 (4.31)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [21][40/100]	Time 1.96 (2.02)	Loss_s 1.65 (1.43)	Loss_t 4.08 (4.37)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [21][50/100]	Time 1.93 (2.07)	Loss_s 1.84 (1.42)	Loss_t 4.16 (4.38)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [21][60/100]	Time 2.06 (2.06)	Loss_s 0.71 (1.40)	Loss_t 4.58 (4.39)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [21][70/100]	Time 2.23 (2.06)	Loss_s 1.46 (1.42)	Loss_t 4.82 (4.38)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [21][80/100]	Time 2.07 (2.04)	Loss_s 1.25 (1.39)	Loss_t 4.19 (4.38)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [21][90/100]	Time 1.97 (2.05)	Loss_s 1.11 (1.39)	Loss_t 5.43 (4.45)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [21][100/100]	Time 1.77 (2.06)	Loss_s 1.37 (1.38)	Loss_t 4.78 (4.44)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.143 (0.177)	Data 0.000 (0.019)	
+Mean AP: 71.7%
+Extract Features: [50/76]	Time 0.148 (0.170)	Data 0.000 (0.020)	
+Mean AP: 69.7%
+
+ * Finished epoch  21  model mAP: 71.7%  model_ema mAP: 69.7%  best: 72.0%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.387000322341919
+==> Statistics for epoch 22: 674 clusters, 873 un-clustered instances
+Epoch: [22][10/100]	Time 1.96 (2.14)	Loss_s 1.75 (1.48)	Loss_t 4.62 (4.36)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [22][20/100]	Time 1.96 (2.08)	Loss_s 1.50 (1.37)	Loss_t 3.83 (4.22)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [22][30/100]	Time 2.00 (2.04)	Loss_s 1.55 (1.39)	Loss_t 3.93 (4.31)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [22][40/100]	Time 1.94 (2.04)	Loss_s 1.41 (1.39)	Loss_t 4.44 (4.32)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [22][50/100]	Time 2.03 (2.09)	Loss_s 1.24 (1.39)	Loss_t 4.56 (4.35)	Loss_ms 0.04 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [22][60/100]	Time 1.94 (2.06)	Loss_s 1.68 (1.38)	Loss_t 4.12 (4.37)	Loss_ms 0.04 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [22][70/100]	Time 2.01 (2.05)	Loss_s 1.42 (1.36)	Loss_t 5.09 (4.36)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [22][80/100]	Time 1.92 (2.04)	Loss_s 1.89 (1.38)	Loss_t 5.10 (4.38)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [22][90/100]	Time 1.88 (2.05)	Loss_s 1.03 (1.38)	Loss_t 3.88 (4.41)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [22][100/100]	Time 1.96 (2.05)	Loss_s 1.05 (1.37)	Loss_t 5.17 (4.41)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Extract Features: [50/76]	Time 0.144 (0.174)	Data 0.000 (0.017)	
+Mean AP: 73.8%
+Extract Features: [50/76]	Time 0.132 (0.171)	Data 0.000 (0.021)	
+Mean AP: 71.7%
+
+ * Finished epoch  22  model mAP: 73.8%  model_ema mAP: 71.7%  best: 73.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.231080770492554
+==> Statistics for epoch 23: 649 clusters, 798 un-clustered instances
+Epoch: [23][10/100]	Time 1.93 (2.12)	Loss_s 1.37 (1.31)	Loss_t 3.61 (4.09)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [23][20/100]	Time 1.86 (2.03)	Loss_s 1.41 (1.46)	Loss_t 4.42 (4.17)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [23][30/100]	Time 1.85 (2.01)	Loss_s 0.79 (1.40)	Loss_t 4.22 (4.23)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [23][40/100]	Time 1.92 (1.99)	Loss_s 1.11 (1.39)	Loss_t 4.88 (4.28)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [23][50/100]	Time 1.93 (2.04)	Loss_s 1.44 (1.34)	Loss_t 4.19 (4.29)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [23][60/100]	Time 1.87 (2.02)	Loss_s 1.47 (1.33)	Loss_t 4.79 (4.29)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [23][70/100]	Time 1.82 (2.00)	Loss_s 1.56 (1.34)	Loss_t 4.62 (4.30)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [23][80/100]	Time 1.80 (1.99)	Loss_s 1.07 (1.34)	Loss_t 4.12 (4.34)	Loss_ms 0.04 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [23][90/100]	Time 1.88 (2.02)	Loss_s 1.40 (1.34)	Loss_t 5.69 (4.37)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [23][100/100]	Time 2.02 (2.02)	Loss_s 1.38 (1.34)	Loss_t 4.85 (4.36)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.200 (0.177)	Data 0.000 (0.020)	
+Mean AP: 74.3%
+Extract Features: [50/76]	Time 0.188 (0.173)	Data 0.000 (0.019)	
+Mean AP: 73.4%
+
+ * Finished epoch  23  model mAP: 74.3%  model_ema mAP: 73.4%  best: 74.3% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.055410385131836
+==> Statistics for epoch 24: 661 clusters, 727 un-clustered instances
+Epoch: [24][10/100]	Time 1.81 (2.15)	Loss_s 0.89 (1.09)	Loss_t 4.49 (4.00)	Loss_ms 0.04 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [24][20/100]	Time 1.91 (2.04)	Loss_s 1.51 (1.24)	Loss_t 3.40 (4.06)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [24][30/100]	Time 1.96 (2.01)	Loss_s 1.49 (1.30)	Loss_t 5.11 (4.20)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [24][40/100]	Time 1.82 (1.98)	Loss_s 1.27 (1.30)	Loss_t 3.42 (4.18)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [24][50/100]	Time 1.75 (2.03)	Loss_s 1.67 (1.28)	Loss_t 3.76 (4.20)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [24][60/100]	Time 1.86 (2.01)	Loss_s 0.92 (1.28)	Loss_t 4.33 (4.16)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [24][70/100]	Time 2.05 (2.01)	Loss_s 1.16 (1.29)	Loss_t 4.11 (4.19)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [24][80/100]	Time 1.83 (1.99)	Loss_s 1.65 (1.32)	Loss_t 3.96 (4.22)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [24][90/100]	Time 1.92 (2.01)	Loss_s 0.98 (1.30)	Loss_t 3.89 (4.25)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [24][100/100]	Time 1.83 (1.99)	Loss_s 1.60 (1.30)	Loss_t 4.95 (4.25)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.149 (0.175)	Data 0.000 (0.019)	
+Mean AP: 75.0%
+Extract Features: [50/76]	Time 0.147 (0.179)	Data 0.000 (0.024)	
+Mean AP: 74.8%
+
+ * Finished epoch  24  model mAP: 75.0%  model_ema mAP: 74.8%  best: 75.0% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 14.41822600364685
+==> Statistics for epoch 25: 651 clusters, 696 un-clustered instances
+Epoch: [25][10/100]	Time 1.96 (1.99)	Loss_s 1.50 (1.23)	Loss_t 4.25 (3.92)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [25][20/100]	Time 1.73 (1.88)	Loss_s 1.20 (1.22)	Loss_t 4.07 (4.04)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [25][30/100]	Time 1.84 (1.85)	Loss_s 1.42 (1.26)	Loss_t 3.75 (4.04)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [25][40/100]	Time 1.72 (1.83)	Loss_s 1.62 (1.27)	Loss_t 4.90 (4.12)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [25][50/100]	Time 1.76 (1.89)	Loss_s 1.82 (1.27)	Loss_t 4.33 (4.15)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [25][60/100]	Time 1.72 (1.88)	Loss_s 1.49 (1.30)	Loss_t 4.07 (4.12)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [25][70/100]	Time 1.75 (1.87)	Loss_s 1.06 (1.30)	Loss_t 4.87 (4.15)	Loss_ms 0.04 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [25][80/100]	Time 1.73 (1.86)	Loss_s 1.16 (1.30)	Loss_t 4.36 (4.18)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [25][90/100]	Time 1.87 (1.89)	Loss_s 1.18 (1.29)	Loss_t 4.38 (4.19)	Loss_ms 0.04 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [25][100/100]	Time 1.77 (1.88)	Loss_s 2.17 (1.29)	Loss_t 4.01 (4.20)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.129 (0.180)	Data 0.000 (0.017)	
+Mean AP: 73.7%
+Extract Features: [50/76]	Time 0.134 (0.169)	Data 0.000 (0.018)	
+Mean AP: 76.3%
+
+ * Finished epoch  25  model mAP: 73.7%  model_ema mAP: 76.3%  best: 76.3% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.317517518997192
+==> Statistics for epoch 26: 655 clusters, 688 un-clustered instances
+Epoch: [26][10/100]	Time 1.83 (1.96)	Loss_s 0.95 (1.20)	Loss_t 3.31 (3.98)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [26][20/100]	Time 1.84 (1.89)	Loss_s 1.09 (1.25)	Loss_t 3.98 (3.91)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [26][30/100]	Time 1.90 (1.87)	Loss_s 1.29 (1.25)	Loss_t 3.47 (3.95)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [26][40/100]	Time 1.80 (1.85)	Loss_s 1.51 (1.28)	Loss_t 4.31 (4.04)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [26][50/100]	Time 1.81 (1.91)	Loss_s 1.73 (1.28)	Loss_t 4.25 (4.09)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [26][60/100]	Time 1.74 (1.89)	Loss_s 0.96 (1.26)	Loss_t 4.11 (4.07)	Loss_ms 0.04 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [26][70/100]	Time 1.78 (1.88)	Loss_s 0.96 (1.25)	Loss_t 4.68 (4.07)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [26][80/100]	Time 1.70 (1.86)	Loss_s 1.33 (1.25)	Loss_t 3.53 (4.10)	Loss_ms 0.04 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [26][90/100]	Time 1.74 (1.89)	Loss_s 1.31 (1.25)	Loss_t 4.17 (4.11)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [26][100/100]	Time 1.77 (1.88)	Loss_s 1.38 (1.24)	Loss_t 3.31 (4.09)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.188 (0.172)	Data 0.000 (0.017)	
+Mean AP: 75.0%
+Extract Features: [50/76]	Time 0.140 (0.175)	Data 0.000 (0.019)	
+Mean AP: 77.1%
+
+ * Finished epoch  26  model mAP: 75.0%  model_ema mAP: 77.1%  best: 77.1% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 14.50468897819519
+==> Statistics for epoch 27: 658 clusters, 640 un-clustered instances
+Epoch: [27][10/100]	Time 1.84 (1.95)	Loss_s 0.88 (1.11)	Loss_t 3.17 (3.82)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [27][20/100]	Time 1.80 (1.87)	Loss_s 1.28 (1.18)	Loss_t 4.12 (3.87)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [27][30/100]	Time 1.74 (1.84)	Loss_s 1.13 (1.17)	Loss_t 3.31 (3.88)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [27][40/100]	Time 1.69 (1.82)	Loss_s 1.12 (1.16)	Loss_t 4.30 (4.00)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [27][50/100]	Time 1.74 (1.87)	Loss_s 1.14 (1.14)	Loss_t 4.22 (4.04)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [27][60/100]	Time 1.72 (1.84)	Loss_s 0.86 (1.14)	Loss_t 3.77 (4.06)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [27][70/100]	Time 1.78 (1.83)	Loss_s 1.25 (1.14)	Loss_t 4.80 (4.05)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [27][80/100]	Time 1.70 (1.83)	Loss_s 0.98 (1.16)	Loss_t 4.84 (4.06)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [27][90/100]	Time 1.79 (1.86)	Loss_s 1.04 (1.16)	Loss_t 4.11 (4.07)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [27][100/100]	Time 1.86 (1.85)	Loss_s 1.73 (1.18)	Loss_t 3.87 (4.09)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.146 (0.160)	Data 0.000 (0.017)	
+Mean AP: 75.8%
+Extract Features: [50/76]	Time 0.180 (0.177)	Data 0.001 (0.022)	
+Mean AP: 78.2%
+
+ * Finished epoch  27  model mAP: 75.8%  model_ema mAP: 78.2%  best: 78.2% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 14.786202907562256
+==> Statistics for epoch 28: 660 clusters, 578 un-clustered instances
+Epoch: [28][10/100]	Time 1.75 (1.96)	Loss_s 1.47 (1.30)	Loss_t 3.43 (4.09)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [28][20/100]	Time 1.82 (1.89)	Loss_s 0.80 (1.26)	Loss_t 4.05 (3.87)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [28][30/100]	Time 1.69 (1.85)	Loss_s 1.36 (1.19)	Loss_t 3.68 (3.97)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [28][40/100]	Time 1.68 (1.82)	Loss_s 1.12 (1.18)	Loss_t 3.55 (3.97)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [28][50/100]	Time 2.00 (1.89)	Loss_s 1.09 (1.16)	Loss_t 4.76 (3.96)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [28][60/100]	Time 1.72 (1.87)	Loss_s 1.37 (1.16)	Loss_t 4.60 (3.97)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [28][70/100]	Time 1.67 (1.85)	Loss_s 1.14 (1.15)	Loss_t 3.84 (4.00)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [28][80/100]	Time 1.66 (1.84)	Loss_s 1.52 (1.16)	Loss_t 4.57 (4.02)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [28][90/100]	Time 1.80 (1.87)	Loss_s 0.86 (1.17)	Loss_t 3.37 (4.01)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [28][100/100]	Time 1.78 (1.86)	Loss_s 1.29 (1.17)	Loss_t 4.55 (4.00)	Loss_ms 0.05 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.221 (0.167)	Data 0.000 (0.018)	
+Mean AP: 76.3%
+Extract Features: [50/76]	Time 0.155 (0.173)	Data 0.000 (0.018)	
+Mean AP: 79.1%
+
+ * Finished epoch  28  model mAP: 76.3%  model_ema mAP: 79.1%  best: 79.1% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 14.287050247192383
+==> Statistics for epoch 29: 650 clusters, 511 un-clustered instances
+Epoch: [29][10/100]	Time 1.71 (1.88)	Loss_s 0.85 (1.17)	Loss_t 3.92 (3.77)	Loss_ms 0.03 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [29][20/100]	Time 1.74 (1.82)	Loss_s 0.77 (1.19)	Loss_t 4.60 (3.88)	Loss_ms 0.04 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [29][30/100]	Time 1.73 (1.81)	Loss_s 1.08 (1.17)	Loss_t 4.21 (3.91)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [29][40/100]	Time 1.73 (1.79)	Loss_s 1.26 (1.17)	Loss_t 4.10 (3.93)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [29][50/100]	Time 1.69 (1.85)	Loss_s 1.22 (1.16)	Loss_t 4.48 (3.94)	Loss_ms 0.03 (0.04)	Loss_mt 0.03 (0.02)
+Epoch: [29][60/100]	Time 1.67 (1.84)	Loss_s 1.43 (1.18)	Loss_t 3.82 (3.93)	Loss_ms 0.03 (0.04)	Loss_mt 0.02 (0.02)
+Epoch: [29][70/100]	Time 1.69 (1.83)	Loss_s 1.63 (1.19)	Loss_t 3.81 (3.94)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [29][80/100]	Time 1.64 (1.82)	Loss_s 1.15 (1.18)	Loss_t 4.12 (3.95)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [29][90/100]	Time 1.80 (1.86)	Loss_s 1.82 (1.17)	Loss_t 4.64 (3.98)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [29][100/100]	Time 1.80 (1.85)	Loss_s 1.12 (1.18)	Loss_t 4.21 (3.99)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Extract Features: [50/76]	Time 0.149 (0.171)	Data 0.000 (0.017)	
+Mean AP: 76.6%
+Extract Features: [50/76]	Time 0.150 (0.174)	Data 0.000 (0.022)	
+Mean AP: 79.8%
+
+ * Finished epoch  29  model mAP: 76.6%  model_ema mAP: 79.8%  best: 79.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 14.597636938095093
+==> Statistics for epoch 30: 646 clusters, 499 un-clustered instances
+Epoch: [30][10/100]	Time 1.71 (1.97)	Loss_s 1.55 (1.16)	Loss_t 3.77 (3.71)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [30][20/100]	Time 1.75 (1.90)	Loss_s 1.28 (1.12)	Loss_t 3.78 (3.72)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [30][30/100]	Time 1.94 (1.87)	Loss_s 1.10 (1.09)	Loss_t 3.66 (3.85)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [30][40/100]	Time 1.70 (1.84)	Loss_s 1.06 (1.09)	Loss_t 4.08 (3.85)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [30][50/100]	Time 1.72 (1.89)	Loss_s 0.80 (1.04)	Loss_t 3.20 (3.84)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [30][60/100]	Time 1.75 (1.87)	Loss_s 0.90 (1.02)	Loss_t 3.81 (3.84)	Loss_ms 0.02 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [30][70/100]	Time 1.73 (1.86)	Loss_s 1.01 (1.00)	Loss_t 3.49 (3.82)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [30][80/100]	Time 1.65 (1.85)	Loss_s 0.72 (1.00)	Loss_t 4.11 (3.85)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [30][90/100]	Time 1.69 (1.88)	Loss_s 0.69 (0.98)	Loss_t 2.90 (3.81)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [30][100/100]	Time 1.71 (1.86)	Loss_s 0.67 (0.97)	Loss_t 4.86 (3.79)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.171 (0.177)	Data 0.000 (0.017)	
+Mean AP: 80.8%
+Extract Features: [50/76]	Time 0.175 (0.173)	Data 0.000 (0.017)	
+Mean AP: 80.4%
+
+ * Finished epoch  30  model mAP: 80.8%  model_ema mAP: 80.4%  best: 80.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 14.531583547592163
+==> Statistics for epoch 31: 644 clusters, 391 un-clustered instances
+Epoch: [31][10/100]	Time 1.67 (1.92)	Loss_s 0.57 (0.76)	Loss_t 2.89 (3.17)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [31][20/100]	Time 1.71 (1.86)	Loss_s 0.65 (0.76)	Loss_t 3.33 (3.32)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [31][30/100]	Time 1.73 (1.83)	Loss_s 0.94 (0.78)	Loss_t 2.61 (3.34)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [31][40/100]	Time 1.73 (1.80)	Loss_s 0.98 (0.77)	Loss_t 4.08 (3.32)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [31][50/100]	Time 1.78 (1.86)	Loss_s 0.65 (0.78)	Loss_t 4.24 (3.38)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [31][60/100]	Time 1.70 (1.85)	Loss_s 0.79 (0.79)	Loss_t 2.69 (3.37)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [31][70/100]	Time 1.79 (1.83)	Loss_s 0.58 (0.78)	Loss_t 3.36 (3.38)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [31][80/100]	Time 1.74 (1.82)	Loss_s 0.85 (0.78)	Loss_t 3.14 (3.39)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [31][90/100]	Time 1.85 (1.86)	Loss_s 0.86 (0.78)	Loss_t 4.27 (3.39)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [31][100/100]	Time 1.94 (1.85)	Loss_s 0.87 (0.78)	Loss_t 3.69 (3.43)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.181 (0.180)	Data 0.000 (0.025)	
+Mean AP: 81.4%
+Extract Features: [50/76]	Time 0.160 (0.170)	Data 0.000 (0.024)	
+Mean AP: 80.9%
+
+ * Finished epoch  31  model mAP: 81.4%  model_ema mAP: 80.9%  best: 81.4% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.616460800170898
+==> Statistics for epoch 32: 640 clusters, 392 un-clustered instances
+Epoch: [32][10/100]	Time 1.69 (1.94)	Loss_s 0.93 (0.72)	Loss_t 4.40 (3.40)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [32][20/100]	Time 1.79 (1.87)	Loss_s 0.76 (0.73)	Loss_t 3.91 (3.28)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [32][30/100]	Time 1.68 (1.83)	Loss_s 0.73 (0.76)	Loss_t 2.28 (3.23)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [32][40/100]	Time 1.62 (1.81)	Loss_s 0.59 (0.75)	Loss_t 2.95 (3.25)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [32][50/100]	Time 1.75 (1.87)	Loss_s 0.92 (0.76)	Loss_t 4.40 (3.28)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [32][60/100]	Time 1.88 (1.86)	Loss_s 0.69 (0.75)	Loss_t 3.45 (3.32)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [32][70/100]	Time 1.90 (1.84)	Loss_s 1.07 (0.73)	Loss_t 2.62 (3.32)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [32][80/100]	Time 1.76 (1.84)	Loss_s 0.73 (0.72)	Loss_t 3.47 (3.33)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [32][90/100]	Time 1.81 (1.87)	Loss_s 0.86 (0.72)	Loss_t 3.75 (3.33)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [32][100/100]	Time 1.82 (1.86)	Loss_s 1.10 (0.73)	Loss_t 3.03 (3.34)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.140 (0.172)	Data 0.000 (0.017)	
+Mean AP: 81.8%
+Extract Features: [50/76]	Time 0.147 (0.174)	Data 0.000 (0.023)	
+Mean AP: 81.2%
+
+ * Finished epoch  32  model mAP: 81.8%  model_ema mAP: 81.2%  best: 81.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.810475587844849
+==> Statistics for epoch 33: 643 clusters, 398 un-clustered instances
+Epoch: [33][10/100]	Time 1.73 (1.95)	Loss_s 0.97 (0.86)	Loss_t 3.41 (3.33)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [33][20/100]	Time 1.87 (1.85)	Loss_s 1.07 (0.82)	Loss_t 2.77 (3.21)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [33][30/100]	Time 1.87 (1.84)	Loss_s 0.88 (0.79)	Loss_t 3.17 (3.17)	Loss_ms 0.02 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [33][40/100]	Time 1.82 (1.84)	Loss_s 0.60 (0.75)	Loss_t 2.81 (3.18)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [33][50/100]	Time 1.98 (1.93)	Loss_s 0.84 (0.75)	Loss_t 3.16 (3.20)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [33][60/100]	Time 1.90 (1.92)	Loss_s 1.16 (0.76)	Loss_t 3.18 (3.24)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [33][70/100]	Time 1.76 (1.90)	Loss_s 0.63 (0.76)	Loss_t 3.09 (3.25)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [33][80/100]	Time 1.75 (1.88)	Loss_s 0.82 (0.75)	Loss_t 3.71 (3.25)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [33][90/100]	Time 1.66 (1.92)	Loss_s 0.85 (0.76)	Loss_t 2.89 (3.24)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [33][100/100]	Time 1.99 (1.92)	Loss_s 0.44 (0.75)	Loss_t 3.28 (3.26)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.160 (0.173)	Data 0.000 (0.019)	
+Mean AP: 81.9%
+Extract Features: [50/76]	Time 0.157 (0.177)	Data 0.000 (0.020)	
+Mean AP: 81.7%
+
+ * Finished epoch  33  model mAP: 81.9%  model_ema mAP: 81.7%  best: 81.9% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.821706056594849
+==> Statistics for epoch 34: 648 clusters, 378 un-clustered instances
+Epoch: [34][10/100]	Time 1.69 (1.89)	Loss_s 0.87 (0.67)	Loss_t 2.31 (2.91)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [34][20/100]	Time 1.79 (1.83)	Loss_s 0.57 (0.65)	Loss_t 3.54 (3.08)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [34][30/100]	Time 1.77 (1.82)	Loss_s 1.05 (0.70)	Loss_t 2.55 (3.11)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [34][40/100]	Time 1.65 (1.80)	Loss_s 0.80 (0.70)	Loss_t 3.33 (3.11)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [34][50/100]	Time 1.67 (1.86)	Loss_s 0.59 (0.71)	Loss_t 3.54 (3.13)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [34][60/100]	Time 1.86 (1.85)	Loss_s 1.09 (0.71)	Loss_t 3.17 (3.16)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [34][70/100]	Time 1.79 (1.85)	Loss_s 0.69 (0.72)	Loss_t 2.60 (3.18)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [34][80/100]	Time 1.66 (1.84)	Loss_s 0.64 (0.72)	Loss_t 3.63 (3.19)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [34][90/100]	Time 1.75 (1.87)	Loss_s 0.60 (0.72)	Loss_t 3.01 (3.24)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [34][100/100]	Time 1.71 (1.86)	Loss_s 0.69 (0.72)	Loss_t 2.90 (3.24)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.166 (0.173)	Data 0.000 (0.020)	
+Mean AP: 82.2%
+Extract Features: [50/76]	Time 0.151 (0.183)	Data 0.000 (0.024)	
+Mean AP: 82.1%
+
+ * Finished epoch  34  model mAP: 82.2%  model_ema mAP: 82.1%  best: 82.2% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.841639518737793
+==> Statistics for epoch 35: 641 clusters, 313 un-clustered instances
+Epoch: [35][10/100]	Time 1.76 (1.90)	Loss_s 0.80 (0.73)	Loss_t 2.16 (3.04)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [35][20/100]	Time 1.65 (1.82)	Loss_s 0.65 (0.70)	Loss_t 2.48 (3.10)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [35][30/100]	Time 1.84 (1.80)	Loss_s 0.82 (0.73)	Loss_t 3.00 (3.07)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [35][40/100]	Time 1.78 (1.78)	Loss_s 0.64 (0.72)	Loss_t 3.26 (3.03)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [35][50/100]	Time 1.80 (1.87)	Loss_s 0.98 (0.72)	Loss_t 3.47 (3.04)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [35][60/100]	Time 1.76 (1.85)	Loss_s 0.45 (0.70)	Loss_t 2.59 (3.04)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [35][70/100]	Time 1.91 (1.85)	Loss_s 0.80 (0.70)	Loss_t 3.78 (3.10)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [35][80/100]	Time 1.64 (1.83)	Loss_s 0.51 (0.71)	Loss_t 3.16 (3.11)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [35][90/100]	Time 1.80 (1.86)	Loss_s 0.49 (0.71)	Loss_t 3.31 (3.11)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [35][100/100]	Time 1.82 (1.85)	Loss_s 0.94 (0.71)	Loss_t 3.46 (3.12)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.156 (0.176)	Data 0.000 (0.020)	
+Mean AP: 82.5%
+Extract Features: [50/76]	Time 0.145 (0.174)	Data 0.000 (0.022)	
+Mean AP: 82.3%
+
+ * Finished epoch  35  model mAP: 82.5%  model_ema mAP: 82.3%  best: 82.5% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.211607694625854
+==> Statistics for epoch 36: 640 clusters, 287 un-clustered instances
+Epoch: [36][10/100]	Time 1.82 (1.97)	Loss_s 0.38 (0.59)	Loss_t 3.32 (3.02)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [36][20/100]	Time 1.86 (1.87)	Loss_s 0.79 (0.65)	Loss_t 2.62 (2.91)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [36][30/100]	Time 1.74 (1.83)	Loss_s 0.94 (0.68)	Loss_t 2.16 (2.98)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [36][40/100]	Time 1.74 (1.80)	Loss_s 0.56 (0.68)	Loss_t 2.84 (2.97)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [36][50/100]	Time 1.75 (1.86)	Loss_s 0.68 (0.68)	Loss_t 3.12 (3.02)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [36][60/100]	Time 1.82 (1.85)	Loss_s 0.72 (0.68)	Loss_t 2.98 (3.08)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [36][70/100]	Time 1.78 (1.84)	Loss_s 0.81 (0.68)	Loss_t 3.13 (3.09)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [36][80/100]	Time 1.65 (1.83)	Loss_s 0.65 (0.67)	Loss_t 3.24 (3.08)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [36][90/100]	Time 1.79 (1.86)	Loss_s 0.83 (0.68)	Loss_t 3.33 (3.07)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [36][100/100]	Time 1.72 (1.86)	Loss_s 0.60 (0.67)	Loss_t 3.57 (3.10)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.164 (0.181)	Data 0.000 (0.022)	
+Mean AP: 82.2%
+Extract Features: [50/76]	Time 0.155 (0.166)	Data 0.000 (0.019)	
+Mean AP: 82.5%
+
+ * Finished epoch  36  model mAP: 82.2%  model_ema mAP: 82.5%  best: 82.5%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.224801778793335
+==> Statistics for epoch 37: 644 clusters, 275 un-clustered instances
+Epoch: [37][10/100]	Time 1.82 (1.88)	Loss_s 0.52 (0.59)	Loss_t 2.70 (3.00)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [37][20/100]	Time 1.69 (1.80)	Loss_s 0.52 (0.64)	Loss_t 4.26 (2.97)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [37][30/100]	Time 1.84 (1.80)	Loss_s 0.61 (0.63)	Loss_t 3.78 (3.03)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [37][40/100]	Time 1.77 (1.79)	Loss_s 0.94 (0.65)	Loss_t 2.76 (2.96)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [37][50/100]	Time 1.89 (1.85)	Loss_s 0.45 (0.65)	Loss_t 3.50 (2.97)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [37][60/100]	Time 1.83 (1.84)	Loss_s 0.56 (0.67)	Loss_t 3.08 (2.98)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [37][70/100]	Time 1.71 (1.83)	Loss_s 0.90 (0.68)	Loss_t 3.11 (2.99)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [37][80/100]	Time 1.73 (1.81)	Loss_s 0.72 (0.68)	Loss_t 3.09 (2.99)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [37][90/100]	Time 1.72 (1.84)	Loss_s 0.54 (0.68)	Loss_t 2.59 (3.02)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [37][100/100]	Time 1.69 (1.83)	Loss_s 0.65 (0.69)	Loss_t 2.71 (3.03)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.145 (0.190)	Data 0.000 (0.033)	
+Mean AP: 82.4%
+Extract Features: [50/76]	Time 0.149 (0.179)	Data 0.000 (0.016)	
+Mean AP: 82.7%
+
+ * Finished epoch  37  model mAP: 82.4%  model_ema mAP: 82.7%  best: 82.7% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.874319791793823
+==> Statistics for epoch 38: 642 clusters, 283 un-clustered instances
+Epoch: [38][10/100]	Time 1.73 (1.89)	Loss_s 0.60 (0.58)	Loss_t 3.50 (2.92)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [38][20/100]	Time 1.79 (1.81)	Loss_s 0.61 (0.62)	Loss_t 2.30 (2.86)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [38][30/100]	Time 1.67 (1.78)	Loss_s 0.78 (0.65)	Loss_t 3.02 (2.86)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [38][40/100]	Time 1.65 (1.76)	Loss_s 0.68 (0.65)	Loss_t 2.70 (2.87)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [38][50/100]	Time 1.67 (1.83)	Loss_s 0.60 (0.64)	Loss_t 3.70 (2.90)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [38][60/100]	Time 1.69 (1.83)	Loss_s 0.63 (0.64)	Loss_t 3.62 (2.95)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [38][70/100]	Time 1.72 (1.82)	Loss_s 0.50 (0.65)	Loss_t 3.09 (2.97)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [38][80/100]	Time 1.70 (1.80)	Loss_s 0.49 (0.65)	Loss_t 2.40 (2.97)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [38][90/100]	Time 1.75 (1.84)	Loss_s 0.41 (0.66)	Loss_t 3.23 (2.98)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [38][100/100]	Time 1.74 (1.83)	Loss_s 0.74 (0.65)	Loss_t 3.14 (3.00)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.153 (0.166)	Data 0.000 (0.018)	
+Mean AP: 82.6%
+Extract Features: [50/76]	Time 0.206 (0.170)	Data 0.000 (0.020)	
+Mean AP: 83.0%
+
+ * Finished epoch  38  model mAP: 82.6%  model_ema mAP: 83.0%  best: 83.0% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.089487552642822
+==> Statistics for epoch 39: 648 clusters, 261 un-clustered instances
+Epoch: [39][10/100]	Time 1.82 (1.88)	Loss_s 0.64 (0.59)	Loss_t 3.13 (2.96)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [39][20/100]	Time 1.77 (1.82)	Loss_s 0.51 (0.62)	Loss_t 3.08 (2.82)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [39][30/100]	Time 1.71 (1.79)	Loss_s 1.03 (0.64)	Loss_t 2.59 (2.81)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [39][40/100]	Time 1.66 (1.76)	Loss_s 0.70 (0.63)	Loss_t 2.62 (2.84)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [39][50/100]	Time 1.68 (1.82)	Loss_s 0.39 (0.63)	Loss_t 3.73 (2.88)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [39][60/100]	Time 1.79 (1.82)	Loss_s 0.69 (0.63)	Loss_t 2.83 (2.89)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [39][70/100]	Time 1.74 (1.80)	Loss_s 0.85 (0.62)	Loss_t 2.77 (2.88)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [39][80/100]	Time 1.74 (1.80)	Loss_s 0.61 (0.63)	Loss_t 2.40 (2.89)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [39][90/100]	Time 1.86 (1.84)	Loss_s 0.57 (0.62)	Loss_t 4.03 (2.94)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [39][100/100]	Time 1.74 (1.83)	Loss_s 0.64 (0.63)	Loss_t 2.68 (2.94)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.181 (0.170)	Data 0.000 (0.017)	
+Mean AP: 82.6%
+Extract Features: [50/76]	Time 0.148 (0.172)	Data 0.000 (0.021)	
+Mean AP: 83.0%
+
+ * Finished epoch  39  model mAP: 82.6%  model_ema mAP: 83.0%  best: 83.0% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.116754055023193
+==> Statistics for epoch 40: 640 clusters, 276 un-clustered instances
+Epoch: [40][10/100]	Time 1.82 (1.95)	Loss_s 0.68 (0.65)	Loss_t 2.80 (2.94)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [40][20/100]	Time 1.71 (1.85)	Loss_s 0.47 (0.65)	Loss_t 2.96 (2.94)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [40][30/100]	Time 1.71 (1.81)	Loss_s 0.71 (0.67)	Loss_t 2.24 (2.86)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [40][40/100]	Time 1.81 (1.80)	Loss_s 0.74 (0.66)	Loss_t 2.63 (2.84)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [40][50/100]	Time 1.83 (1.87)	Loss_s 0.57 (0.65)	Loss_t 3.19 (2.84)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [40][60/100]	Time 1.76 (1.86)	Loss_s 0.36 (0.64)	Loss_t 3.10 (2.82)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [40][70/100]	Time 1.74 (1.85)	Loss_s 0.58 (0.64)	Loss_t 3.15 (2.87)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [40][80/100]	Time 1.69 (1.84)	Loss_s 0.47 (0.64)	Loss_t 2.97 (2.88)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [40][90/100]	Time 1.70 (1.87)	Loss_s 0.87 (0.64)	Loss_t 2.77 (2.88)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [40][100/100]	Time 1.76 (1.86)	Loss_s 0.79 (0.63)	Loss_t 3.49 (2.89)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Extract Features: [50/76]	Time 0.149 (0.175)	Data 0.000 (0.020)	
+Mean AP: 82.7%
+Extract Features: [50/76]	Time 0.172 (0.173)	Data 0.000 (0.020)	
+Mean AP: 83.1%
+
+ * Finished epoch  40  model mAP: 82.7%  model_ema mAP: 83.1%  best: 83.1% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.496537208557129
+==> Statistics for epoch 41: 640 clusters, 232 un-clustered instances
+Epoch: [41][10/100]	Time 1.70 (1.87)	Loss_s 0.62 (0.64)	Loss_t 2.69 (2.92)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [41][20/100]	Time 1.72 (1.79)	Loss_s 0.52 (0.62)	Loss_t 2.57 (2.77)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [41][30/100]	Time 1.74 (1.77)	Loss_s 0.44 (0.60)	Loss_t 3.08 (2.83)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [41][40/100]	Time 1.73 (1.76)	Loss_s 0.67 (0.63)	Loss_t 3.36 (2.81)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [41][50/100]	Time 1.75 (1.82)	Loss_s 0.43 (0.62)	Loss_t 2.61 (2.80)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [41][60/100]	Time 1.86 (1.81)	Loss_s 0.48 (0.61)	Loss_t 3.08 (2.83)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [41][70/100]	Time 1.74 (1.81)	Loss_s 0.88 (0.61)	Loss_t 3.42 (2.88)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [41][80/100]	Time 1.73 (1.80)	Loss_s 0.70 (0.61)	Loss_t 2.81 (2.85)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [41][90/100]	Time 1.77 (1.84)	Loss_s 0.48 (0.61)	Loss_t 3.28 (2.86)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [41][100/100]	Time 1.65 (1.83)	Loss_s 0.75 (0.60)	Loss_t 3.14 (2.85)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.137 (0.176)	Data 0.000 (0.021)	
+Mean AP: 82.6%
+Extract Features: [50/76]	Time 0.134 (0.176)	Data 0.000 (0.019)	
+Mean AP: 83.2%
+
+ * Finished epoch  41  model mAP: 82.6%  model_ema mAP: 83.2%  best: 83.2% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 14.342395067214966
+==> Statistics for epoch 42: 635 clusters, 227 un-clustered instances
+Epoch: [42][10/100]	Time 1.75 (1.90)	Loss_s 0.80 (0.73)	Loss_t 3.11 (2.84)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [42][20/100]	Time 1.68 (1.83)	Loss_s 0.84 (0.73)	Loss_t 2.85 (2.96)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [42][30/100]	Time 1.73 (1.79)	Loss_s 0.75 (0.69)	Loss_t 3.25 (2.87)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [42][40/100]	Time 1.72 (1.79)	Loss_s 1.01 (0.67)	Loss_t 2.49 (2.85)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [42][50/100]	Time 1.73 (1.85)	Loss_s 0.62 (0.66)	Loss_t 2.81 (2.85)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [42][60/100]	Time 1.69 (1.84)	Loss_s 0.48 (0.64)	Loss_t 2.63 (2.86)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [42][70/100]	Time 1.68 (1.82)	Loss_s 0.83 (0.65)	Loss_t 2.28 (2.87)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [42][80/100]	Time 1.67 (1.81)	Loss_s 0.94 (0.66)	Loss_t 3.05 (2.88)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [42][90/100]	Time 1.91 (1.84)	Loss_s 0.61 (0.65)	Loss_t 2.38 (2.87)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [42][100/100]	Time 1.67 (1.83)	Loss_s 0.94 (0.66)	Loss_t 3.50 (2.87)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.163 (0.179)	Data 0.000 (0.022)	
+Mean AP: 82.6%
+Extract Features: [50/76]	Time 0.211 (0.181)	Data 0.000 (0.022)	
+Mean AP: 83.3%
+
+ * Finished epoch  42  model mAP: 82.6%  model_ema mAP: 83.3%  best: 83.3% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.514046430587769
+==> Statistics for epoch 43: 640 clusters, 227 un-clustered instances
+Epoch: [43][10/100]	Time 1.90 (1.95)	Loss_s 0.42 (0.54)	Loss_t 2.63 (2.64)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [43][20/100]	Time 1.73 (1.83)	Loss_s 0.70 (0.61)	Loss_t 2.91 (2.78)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [43][30/100]	Time 1.66 (1.79)	Loss_s 0.53 (0.60)	Loss_t 2.79 (2.76)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [43][40/100]	Time 1.65 (1.76)	Loss_s 0.50 (0.61)	Loss_t 3.26 (2.77)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [43][50/100]	Time 1.73 (1.83)	Loss_s 0.43 (0.61)	Loss_t 3.55 (2.80)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [43][60/100]	Time 1.79 (1.82)	Loss_s 0.78 (0.63)	Loss_t 2.62 (2.77)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [43][70/100]	Time 1.82 (1.81)	Loss_s 0.69 (0.63)	Loss_t 3.55 (2.78)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [43][80/100]	Time 1.74 (1.80)	Loss_s 0.57 (0.62)	Loss_t 2.86 (2.81)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [43][90/100]	Time 1.71 (1.84)	Loss_s 0.65 (0.62)	Loss_t 2.96 (2.80)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [43][100/100]	Time 1.78 (1.84)	Loss_s 0.61 (0.62)	Loss_t 3.12 (2.80)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Extract Features: [50/76]	Time 0.142 (0.167)	Data 0.000 (0.016)	
+Mean AP: 82.4%
+Extract Features: [50/76]	Time 0.161 (0.178)	Data 0.000 (0.020)	
+Mean AP: 83.3%
+
+ * Finished epoch  43  model mAP: 82.4%  model_ema mAP: 83.3%  best: 83.3% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.505102157592773
+==> Statistics for epoch 44: 638 clusters, 243 un-clustered instances
+Epoch: [44][10/100]	Time 1.68 (1.87)	Loss_s 0.34 (0.56)	Loss_t 3.37 (2.68)	Loss_ms 0.02 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [44][20/100]	Time 1.70 (1.83)	Loss_s 0.38 (0.58)	Loss_t 2.90 (2.65)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [44][30/100]	Time 1.78 (1.83)	Loss_s 0.67 (0.58)	Loss_t 2.96 (2.73)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [44][40/100]	Time 1.74 (1.81)	Loss_s 0.44 (0.59)	Loss_t 2.52 (2.73)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [44][50/100]	Time 1.79 (1.85)	Loss_s 0.98 (0.60)	Loss_t 2.46 (2.76)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [44][60/100]	Time 1.88 (1.84)	Loss_s 0.51 (0.59)	Loss_t 2.39 (2.78)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [44][70/100]	Time 1.84 (1.83)	Loss_s 0.64 (0.59)	Loss_t 3.83 (2.78)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [44][80/100]	Time 1.68 (1.81)	Loss_s 0.64 (0.59)	Loss_t 3.28 (2.78)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [44][90/100]	Time 1.80 (1.84)	Loss_s 0.53 (0.59)	Loss_t 3.30 (2.81)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [44][100/100]	Time 1.82 (1.83)	Loss_s 0.52 (0.60)	Loss_t 2.35 (2.82)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.128 (0.172)	Data 0.000 (0.023)	
+Mean AP: 82.0%
+Extract Features: [50/76]	Time 0.163 (0.181)	Data 0.000 (0.020)	
+Mean AP: 83.4%
+
+ * Finished epoch  44  model mAP: 82.0%  model_ema mAP: 83.4%  best: 83.4% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.281398057937622
+==> Statistics for epoch 45: 637 clusters, 211 un-clustered instances
+Epoch: [45][10/100]	Time 1.78 (1.92)	Loss_s 0.85 (0.63)	Loss_t 2.14 (2.52)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [45][20/100]	Time 1.82 (1.83)	Loss_s 1.05 (0.66)	Loss_t 2.89 (2.58)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [45][30/100]	Time 1.71 (1.82)	Loss_s 0.69 (0.68)	Loss_t 3.09 (2.68)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [45][40/100]	Time 1.78 (1.80)	Loss_s 0.64 (0.69)	Loss_t 2.95 (2.72)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [45][50/100]	Time 1.79 (1.89)	Loss_s 0.53 (0.67)	Loss_t 2.97 (2.72)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [45][60/100]	Time 1.89 (1.87)	Loss_s 0.73 (0.66)	Loss_t 3.03 (2.71)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [45][70/100]	Time 1.74 (1.85)	Loss_s 0.64 (0.65)	Loss_t 3.41 (2.74)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [45][80/100]	Time 1.75 (1.84)	Loss_s 0.45 (0.64)	Loss_t 2.52 (2.76)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [45][90/100]	Time 1.92 (1.87)	Loss_s 0.59 (0.64)	Loss_t 2.34 (2.76)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [45][100/100]	Time 1.64 (1.86)	Loss_s 0.66 (0.64)	Loss_t 2.73 (2.76)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Extract Features: [50/76]	Time 0.197 (0.179)	Data 0.000 (0.018)	
+Mean AP: 82.3%
+Extract Features: [50/76]	Time 0.149 (0.178)	Data 0.000 (0.024)	
+Mean AP: 83.6%
+
+ * Finished epoch  45  model mAP: 82.3%  model_ema mAP: 83.6%  best: 83.6% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.56510877609253
+==> Statistics for epoch 46: 633 clusters, 211 un-clustered instances
+Epoch: [46][10/100]	Time 1.83 (1.95)	Loss_s 0.54 (0.53)	Loss_t 2.46 (2.57)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [46][20/100]	Time 1.66 (1.86)	Loss_s 0.47 (0.57)	Loss_t 2.79 (2.70)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [46][30/100]	Time 1.70 (1.83)	Loss_s 0.46 (0.56)	Loss_t 3.06 (2.66)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [46][40/100]	Time 1.62 (1.81)	Loss_s 0.52 (0.57)	Loss_t 2.50 (2.67)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [46][50/100]	Time 1.74 (1.87)	Loss_s 0.66 (0.57)	Loss_t 2.95 (2.69)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [46][60/100]	Time 1.78 (1.85)	Loss_s 0.57 (0.56)	Loss_t 2.65 (2.68)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [46][70/100]	Time 1.72 (1.83)	Loss_s 0.49 (0.56)	Loss_t 3.33 (2.74)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [46][80/100]	Time 1.65 (1.81)	Loss_s 0.34 (0.55)	Loss_t 3.80 (2.74)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [46][90/100]	Time 1.88 (1.85)	Loss_s 0.59 (0.56)	Loss_t 3.01 (2.76)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [46][100/100]	Time 1.72 (1.84)	Loss_s 0.47 (0.55)	Loss_t 2.85 (2.74)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Extract Features: [50/76]	Time 0.141 (0.173)	Data 0.000 (0.018)	
+Mean AP: 82.5%
+Extract Features: [50/76]	Time 0.129 (0.173)	Data 0.000 (0.020)	
+Mean AP: 83.5%
+
+ * Finished epoch  46  model mAP: 82.5%  model_ema mAP: 83.5%  best: 83.6%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.406090259552002
+==> Statistics for epoch 47: 642 clusters, 204 un-clustered instances
+Epoch: [47][10/100]	Time 1.83 (1.92)	Loss_s 0.65 (0.56)	Loss_t 2.16 (2.73)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [47][20/100]	Time 1.82 (1.84)	Loss_s 0.47 (0.54)	Loss_t 2.27 (2.72)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [47][30/100]	Time 1.67 (1.83)	Loss_s 0.41 (0.56)	Loss_t 1.74 (2.62)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [47][40/100]	Time 1.76 (1.80)	Loss_s 0.50 (0.57)	Loss_t 2.62 (2.64)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [47][50/100]	Time 1.73 (1.86)	Loss_s 0.91 (0.57)	Loss_t 3.15 (2.66)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [47][60/100]	Time 1.70 (1.85)	Loss_s 0.33 (0.57)	Loss_t 3.47 (2.65)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [47][70/100]	Time 1.78 (1.84)	Loss_s 0.44 (0.57)	Loss_t 2.55 (2.67)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [47][80/100]	Time 1.62 (1.83)	Loss_s 0.63 (0.58)	Loss_t 2.13 (2.66)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [47][90/100]	Time 1.91 (1.87)	Loss_s 0.56 (0.58)	Loss_t 3.21 (2.68)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [47][100/100]	Time 1.67 (1.86)	Loss_s 0.46 (0.58)	Loss_t 2.69 (2.69)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.145 (0.168)	Data 0.000 (0.019)	
+Mean AP: 82.3%
+Extract Features: [50/76]	Time 0.146 (0.174)	Data 0.000 (0.020)	
+Mean AP: 83.6%
+
+ * Finished epoch  47  model mAP: 82.3%  model_ema mAP: 83.6%  best: 83.6% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.484520673751831
+==> Statistics for epoch 48: 631 clusters, 202 un-clustered instances
+Epoch: [48][10/100]	Time 1.83 (1.96)	Loss_s 0.72 (0.60)	Loss_t 3.58 (2.58)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [48][20/100]	Time 1.66 (1.85)	Loss_s 0.48 (0.59)	Loss_t 2.41 (2.54)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [48][30/100]	Time 1.89 (1.82)	Loss_s 0.31 (0.55)	Loss_t 2.70 (2.58)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [48][40/100]	Time 1.83 (1.79)	Loss_s 0.64 (0.56)	Loss_t 2.45 (2.54)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [48][50/100]	Time 1.67 (1.85)	Loss_s 0.48 (0.54)	Loss_t 1.71 (2.52)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [48][60/100]	Time 1.69 (1.83)	Loss_s 1.03 (0.55)	Loss_t 2.64 (2.52)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [48][70/100]	Time 1.67 (1.82)	Loss_s 0.77 (0.56)	Loss_t 2.19 (2.54)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [48][80/100]	Time 1.75 (1.80)	Loss_s 0.36 (0.56)	Loss_t 2.72 (2.57)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [48][90/100]	Time 1.97 (1.84)	Loss_s 0.53 (0.57)	Loss_t 2.72 (2.56)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [48][100/100]	Time 1.84 (1.83)	Loss_s 0.48 (0.57)	Loss_t 2.67 (2.57)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.173 (0.174)	Data 0.002 (0.019)	
+Mean AP: 82.4%
+Extract Features: [50/76]	Time 0.167 (0.180)	Data 0.000 (0.024)	
+Mean AP: 83.5%
+
+ * Finished epoch  48  model mAP: 82.4%  model_ema mAP: 83.5%  best: 83.6%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.521178960800171
+==> Statistics for epoch 49: 631 clusters, 179 un-clustered instances
+Epoch: [49][10/100]	Time 1.65 (1.87)	Loss_s 0.40 (0.51)	Loss_t 2.55 (2.49)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [49][20/100]	Time 1.63 (1.78)	Loss_s 0.43 (0.54)	Loss_t 3.07 (2.45)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [49][30/100]	Time 1.69 (1.76)	Loss_s 0.76 (0.56)	Loss_t 2.25 (2.50)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [49][40/100]	Time 1.61 (1.73)	Loss_s 0.33 (0.55)	Loss_t 2.54 (2.55)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [49][50/100]	Time 1.77 (1.82)	Loss_s 0.74 (0.54)	Loss_t 2.08 (2.57)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [49][60/100]	Time 1.75 (1.80)	Loss_s 0.71 (0.55)	Loss_t 3.13 (2.58)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [49][70/100]	Time 1.78 (1.79)	Loss_s 0.45 (0.55)	Loss_t 2.74 (2.59)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [49][80/100]	Time 1.63 (1.77)	Loss_s 0.65 (0.55)	Loss_t 3.10 (2.62)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [49][90/100]	Time 1.65 (1.80)	Loss_s 0.54 (0.55)	Loss_t 2.77 (2.61)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [49][100/100]	Time 1.88 (1.79)	Loss_s 0.67 (0.55)	Loss_t 1.97 (2.64)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.151 (0.177)	Data 0.000 (0.017)	
+Mean AP: 82.6%
+Extract Features: [50/76]	Time 0.143 (0.176)	Data 0.000 (0.022)	
+Mean AP: 83.6%
+
+ * Finished epoch  49  model mAP: 82.6%  model_ema mAP: 83.6%  best: 83.6% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.861331224441528
+==> Statistics for epoch 50: 634 clusters, 181 un-clustered instances
+Epoch: [50][10/100]	Time 1.75 (1.92)	Loss_s 0.64 (0.53)	Loss_t 2.99 (2.60)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [50][20/100]	Time 1.85 (1.88)	Loss_s 0.70 (0.56)	Loss_t 2.61 (2.63)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [50][30/100]	Time 1.94 (1.84)	Loss_s 0.67 (0.55)	Loss_t 2.37 (2.52)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [50][40/100]	Time 1.77 (1.82)	Loss_s 0.60 (0.54)	Loss_t 1.96 (2.55)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [50][50/100]	Time 1.85 (1.89)	Loss_s 0.37 (0.55)	Loss_t 2.84 (2.55)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [50][60/100]	Time 1.80 (1.87)	Loss_s 0.43 (0.57)	Loss_t 2.54 (2.54)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [50][70/100]	Time 1.73 (1.86)	Loss_s 0.46 (0.57)	Loss_t 2.43 (2.57)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [50][80/100]	Time 1.78 (1.85)	Loss_s 0.61 (0.56)	Loss_t 3.17 (2.57)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [50][90/100]	Time 1.80 (1.88)	Loss_s 0.49 (0.56)	Loss_t 2.32 (2.55)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [50][100/100]	Time 1.87 (1.87)	Loss_s 0.61 (0.56)	Loss_t 2.77 (2.55)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.148 (0.184)	Data 0.001 (0.021)	
+Mean AP: 82.8%
+Extract Features: [50/76]	Time 0.165 (0.177)	Data 0.001 (0.019)	
+Mean AP: 83.7%
+
+ * Finished epoch  50  model mAP: 82.8%  model_ema mAP: 83.7%  best: 83.7% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.429075956344604
+==> Statistics for epoch 51: 626 clusters, 171 un-clustered instances
+Epoch: [51][10/100]	Time 1.68 (1.93)	Loss_s 0.63 (0.61)	Loss_t 2.15 (2.30)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [51][20/100]	Time 1.73 (1.85)	Loss_s 0.48 (0.60)	Loss_t 3.10 (2.53)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [51][30/100]	Time 1.74 (1.82)	Loss_s 0.50 (0.59)	Loss_t 2.36 (2.47)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [51][40/100]	Time 3.43 (1.84)	Loss_s 0.53 (0.57)	Loss_t 2.60 (2.50)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [51][50/100]	Time 1.88 (1.86)	Loss_s 0.58 (0.56)	Loss_t 3.34 (2.55)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [51][60/100]	Time 1.69 (1.85)	Loss_s 0.69 (0.56)	Loss_t 1.93 (2.53)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [51][70/100]	Time 1.94 (1.84)	Loss_s 0.32 (0.56)	Loss_t 3.07 (2.53)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [51][80/100]	Time 1.84 (1.85)	Loss_s 0.60 (0.56)	Loss_t 3.53 (2.57)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [51][90/100]	Time 1.67 (1.86)	Loss_s 0.33 (0.56)	Loss_t 2.81 (2.56)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [51][100/100]	Time 1.82 (1.84)	Loss_s 0.57 (0.56)	Loss_t 2.39 (2.57)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.129 (0.180)	Data 0.000 (0.016)	
+Mean AP: 82.5%
+Extract Features: [50/76]	Time 0.159 (0.180)	Data 0.000 (0.021)	
+Mean AP: 83.7%
+
+ * Finished epoch  51  model mAP: 82.5%  model_ema mAP: 83.7%  best: 83.7% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.395471572875977
+==> Statistics for epoch 52: 629 clusters, 139 un-clustered instances
+Epoch: [52][10/100]	Time 1.74 (1.90)	Loss_s 0.65 (0.56)	Loss_t 1.93 (2.39)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [52][20/100]	Time 1.97 (1.85)	Loss_s 0.49 (0.55)	Loss_t 2.60 (2.45)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [52][30/100]	Time 1.93 (1.83)	Loss_s 0.56 (0.54)	Loss_t 3.12 (2.48)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [52][40/100]	Time 3.78 (1.85)	Loss_s 0.47 (0.54)	Loss_t 2.92 (2.48)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [52][50/100]	Time 1.82 (1.85)	Loss_s 0.50 (0.54)	Loss_t 2.64 (2.48)	Loss_ms 0.02 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [52][60/100]	Time 1.65 (1.84)	Loss_s 0.62 (0.54)	Loss_t 2.41 (2.50)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [52][70/100]	Time 1.92 (1.84)	Loss_s 0.77 (0.55)	Loss_t 3.54 (2.51)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [52][80/100]	Time 1.80 (1.83)	Loss_s 1.12 (0.55)	Loss_t 2.49 (2.50)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [52][90/100]	Time 1.73 (1.84)	Loss_s 0.42 (0.56)	Loss_t 2.94 (2.50)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [52][100/100]	Time 1.81 (1.83)	Loss_s 0.72 (0.56)	Loss_t 2.00 (2.51)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.158 (0.174)	Data 0.000 (0.024)	
+Mean AP: 82.7%
+Extract Features: [50/76]	Time 0.165 (0.176)	Data 0.000 (0.019)	
+Mean AP: 83.8%
+
+ * Finished epoch  52  model mAP: 82.7%  model_ema mAP: 83.8%  best: 83.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.321799516677856
+==> Statistics for epoch 53: 637 clusters, 163 un-clustered instances
+Epoch: [53][10/100]	Time 1.83 (1.87)	Loss_s 0.60 (0.56)	Loss_t 1.65 (2.38)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [53][20/100]	Time 1.94 (1.81)	Loss_s 0.44 (0.55)	Loss_t 3.04 (2.47)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [53][30/100]	Time 1.70 (1.79)	Loss_s 0.51 (0.56)	Loss_t 2.89 (2.51)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [53][40/100]	Time 1.71 (1.77)	Loss_s 0.46 (0.56)	Loss_t 2.34 (2.47)	Loss_ms 0.02 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [53][50/100]	Time 1.88 (1.85)	Loss_s 0.43 (0.56)	Loss_t 2.39 (2.40)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [53][60/100]	Time 1.83 (1.83)	Loss_s 0.77 (0.56)	Loss_t 3.08 (2.45)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [53][70/100]	Time 1.70 (1.82)	Loss_s 0.27 (0.55)	Loss_t 2.83 (2.49)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [53][80/100]	Time 1.76 (1.81)	Loss_s 0.65 (0.55)	Loss_t 2.25 (2.49)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [53][90/100]	Time 1.75 (1.84)	Loss_s 0.47 (0.55)	Loss_t 2.69 (2.48)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [53][100/100]	Time 1.80 (1.84)	Loss_s 0.42 (0.55)	Loss_t 2.45 (2.48)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.163 (0.175)	Data 0.000 (0.016)	
+Mean AP: 82.5%
+Extract Features: [50/76]	Time 0.143 (0.182)	Data 0.000 (0.019)	
+Mean AP: 83.7%
+
+ * Finished epoch  53  model mAP: 82.5%  model_ema mAP: 83.7%  best: 83.8%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.689228057861328
+==> Statistics for epoch 54: 637 clusters, 149 un-clustered instances
+Epoch: [54][10/100]	Time 1.77 (1.85)	Loss_s 0.70 (0.49)	Loss_t 2.63 (2.48)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [54][20/100]	Time 1.77 (1.79)	Loss_s 0.56 (0.47)	Loss_t 1.79 (2.39)	Loss_ms 0.03 (0.02)	Loss_mt 0.03 (0.02)
+Epoch: [54][30/100]	Time 1.69 (1.78)	Loss_s 0.45 (0.50)	Loss_t 2.68 (2.41)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [54][40/100]	Time 1.62 (1.74)	Loss_s 0.73 (0.52)	Loss_t 2.23 (2.43)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [54][50/100]	Time 1.71 (1.82)	Loss_s 0.48 (0.52)	Loss_t 1.43 (2.44)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [54][60/100]	Time 1.77 (1.82)	Loss_s 0.55 (0.53)	Loss_t 3.11 (2.49)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [54][70/100]	Time 1.70 (1.82)	Loss_s 0.69 (0.53)	Loss_t 2.94 (2.48)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [54][80/100]	Time 1.63 (1.81)	Loss_s 0.79 (0.54)	Loss_t 2.16 (2.50)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [54][90/100]	Time 1.66 (1.84)	Loss_s 0.55 (0.54)	Loss_t 1.61 (2.49)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [54][100/100]	Time 1.75 (1.84)	Loss_s 0.76 (0.55)	Loss_t 3.46 (2.52)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.163 (0.184)	Data 0.000 (0.021)	
+Mean AP: 82.5%
+Extract Features: [50/76]	Time 0.150 (0.182)	Data 0.000 (0.021)	
+Mean AP: 83.8%
+
+ * Finished epoch  54  model mAP: 82.5%  model_ema mAP: 83.8%  best: 83.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 12.988507986068726
+==> Statistics for epoch 55: 632 clusters, 170 un-clustered instances
+Epoch: [55][10/100]	Time 1.82 (1.95)	Loss_s 0.27 (0.51)	Loss_t 2.83 (2.34)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [55][20/100]	Time 1.79 (1.84)	Loss_s 0.54 (0.50)	Loss_t 1.85 (2.35)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [55][30/100]	Time 1.77 (1.81)	Loss_s 0.58 (0.55)	Loss_t 2.42 (2.35)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [55][40/100]	Time 1.78 (1.79)	Loss_s 0.45 (0.53)	Loss_t 2.14 (2.36)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [55][50/100]	Time 1.70 (1.86)	Loss_s 0.32 (0.53)	Loss_t 2.35 (2.39)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [55][60/100]	Time 1.71 (1.85)	Loss_s 0.53 (0.53)	Loss_t 3.42 (2.39)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [55][70/100]	Time 1.83 (1.84)	Loss_s 0.41 (0.53)	Loss_t 2.64 (2.41)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [55][80/100]	Time 1.61 (1.82)	Loss_s 0.55 (0.52)	Loss_t 1.94 (2.41)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [55][90/100]	Time 1.77 (1.85)	Loss_s 0.60 (0.53)	Loss_t 2.02 (2.40)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [55][100/100]	Time 1.79 (1.85)	Loss_s 0.86 (0.53)	Loss_t 2.31 (2.42)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.141 (0.174)	Data 0.000 (0.019)	
+Mean AP: 82.7%
+Extract Features: [50/76]	Time 0.151 (0.187)	Data 0.000 (0.023)	
+Mean AP: 83.8%
+
+ * Finished epoch  55  model mAP: 82.7%  model_ema mAP: 83.8%  best: 83.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.561816930770874
+==> Statistics for epoch 56: 633 clusters, 152 un-clustered instances
+Epoch: [56][10/100]	Time 1.74 (1.93)	Loss_s 0.37 (0.61)	Loss_t 2.86 (2.29)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [56][20/100]	Time 1.74 (1.81)	Loss_s 0.54 (0.56)	Loss_t 2.31 (2.35)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [56][30/100]	Time 1.71 (1.78)	Loss_s 0.52 (0.55)	Loss_t 1.88 (2.36)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [56][40/100]	Time 1.65 (1.76)	Loss_s 0.77 (0.55)	Loss_t 2.86 (2.42)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [56][50/100]	Time 1.70 (1.83)	Loss_s 0.90 (0.55)	Loss_t 2.00 (2.43)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [56][60/100]	Time 1.83 (1.83)	Loss_s 0.34 (0.55)	Loss_t 2.77 (2.46)	Loss_ms 0.02 (0.02)	Loss_mt 0.03 (0.02)
+Epoch: [56][70/100]	Time 1.65 (1.82)	Loss_s 0.38 (0.55)	Loss_t 1.88 (2.47)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [56][80/100]	Time 1.67 (1.80)	Loss_s 0.53 (0.54)	Loss_t 2.35 (2.45)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [56][90/100]	Time 1.70 (1.83)	Loss_s 0.26 (0.54)	Loss_t 2.47 (2.45)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [56][100/100]	Time 1.71 (1.83)	Loss_s 0.70 (0.53)	Loss_t 2.55 (2.45)	Loss_ms 0.04 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.146 (0.168)	Data 0.000 (0.018)	
+Mean AP: 82.7%
+Extract Features: [50/76]	Time 0.130 (0.181)	Data 0.000 (0.021)	
+Mean AP: 83.8%
+
+ * Finished epoch  56  model mAP: 82.7%  model_ema mAP: 83.8%  best: 83.8% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.542732238769531
+==> Statistics for epoch 57: 633 clusters, 151 un-clustered instances
+Epoch: [57][10/100]	Time 1.69 (1.93)	Loss_s 0.36 (0.52)	Loss_t 2.05 (2.25)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [57][20/100]	Time 1.84 (1.86)	Loss_s 0.27 (0.50)	Loss_t 1.77 (2.20)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [57][30/100]	Time 1.75 (1.81)	Loss_s 0.77 (0.50)	Loss_t 2.21 (2.30)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [57][40/100]	Time 1.62 (1.78)	Loss_s 0.31 (0.49)	Loss_t 2.31 (2.28)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [57][50/100]	Time 1.85 (1.85)	Loss_s 0.42 (0.50)	Loss_t 1.73 (2.28)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [57][60/100]	Time 1.77 (1.84)	Loss_s 0.63 (0.50)	Loss_t 1.98 (2.31)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [57][70/100]	Time 1.88 (1.83)	Loss_s 0.49 (0.51)	Loss_t 2.56 (2.31)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [57][80/100]	Time 1.75 (1.83)	Loss_s 0.68 (0.51)	Loss_t 3.41 (2.31)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [57][90/100]	Time 1.69 (1.85)	Loss_s 0.40 (0.50)	Loss_t 2.09 (2.33)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [57][100/100]	Time 1.73 (1.84)	Loss_s 0.60 (0.49)	Loss_t 1.59 (2.32)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Extract Features: [50/76]	Time 0.145 (0.170)	Data 0.000 (0.018)	
+Mean AP: 82.6%
+Extract Features: [50/76]	Time 0.147 (0.179)	Data 0.000 (0.020)	
+Mean AP: 83.9%
+
+ * Finished epoch  57  model mAP: 82.6%  model_ema mAP: 83.9%  best: 83.9% *
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.699952602386475
+==> Statistics for epoch 58: 637 clusters, 128 un-clustered instances
+Epoch: [58][10/100]	Time 1.71 (1.84)	Loss_s 0.44 (0.45)	Loss_t 2.85 (2.30)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [58][20/100]	Time 1.70 (1.76)	Loss_s 0.94 (0.52)	Loss_t 2.21 (2.29)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [58][30/100]	Time 1.95 (1.78)	Loss_s 0.33 (0.53)	Loss_t 2.07 (2.22)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [58][40/100]	Time 1.62 (1.75)	Loss_s 0.30 (0.52)	Loss_t 1.77 (2.23)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [58][50/100]	Time 1.82 (1.83)	Loss_s 0.61 (0.52)	Loss_t 1.47 (2.23)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [58][60/100]	Time 1.66 (1.82)	Loss_s 0.55 (0.52)	Loss_t 3.18 (2.26)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [58][70/100]	Time 1.72 (1.80)	Loss_s 0.42 (0.52)	Loss_t 2.08 (2.27)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [58][80/100]	Time 1.68 (1.80)	Loss_s 0.82 (0.53)	Loss_t 2.62 (2.30)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [58][90/100]	Time 2.11 (1.83)	Loss_s 0.56 (0.53)	Loss_t 2.15 (2.29)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [58][100/100]	Time 1.63 (1.83)	Loss_s 0.56 (0.53)	Loss_t 2.60 (2.28)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.214 (0.172)	Data 0.000 (0.019)	
+Mean AP: 82.4%
+Extract Features: [50/76]	Time 0.163 (0.178)	Data 0.000 (0.021)	
+Mean AP: 83.8%
+
+ * Finished epoch  58  model mAP: 82.4%  model_ema mAP: 83.8%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 14.92851996421814
+==> Statistics for epoch 59: 635 clusters, 114 un-clustered instances
+Epoch: [59][10/100]	Time 1.76 (1.94)	Loss_s 0.46 (0.48)	Loss_t 2.00 (2.24)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [59][20/100]	Time 1.69 (1.83)	Loss_s 0.36 (0.48)	Loss_t 1.99 (2.22)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [59][30/100]	Time 1.72 (1.80)	Loss_s 0.60 (0.49)	Loss_t 1.65 (2.17)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [59][40/100]	Time 1.71 (1.77)	Loss_s 0.64 (0.50)	Loss_t 2.32 (2.19)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [59][50/100]	Time 1.70 (1.84)	Loss_s 0.50 (0.50)	Loss_t 2.05 (2.19)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [59][60/100]	Time 1.84 (1.83)	Loss_s 0.59 (0.51)	Loss_t 2.77 (2.19)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [59][70/100]	Time 1.71 (1.81)	Loss_s 0.54 (0.51)	Loss_t 2.54 (2.22)	Loss_ms 0.04 (0.02)	Loss_mt 0.03 (0.02)
+Epoch: [59][80/100]	Time 1.84 (1.80)	Loss_s 0.60 (0.51)	Loss_t 2.79 (2.24)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [59][90/100]	Time 1.83 (1.84)	Loss_s 0.25 (0.50)	Loss_t 3.04 (2.25)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [59][100/100]	Time 1.93 (1.84)	Loss_s 0.42 (0.49)	Loss_t 2.89 (2.25)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.150 (0.185)	Data 0.000 (0.020)	
+Mean AP: 82.9%
+Extract Features: [50/76]	Time 0.170 (0.175)	Data 0.000 (0.021)	
+Mean AP: 83.8%
+
+ * Finished epoch  59  model mAP: 82.9%  model_ema mAP: 83.8%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.39925241470337
+==> Statistics for epoch 60: 632 clusters, 117 un-clustered instances
+Epoch: [60][10/100]	Time 1.72 (1.96)	Loss_s 0.36 (0.49)	Loss_t 1.86 (2.10)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [60][20/100]	Time 1.84 (1.83)	Loss_s 0.54 (0.50)	Loss_t 1.96 (2.14)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [60][30/100]	Time 1.79 (1.80)	Loss_s 0.32 (0.48)	Loss_t 2.22 (2.10)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [60][40/100]	Time 3.67 (1.83)	Loss_s 0.55 (0.48)	Loss_t 2.10 (2.15)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [60][50/100]	Time 1.73 (1.85)	Loss_s 0.46 (0.49)	Loss_t 3.56 (2.21)	Loss_ms 0.03 (0.03)	Loss_mt 0.03 (0.02)
+Epoch: [60][60/100]	Time 1.66 (1.83)	Loss_s 0.38 (0.49)	Loss_t 2.80 (2.25)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [60][70/100]	Time 1.73 (1.82)	Loss_s 0.62 (0.49)	Loss_t 1.79 (2.23)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [60][80/100]	Time 1.66 (1.83)	Loss_s 0.27 (0.48)	Loss_t 2.41 (2.23)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [60][90/100]	Time 1.91 (1.84)	Loss_s 0.45 (0.48)	Loss_t 2.78 (2.27)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [60][100/100]	Time 1.76 (1.84)	Loss_s 0.45 (0.48)	Loss_t 2.13 (2.26)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.143 (0.174)	Data 0.000 (0.017)	
+Mean AP: 83.0%
+Extract Features: [50/76]	Time 0.138 (0.179)	Data 0.000 (0.022)	
+Mean AP: 83.9%
+
+ * Finished epoch  60  model mAP: 83.0%  model_ema mAP: 83.9%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.653401613235474
+==> Statistics for epoch 61: 631 clusters, 124 un-clustered instances
+Epoch: [61][10/100]	Time 1.79 (1.87)	Loss_s 0.44 (0.51)	Loss_t 2.79 (2.36)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [61][20/100]	Time 1.73 (1.81)	Loss_s 0.87 (0.52)	Loss_t 2.35 (2.16)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [61][30/100]	Time 1.66 (1.78)	Loss_s 0.56 (0.50)	Loss_t 2.43 (2.10)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [61][40/100]	Time 3.57 (1.81)	Loss_s 0.36 (0.50)	Loss_t 1.57 (2.12)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [61][50/100]	Time 1.70 (1.85)	Loss_s 0.39 (0.49)	Loss_t 2.49 (2.15)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [61][60/100]	Time 1.98 (1.85)	Loss_s 0.49 (0.48)	Loss_t 2.67 (2.20)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [61][70/100]	Time 1.76 (1.83)	Loss_s 0.54 (0.49)	Loss_t 1.80 (2.20)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [61][80/100]	Time 1.60 (1.84)	Loss_s 0.38 (0.49)	Loss_t 2.21 (2.21)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [61][90/100]	Time 1.67 (1.85)	Loss_s 0.41 (0.49)	Loss_t 2.82 (2.21)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [61][100/100]	Time 1.84 (1.84)	Loss_s 0.35 (0.49)	Loss_t 2.12 (2.24)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Extract Features: [50/76]	Time 0.146 (0.172)	Data 0.000 (0.018)	
+Mean AP: 82.9%
+Extract Features: [50/76]	Time 0.155 (0.178)	Data 0.000 (0.029)	
+Mean AP: 83.8%
+
+ * Finished epoch  61  model mAP: 82.9%  model_ema mAP: 83.8%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.040901899337769
+==> Statistics for epoch 62: 629 clusters, 118 un-clustered instances
+Epoch: [62][10/100]	Time 1.69 (1.90)	Loss_s 0.72 (0.54)	Loss_t 1.76 (1.98)	Loss_ms 0.03 (0.03)	Loss_mt 0.01 (0.01)
+Epoch: [62][20/100]	Time 1.71 (1.83)	Loss_s 0.52 (0.47)	Loss_t 2.33 (2.05)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [62][30/100]	Time 1.81 (1.81)	Loss_s 0.35 (0.47)	Loss_t 1.68 (2.10)	Loss_ms 0.01 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [62][40/100]	Time 3.60 (1.83)	Loss_s 0.72 (0.47)	Loss_t 2.73 (2.16)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [62][50/100]	Time 1.72 (1.85)	Loss_s 0.40 (0.46)	Loss_t 2.25 (2.16)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [62][60/100]	Time 1.86 (1.83)	Loss_s 0.48 (0.47)	Loss_t 1.64 (2.13)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [62][70/100]	Time 1.67 (1.82)	Loss_s 0.52 (0.47)	Loss_t 1.80 (2.13)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [62][80/100]	Time 1.83 (1.84)	Loss_s 0.48 (0.48)	Loss_t 2.02 (2.17)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [62][90/100]	Time 1.72 (1.84)	Loss_s 0.51 (0.48)	Loss_t 1.34 (2.16)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [62][100/100]	Time 1.64 (1.84)	Loss_s 0.34 (0.48)	Loss_t 2.00 (2.16)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.145 (0.182)	Data 0.000 (0.021)	
+Mean AP: 82.9%
+Extract Features: [50/76]	Time 0.137 (0.171)	Data 0.000 (0.020)	
+Mean AP: 83.8%
+
+ * Finished epoch  62  model mAP: 82.9%  model_ema mAP: 83.8%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.64705204963684
+==> Statistics for epoch 63: 633 clusters, 116 un-clustered instances
+Epoch: [63][10/100]	Time 1.77 (1.92)	Loss_s 0.57 (0.50)	Loss_t 1.75 (2.02)	Loss_ms 0.04 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [63][20/100]	Time 1.80 (1.82)	Loss_s 0.56 (0.48)	Loss_t 2.10 (1.98)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [63][30/100]	Time 1.71 (1.79)	Loss_s 0.59 (0.49)	Loss_t 1.90 (2.01)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [63][40/100]	Time 1.72 (1.78)	Loss_s 0.31 (0.47)	Loss_t 2.14 (2.07)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [63][50/100]	Time 1.66 (1.85)	Loss_s 0.60 (0.48)	Loss_t 2.60 (2.10)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [63][60/100]	Time 1.76 (1.83)	Loss_s 0.57 (0.48)	Loss_t 3.35 (2.16)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [63][70/100]	Time 1.67 (1.81)	Loss_s 0.65 (0.49)	Loss_t 1.67 (2.15)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [63][80/100]	Time 1.66 (1.79)	Loss_s 0.22 (0.49)	Loss_t 2.73 (2.15)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [63][90/100]	Time 1.85 (1.82)	Loss_s 0.53 (0.49)	Loss_t 2.15 (2.16)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [63][100/100]	Time 1.68 (1.82)	Loss_s 0.71 (0.49)	Loss_t 2.33 (2.18)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.148 (0.171)	Data 0.000 (0.019)	
+Mean AP: 82.9%
+Extract Features: [50/76]	Time 0.155 (0.182)	Data 0.000 (0.026)	
+Mean AP: 83.8%
+
+ * Finished epoch  63  model mAP: 82.9%  model_ema mAP: 83.8%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.077396154403687
+==> Statistics for epoch 64: 633 clusters, 126 un-clustered instances
+Epoch: [64][10/100]	Time 1.71 (1.90)	Loss_s 0.25 (0.42)	Loss_t 1.88 (1.93)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [64][20/100]	Time 1.64 (1.81)	Loss_s 0.38 (0.43)	Loss_t 1.67 (2.04)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [64][30/100]	Time 1.75 (1.77)	Loss_s 0.60 (0.44)	Loss_t 2.77 (2.07)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [64][40/100]	Time 1.72 (1.75)	Loss_s 0.63 (0.45)	Loss_t 2.75 (2.10)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [64][50/100]	Time 1.78 (1.82)	Loss_s 0.46 (0.46)	Loss_t 1.22 (2.13)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [64][60/100]	Time 1.78 (1.82)	Loss_s 0.32 (0.47)	Loss_t 1.99 (2.14)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [64][70/100]	Time 1.69 (1.82)	Loss_s 0.42 (0.46)	Loss_t 2.15 (2.15)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [64][80/100]	Time 1.62 (1.80)	Loss_s 0.58 (0.47)	Loss_t 2.35 (2.15)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [64][90/100]	Time 1.94 (1.84)	Loss_s 0.40 (0.47)	Loss_t 2.71 (2.15)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [64][100/100]	Time 1.70 (1.83)	Loss_s 0.48 (0.47)	Loss_t 2.26 (2.17)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.164 (0.182)	Data 0.000 (0.018)	
+Mean AP: 82.9%
+Extract Features: [50/76]	Time 0.161 (0.174)	Data 0.000 (0.019)	
+Mean AP: 83.8%
+
+ * Finished epoch  64  model mAP: 82.9%  model_ema mAP: 83.8%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.691229343414307
+==> Statistics for epoch 65: 628 clusters, 102 un-clustered instances
+Epoch: [65][10/100]	Time 1.66 (1.87)	Loss_s 0.49 (0.48)	Loss_t 1.83 (2.08)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [65][20/100]	Time 1.78 (1.78)	Loss_s 0.33 (0.47)	Loss_t 1.87 (2.11)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [65][30/100]	Time 1.74 (1.76)	Loss_s 0.40 (0.46)	Loss_t 3.05 (2.16)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [65][40/100]	Time 3.55 (1.79)	Loss_s 0.36 (0.46)	Loss_t 2.99 (2.17)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [65][50/100]	Time 1.81 (1.82)	Loss_s 0.41 (0.47)	Loss_t 2.14 (2.20)	Loss_ms 0.02 (0.02)	Loss_mt 0.03 (0.02)
+Epoch: [65][60/100]	Time 1.73 (1.80)	Loss_s 0.47 (0.46)	Loss_t 2.30 (2.20)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [65][70/100]	Time 1.72 (1.79)	Loss_s 0.60 (0.47)	Loss_t 2.38 (2.19)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [65][80/100]	Time 1.79 (1.80)	Loss_s 0.57 (0.47)	Loss_t 1.84 (2.17)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [65][90/100]	Time 1.76 (1.81)	Loss_s 0.44 (0.47)	Loss_t 2.33 (2.17)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [65][100/100]	Time 1.68 (1.80)	Loss_s 0.63 (0.47)	Loss_t 2.69 (2.18)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.136 (0.174)	Data 0.000 (0.019)	
+Mean AP: 82.9%
+Extract Features: [50/76]	Time 0.128 (0.180)	Data 0.000 (0.018)	
+Mean AP: 83.7%
+
+ * Finished epoch  65  model mAP: 82.9%  model_ema mAP: 83.7%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 15.445387840270996
+==> Statistics for epoch 66: 632 clusters, 120 un-clustered instances
+Epoch: [66][10/100]	Time 1.84 (1.88)	Loss_s 0.47 (0.54)	Loss_t 2.28 (2.19)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [66][20/100]	Time 1.88 (1.83)	Loss_s 0.51 (0.49)	Loss_t 2.08 (2.13)	Loss_ms 0.02 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [66][30/100]	Time 1.74 (1.79)	Loss_s 0.76 (0.50)	Loss_t 2.11 (2.13)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [66][40/100]	Time 3.35 (1.81)	Loss_s 0.38 (0.49)	Loss_t 2.31 (2.09)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [66][50/100]	Time 1.66 (1.84)	Loss_s 0.43 (0.46)	Loss_t 1.85 (2.10)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [66][60/100]	Time 1.73 (1.82)	Loss_s 0.41 (0.47)	Loss_t 2.01 (2.14)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [66][70/100]	Time 1.72 (1.80)	Loss_s 0.40 (0.47)	Loss_t 1.73 (2.15)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [66][80/100]	Time 1.66 (1.81)	Loss_s 0.51 (0.48)	Loss_t 2.23 (2.15)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [66][90/100]	Time 1.65 (1.82)	Loss_s 0.22 (0.48)	Loss_t 2.27 (2.18)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [66][100/100]	Time 1.72 (1.82)	Loss_s 0.44 (0.47)	Loss_t 2.97 (2.17)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.141 (0.176)	Data 0.000 (0.020)	
+Mean AP: 82.8%
+Extract Features: [50/76]	Time 0.143 (0.178)	Data 0.000 (0.020)	
+Mean AP: 83.7%
+
+ * Finished epoch  66  model mAP: 82.8%  model_ema mAP: 83.7%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.14733099937439
+==> Statistics for epoch 67: 628 clusters, 127 un-clustered instances
+Epoch: [67][10/100]	Time 1.68 (1.95)	Loss_s 0.49 (0.46)	Loss_t 2.28 (2.03)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.01)
+Epoch: [67][20/100]	Time 1.66 (1.85)	Loss_s 0.48 (0.45)	Loss_t 1.95 (2.11)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.01)
+Epoch: [67][30/100]	Time 1.68 (1.80)	Loss_s 0.42 (0.45)	Loss_t 2.37 (2.05)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.01)
+Epoch: [67][40/100]	Time 3.49 (1.82)	Loss_s 0.36 (0.45)	Loss_t 2.73 (2.06)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.01)
+Epoch: [67][50/100]	Time 1.69 (1.83)	Loss_s 0.58 (0.47)	Loss_t 1.89 (2.11)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.01)
+Epoch: [67][60/100]	Time 1.88 (1.82)	Loss_s 0.34 (0.47)	Loss_t 2.26 (2.10)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.01)
+Epoch: [67][70/100]	Time 1.76 (1.81)	Loss_s 0.41 (0.47)	Loss_t 2.56 (2.10)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [67][80/100]	Time 1.75 (1.83)	Loss_s 0.35 (0.46)	Loss_t 2.83 (2.12)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [67][90/100]	Time 1.82 (1.84)	Loss_s 0.43 (0.46)	Loss_t 2.36 (2.15)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [67][100/100]	Time 1.62 (1.83)	Loss_s 0.28 (0.47)	Loss_t 1.80 (2.16)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.02)
+Extract Features: [50/76]	Time 0.157 (0.182)	Data 0.000 (0.023)	
+Mean AP: 82.9%
+Extract Features: [50/76]	Time 0.130 (0.173)	Data 0.000 (0.022)	
+Mean AP: 83.7%
+
+ * Finished epoch  67  model mAP: 82.9%  model_ema mAP: 83.7%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 13.14689826965332
+==> Statistics for epoch 68: 635 clusters, 116 un-clustered instances
+Epoch: [68][10/100]	Time 1.73 (1.94)	Loss_s 0.48 (0.55)	Loss_t 1.40 (2.10)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [68][20/100]	Time 1.76 (1.82)	Loss_s 0.36 (0.53)	Loss_t 2.04 (2.06)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.02)
+Epoch: [68][30/100]	Time 1.80 (1.81)	Loss_s 0.45 (0.52)	Loss_t 2.07 (2.04)	Loss_ms 0.03 (0.03)	Loss_mt 0.02 (0.02)
+Epoch: [68][40/100]	Time 1.82 (1.79)	Loss_s 0.35 (0.49)	Loss_t 2.21 (2.06)	Loss_ms 0.02 (0.03)	Loss_mt 0.01 (0.01)
+Epoch: [68][50/100]	Time 1.90 (1.86)	Loss_s 0.80 (0.50)	Loss_t 2.33 (2.08)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [68][60/100]	Time 1.66 (1.84)	Loss_s 0.43 (0.50)	Loss_t 2.54 (2.11)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.02)
+Epoch: [68][70/100]	Time 1.73 (1.83)	Loss_s 0.44 (0.49)	Loss_t 2.17 (2.15)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [68][80/100]	Time 1.84 (1.82)	Loss_s 0.44 (0.48)	Loss_t 2.03 (2.14)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [68][90/100]	Time 2.04 (1.86)	Loss_s 0.34 (0.48)	Loss_t 3.64 (2.16)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [68][100/100]	Time 1.92 (1.85)	Loss_s 0.54 (0.48)	Loss_t 1.79 (2.19)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Extract Features: [50/76]	Time 0.146 (0.165)	Data 0.000 (0.018)	
+Mean AP: 82.8%
+Extract Features: [50/76]	Time 0.154 (0.179)	Data 0.000 (0.021)	
+Mean AP: 83.5%
+
+ * Finished epoch  68  model mAP: 82.8%  model_ema mAP: 83.5%  best: 83.9%
+
+==> Create pseudo labels for unlabeled target domain with self-paced policy
+Computing jaccard distance...
+Jaccard distance computing time cost: 16.34300208091736
+==> Statistics for epoch 69: 634 clusters, 109 un-clustered instances
+Epoch: [69][10/100]	Time 1.81 (1.98)	Loss_s 0.47 (0.48)	Loss_t 2.95 (2.13)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [69][20/100]	Time 1.78 (1.89)	Loss_s 0.57 (0.50)	Loss_t 2.57 (2.18)	Loss_ms 0.02 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [69][30/100]	Time 1.85 (1.87)	Loss_s 0.58 (0.50)	Loss_t 2.50 (2.12)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.02)
+Epoch: [69][40/100]	Time 1.64 (1.82)	Loss_s 0.33 (0.48)	Loss_t 1.61 (2.10)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.01)
+Epoch: [69][50/100]	Time 1.71 (1.88)	Loss_s 0.50 (0.48)	Loss_t 2.14 (2.08)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.01)
+Epoch: [69][60/100]	Time 1.88 (1.86)	Loss_s 0.40 (0.47)	Loss_t 1.77 (2.12)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.01)
+Epoch: [69][70/100]	Time 1.85 (1.85)	Loss_s 0.61 (0.48)	Loss_t 1.82 (2.11)	Loss_ms 0.03 (0.02)	Loss_mt 0.01 (0.01)
+Epoch: [69][80/100]	Time 1.74 (1.84)	Loss_s 0.53 (0.49)	Loss_t 2.86 (2.13)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.01)
+Epoch: [69][90/100]	Time 2.02 (1.87)	Loss_s 0.65 (0.48)	Loss_t 1.87 (2.12)	Loss_ms 0.03 (0.02)	Loss_mt 0.02 (0.01)
+Epoch: [69][100/100]	Time 1.71 (1.86)	Loss_s 0.31 (0.49)	Loss_t 1.58 (2.12)	Loss_ms 0.02 (0.02)	Loss_mt 0.01 (0.01)
+Extract Features: [50/76]	Time 0.157 (0.180)	Data 0.000 (0.022)	
+Mean AP: 82.8%
+Extract Features: [50/76]	Time 0.149 (0.178)	Data 0.000 (0.023)	
+Mean AP: 83.5%
+
+ * Finished epoch  69  model mAP: 82.8%  model_ema mAP: 83.5%  best: 83.9%
+
+==> Test with the best model on the target domain:
+=> Loaded checkpoint 'logs/d2m/model_best.pth.tar'
+Extract Features: [50/76]	Time 0.167 (0.183)	Data 0.000 (0.026)	
+Mean AP: 83.9%
+CMC Scores:
+  top-1          93.6%
+  top-5          97.5%
+  top-10         98.3%
+Total running time:  5:17:24.532982
