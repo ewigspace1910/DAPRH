@@ -1,15 +1,22 @@
 from __future__ import absolute_import
 import warnings
 
+from .dukemtmc import DukeMTMC
 from .market1501 import Market1501
 from .msmt17 import MSMT17
-from .veri import VeRi
-
+from .custom import CustomData
+from .merge import MergedData
+from .unlabel import UnlabelDs
+from .unlabel_wcam import UnlabelwCamDs
 
 __factory = {
     'market1501': Market1501,
+    'dukemtmc': DukeMTMC,
     'msmt17': MSMT17,
-    'veri': VeRi
+    'custom': CustomData,
+    'merged' : MergedData,
+    'unlabel': UnlabelDs,
+    'unlabelwCam': UnlabelwCamDs
 }
 
 
@@ -24,7 +31,9 @@ def create(name, root, *args, **kwargs):
     Parameters
     ----------
     name : str
-        The dataset name. 
+        The dataset name. Can be one of 'viper', 'cuhk01', 'cuhk03',
+        'market1501', and 'dukemtmc'. 
+        'market1501|dukemtmc|msmt' for merge datasets
     root : str
         The path to the dataset directory.
     split_id : int, optional
@@ -35,6 +44,13 @@ def create(name, root, *args, **kwargs):
     download : bool, optional
         If True, will download the dataset. Default: False
     """
+    
+    #check merge datasets
+    if "|" in name:
+        list = name.split("|")
+        return __factory['merged'](list, *args, **kwargs)
+    
+    #else
     if name not in __factory:
         raise KeyError("Unknown dataset:", name)
     return __factory[name](root, *args, **kwargs)

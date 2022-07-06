@@ -35,7 +35,7 @@ start_epoch = best_mAP = 0
 
 
 def get_data(name, data_dir):
-    root = osp.join(data_dir, name)
+    root = data_dir#osp.join(data_dir, name)
     dataset = datasets.create(name, root)
     return dataset
 

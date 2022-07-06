@@ -9,26 +9,26 @@ from ..utils.data import BaseImageDataset
 from ..utils.osutils import mkdir_if_missing
 from ..utils.serialization import write_json
 
-class Market1501(BaseImageDataset):
+class CustomData(BaseImageDataset):
     """
-    Market1501
-    Reference:
-    Zheng et al. Scalable Person Re-identification: A Benchmark. ICCV 2015.
-    URL: http://www.liangzheng.org/Project/project_reid.html
+    CustomDataset: custom person ReID dataset
 
-    Dataset statistics:
-    # identities: 1501 (+1 for background)
-    # images: 12936 (train) + 3368 (query) + 15913 (gallery)
+    Dataset file trees:
+        -trainval
+            -pid_cid_num.jpg
+        -prob
+            -pid_cid_num.jpg
+        -gallery
+            -pid_cid_num.jpg
     """
-    dataset_dir = 'Market-1501-v15.09.15'
+    dataset_dir = 'CustomData'
 
     def __init__(self, root="./datasets", verbose=True, **kwargs):
-        super(Market1501, self).__init__()
-        self.dataset_name = 'market'
+        super(CustomData, self).__init__()
         self.dataset_dir = osp.join(root, self.dataset_dir)
-        self.train_dir = osp.join(self.dataset_dir, 'bounding_box_train')
-        self.query_dir = osp.join(self.dataset_dir, 'query')
-        self.gallery_dir = osp.join(self.dataset_dir, 'bounding_box_test')
+        self.train_dir = osp.join(self.dataset_dir, 'trainval')
+        self.query_dir = osp.join(self.dataset_dir, 'probe')
+        self.gallery_dir = osp.join(self.dataset_dir, 'gallery')
 
         self._check_before_run()
 
@@ -37,7 +37,7 @@ class Market1501(BaseImageDataset):
         gallery = self._process_dir(self.gallery_dir, relabel=False)
 
         if verbose:
-            print("=> Market1501 loaded")
+            print("=> Custom dataset loaded")
             self.print_dataset_statistics(train, query, gallery)
 
         self.train = train
@@ -47,9 +47,6 @@ class Market1501(BaseImageDataset):
         self.num_train_pids, self.num_train_imgs, self.num_train_cams = self.get_imagedata_info(self.train)
         self.num_query_pids, self.num_query_imgs, self.num_query_cams = self.get_imagedata_info(self.query)
         self.num_gallery_pids, self.num_gallery_imgs, self.num_gallery_cams = self.get_imagedata_info(self.gallery)
-        
-        self._for_merge = self.process_train(self.train_dir)
-        
 
     def _check_before_run(self):
         """Check if all files are available before going deeper"""
@@ -64,41 +61,20 @@ class Market1501(BaseImageDataset):
 
     def _process_dir(self, dir_path, relabel=False):
         img_paths = glob.glob(osp.join(dir_path, '*.jpg'))
-        pattern = re.compile(r'([-\d]+)_c(\d)')
 
         pid_container = set()
         for img_path in img_paths:
-            pid, _ = map(int, pattern.search(img_path).groups())
+            pid, cid = list(map(int, img_path.split('/')[-1].split('_')[:2]))
             if pid == -1: continue  # junk images are just ignored
             pid_container.add(pid)
         pid2label = {pid: label for label, pid in enumerate(pid_container)}
 
         dataset = []
         for img_path in img_paths:
-            pid, camid = map(int, pattern.search(img_path).groups())
+            pid, cid = list(map(int, img_path.split('/')[-1].split('_')[:2]))
             if pid == -1: continue  # junk images are just ignored
-            assert 0 <= pid <= 1501  # pid == 0 means background
-            assert 1 <= camid <= 6
-            camid -= 1  # index starts from 0
+            # camid -= 1  # index starts from 0
             if relabel: pid = pid2label[pid]
-            dataset.append((img_path, pid, camid))
+            dataset.append((img_path, pid, cid%4))
 
         return dataset
-
-    def process_train(self, dir_path, is_train=True):
-        img_paths = glob.glob(osp.join(dir_path, '*.jpg'))
-        pattern = re.compile(r'([-\d]+)_c(\d)')
-        data = []
-        for img_path in img_paths:
-            pid, camid = map(int, pattern.search(img_path).groups())
-            if pid == -1:
-                continue  # junk images are just ignored
-            assert 0 <= pid <= 1501  # pid == 0 means background
-            assert 1 <= camid <= 6
-            camid -= 1  # index starts from 0
-            if is_train:
-                pid = self.dataset_name + "_" + str(pid)
-                camid = self.dataset_name + "_" + str(camid)
-            data.append((img_path, pid, camid))
-
-        return data

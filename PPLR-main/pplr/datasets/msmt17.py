@@ -1,87 +1,132 @@
-from __future__ import print_function, absolute_import
+# encoding: utf-8
+"""
+@author:  l1aoxingyu
+@contact: sherlockliao01@gmail.com
+"""
+
+import sys
+import os
 import os.path as osp
-import tarfile
+import glob 
 
-import glob
-import re
-import urllib
-import zipfile
-
-from ..utils.osutils import mkdir_if_missing
-from ..utils.serialization import write_json
-
-
-def _pluck_msmt(list_file, subdir, pattern=re.compile(r'([-\d]+)_([-\d]+)_([-\d]+)')):
-    with open(list_file, 'r') as f:
-        lines = f.readlines()
-    ret = []
-    pids = []
-    for line in lines:
-        line = line.strip()
-        fname = line.split(' ')[0]
-        pid, _, cam = map(int, pattern.search(osp.basename(fname)).groups())
-        if pid not in pids:
-            pids.append(pid)
-        ret.append((osp.join(subdir,fname), pid, cam))
-    return ret, pids
+from ..utils.data import BaseImageDataset
+##### Log #####
+# 22.01.2019
+# - add v2
+# - v1 and v2 differ in dir names
+# - note that faces in v2 are blurred
+TRAIN_DIR_KEY = 'train_dir'
+TEST_DIR_KEY = 'test_dir'
+VERSION_DICT = {
+    'MSMT17_V1': {
+        TRAIN_DIR_KEY: 'train',
+        TEST_DIR_KEY: 'test',
+    },
+    'MSMT17_V2': {
+        TRAIN_DIR_KEY: 'mask_train_v2',
+        TEST_DIR_KEY: 'mask_test_v2',
+    }
+}
 
 
-class Dataset_MSMT(object):
-    def __init__(self, root):
-        self.root = root
-        self.train, self.val, self.trainval = [], [], []
-        self.query, self.gallery = [], []
-        self.num_train_ids, self.num_val_ids, self.num_trainval_ids = 0, 0, 0
+class MSMT17(BaseImageDataset):
+    """MSMT17.
+    Reference:
+        Wei et al. Person Transfer GAN to Bridge Domain Gap for Person Re-Identification. CVPR 2018.
+    URL: `<http://www.pkuvmc.com/publications/msmt17.html>`_
 
-    @property
-    def images_dir(self):
-        return osp.join(self.root, 'MSMT17_V1')
+    Dataset statistics:
+        - identities: 4101.
+        - images: 32621 (train) + 11659 (query) + 82161 (gallery).
+        - cameras: 15.
+    """
+    # dataset_dir = 'MSMT17_V2'
+    dataset_url = None
+    dataset_name = 'msmt17'
 
-    def load(self, verbose=True):
-        exdir = osp.join(self.root, 'MSMT17_V1')
-        self.train, train_pids = _pluck_msmt(osp.join(exdir, 'list_train.txt'), 'train')
-        self.val, val_pids = _pluck_msmt(osp.join(exdir, 'list_val.txt'), 'train')
-        self.train = self.train + self.val
-        self.query, query_pids = _pluck_msmt(osp.join(exdir, 'list_query.txt'), 'test')
-        self.gallery, gallery_pids = _pluck_msmt(osp.join(exdir, 'list_gallery.txt'), 'test')
-        self.num_train_pids = len(list(set(train_pids).union(set(val_pids))))
+    def __init__(self, root='datasets', verbose=False, **kwargs):
+        self.dataset_dir = root
 
+        has_main_dir = False
+        for main_dir in VERSION_DICT:
+            if osp.exists(osp.join(self.dataset_dir, main_dir)):
+                train_dir = VERSION_DICT[main_dir][TRAIN_DIR_KEY]
+                test_dir = VERSION_DICT[main_dir][TEST_DIR_KEY]
+                has_main_dir = True
+                break
+        assert has_main_dir, 'Dataset folder not found'
+
+        self.train_dir = osp.join(self.dataset_dir, main_dir, train_dir)
+        self.test_dir = osp.join(self.dataset_dir, main_dir, test_dir)
+        self.list_train_path = osp.join(self.dataset_dir, main_dir, 'list_train.txt')
+        self.list_val_path = osp.join(self.dataset_dir, main_dir, 'list_val.txt')
+        self.list_query_path = osp.join(self.dataset_dir, main_dir, 'list_query.txt')
+        self.list_gallery_path = osp.join(self.dataset_dir, main_dir, 'list_gallery.txt')
+
+        required_files = [
+            self.dataset_dir,
+            self.train_dir,
+            self.test_dir
+        ]
+        
+
+        train = self.process_dir(self.train_dir, self.list_train_path)
+        val = self.process_dir(self.train_dir, self.list_val_path)
+        query = self.process_dir(self.test_dir, self.list_query_path, is_train=False)
+        gallery = self.process_dir(self.test_dir, self.list_gallery_path, is_train=False)
+
+        num_train_pids = self.parse_data(train)[0]
+        query_tmp = []
+        for img_path, pid, camid in query:
+            query_tmp.append((img_path, pid+num_train_pids, camid))
+        del query
+        query = query_tmp
+        
+        gallery_temp = []
+        for img_path, pid, camid in gallery:
+            gallery_temp.append((img_path, pid+num_train_pids, camid))
+        del gallery
+        gallery = gallery_temp
+
+        # Note: to fairly compare with published methods on the conventional ReID setting,
+        #       do not add val images to the training set.
+        #if 'combineall' in kwargs and kwargs['combineall']:
+        #    train += val
+        train += val
+        self._for_merge = train
+        super(MSMT17, self).__init__(**kwargs)
+        
         if verbose:
-            print(self.__class__.__name__, "dataset loaded")
-            print("  subset   | # ids | # images")
-            print("  ---------------------------")
-            print("  train    | {:5d} | {:8d}"
-                  .format(self.num_train_pids, len(self.train)))
-            print("  query    | {:5d} | {:8d}"
-                  .format(len(query_pids), len(self.query)))
-            print("  gallery  | {:5d} | {:8d}"
-                  .format(len(gallery_pids), len(self.gallery)))
+            print("=> MSMT loaded")
+            self.print_dataset_statistics(train, query, gallery)
 
+    def process_dir(self, dir_path, list_path, is_train=True):
+        with open(list_path, 'r') as txt:
+            lines = txt.readlines()
+        data = []
 
-class MSMT17(Dataset_MSMT):
+        for img_idx, img_info in enumerate(lines):
+            img_path, pid = img_info.split(' ')
+            pid = int(pid)  # no need to relabel
+            camid = int(img_path.split('_')[2]) - 1  # index starts from 0
+            img_path = osp.join(dir_path, img_path)
+            if is_train:
+                pid = self.dataset_name + "_" + str(pid)
+                camid = self.dataset_name + "_" + str(camid)
+            data.append((img_path, pid, camid))
 
-    def __init__(self, root, split_id=0, download=True):
-        super(MSMT17, self).__init__(root)
-
-        if download:
-            self.download()
-
-        self.load()
-
-    def download(self):
-
-        import re
-        import hashlib
-        import shutil
-        from glob import glob
-        from zipfile import ZipFile
-
-        raw_dir = osp.join(self.root)
-        mkdir_if_missing(raw_dir)
-
-        # Download the raw zip file
-        fpath = osp.join(raw_dir, 'MSMT17_V1')
-        if osp.isdir(fpath):
-            print("Using downloaded file: " + fpath)
-        else:
-            raise RuntimeError("Please download the dataset manually to {}".format(fpath))
+        return data
+        
+    def parse_data(self, data):
+        """Parses data list and returns the number of person IDs
+        and the number of camera views.
+        Args:
+            data (list): contains tuples of (img_path(s), pid, camid)
+        """
+        pids = set()
+        cams = set()
+        
+        for info in data:
+            pids.add(info[1])
+            cams.add(info[2])
+        return len(pids), len(cams)

@@ -34,7 +34,7 @@ from hdcrl.utils.faiss_rerank import compute_jaccard_distance
 start_epoch = best_mAP = 0
 
 def get_data(name, data_dir):
-    root = osp.join(data_dir, name)
+    root = data_dir#osp.join(data_dir, name)
     dataset = datasets.create(name, root)
     return dataset
 
@@ -158,77 +158,6 @@ def main_worker(args):
         features = memory.features.clone()
         rerank_dist = compute_jaccard_distance(features, k1=args.k1, k2=args.k2)
         del features
-
-        # if (epoch==0):
-        #     # DBSCAN cluster
-        #     eps = args.eps
-        #     eps_tight = eps-args.eps_gap
-        #     eps_loose = eps+args.eps_gap
-        #     print('Clustering criterion: eps: {:.3f}, eps_tight: {:.3f}, eps_loose: {:.3f}'.format(eps, eps_tight, eps_loose))
-        #     cluster = DBSCAN(eps=eps, min_samples=4, metric='precomputed', n_jobs=-1)
-        #     cluster_tight = DBSCAN(eps=eps_tight, min_samples=4, metric='precomputed', n_jobs=-1)
-        #     cluster_loose = DBSCAN(eps=eps_loose, min_samples=4, metric='precomputed', n_jobs=-1)
-
-        # # select & cluster images as training set of this epochs
-        # pseudo_labels = cluster.fit_predict(rerank_dist)
-        # pseudo_labels_tight = cluster_tight.fit_predict(rerank_dist)
-        # pseudo_labels_loose = cluster_loose.fit_predict(rerank_dist)
-        # num_ids = len(set(pseudo_labels)) - (1 if -1 in pseudo_labels else 0)
-        # num_ids_tight = len(set(pseudo_labels_tight)) - (1 if -1 in pseudo_labels_tight else 0)
-        # num_ids_loose = len(set(pseudo_labels_loose)) - (1 if -1 in pseudo_labels_loose else 0)
-
-        # # generate new dataset and calculate cluster centers
-        # def generate_pseudo_labels(cluster_id, num):
-        #     labels = []
-        #     outliers = 0
-        #     for i, ((fname, _, cid), id) in enumerate(zip(sorted(dataset.train), cluster_id)):
-        #         if id!=-1:
-        #             labels.append(id)
-        #         else:
-        #             labels.append(num+outliers)
-        #             outliers += 1
-        #     return torch.Tensor(labels).long()
-
-        # pseudo_labels = generate_pseudo_labels(pseudo_labels, num_ids)
-        # pseudo_labels_tight = generate_pseudo_labels(pseudo_labels_tight, num_ids_tight)
-        # pseudo_labels_loose = generate_pseudo_labels(pseudo_labels_loose, num_ids_loose)
-
-        # # compute R_indep and R_comp
-        # N = pseudo_labels.size(0)
-        # label_sim = pseudo_labels.expand(N, N).eq(pseudo_labels.expand(N, N).t()).float()
-        # label_sim_tight = pseudo_labels_tight.expand(N, N).eq(pseudo_labels_tight.expand(N, N).t()).float()
-        # label_sim_loose = pseudo_labels_loose.expand(N, N).eq(pseudo_labels_loose.expand(N, N).t()).float()
-
-        # R_comp = 1-torch.min(label_sim, label_sim_tight).sum(-1)/torch.max(label_sim, label_sim_tight).sum(-1)
-        # R_indep = 1-torch.min(label_sim, label_sim_loose).sum(-1)/torch.max(label_sim, label_sim_loose).sum(-1)
-        # assert((R_comp.min()>=0) and (R_comp.max()<=1))
-        # assert((R_indep.min()>=0) and (R_indep.max()<=1))
-
-        # cluster_R_comp, cluster_R_indep = collections.defaultdict(list), collections.defaultdict(list)
-        # cluster_img_num = collections.defaultdict(int)
-        # for i, (comp, indep, label) in enumerate(zip(R_comp, R_indep, pseudo_labels)):
-        #     cluster_R_comp[label.item()].append(comp.item())
-        #     cluster_R_indep[label.item()].append(indep.item())
-        #     cluster_img_num[label.item()]+=1
-
-        # cluster_R_comp = [min(cluster_R_comp[i]) for i in sorted(cluster_R_comp.keys())]
-        # cluster_R_indep = [min(cluster_R_indep[i]) for i in sorted(cluster_R_indep.keys())]
-        # cluster_R_indep_noins = [iou for iou, num in zip(cluster_R_indep, sorted(cluster_img_num.keys())) if cluster_img_num[num]>1]
-        # if (epoch==0):
-        #     indep_thres = np.sort(cluster_R_indep_noins)[min(len(cluster_R_indep_noins)-1,np.round(len(cluster_R_indep_noins)*0.9).astype('int'))]
-
-        # pseudo_labeled_dataset = []
-        # outliers = 0
-        # for i, ((fname, _, cid), label) in enumerate(zip(sorted(dataset.train), pseudo_labels)):
-        #     indep_score = cluster_R_indep[label.item()]
-        #     comp_score = R_comp[i]
-        #     if ((indep_score<=indep_thres) and (comp_score.item()<=cluster_R_comp[label.item()])):
-        #         pseudo_labeled_dataset.append((fname,label.item(),cid))
-        #     else:
-        #         pseudo_labeled_dataset.append((fname,len(cluster_R_indep)+outliers,cid))
-        #         pseudo_labels[i] = len(cluster_R_indep)+outliers
-        #         outliers+=1
-
         if (epoch == 0):
             eps = args.eps
             cluster = DBSCAN(eps=eps, min_samples=4, metric='precomputed', n_jobs=-1)
@@ -267,19 +196,6 @@ def main_worker(args):
         train_loader.new_epoch()
 
         trainer.train(epoch, train_loader, optimizer, print_freq=args.print_freq, train_iters=len(train_loader))
-
-        # if ((epoch+1)%args.eval_step==0 or (epoch==args.epochs-1)):
-        #     mAP = evaluator.evaluate(test_loader, dataset.query, dataset.gallery, cmc_flag=False)
-        #     is_best = (mAP>best_mAP)
-        #     best_mAP = max(mAP, best_mAP)
-        #     save_checkpoint({
-        #         'state_dict': model.state_dict(),
-        #         'epoch': epoch + 1,
-        #         'best_mAP': best_mAP,
-        #     }, is_best, fpath=osp.join(args.logs_dir, 'checkpoint.pth.tar'))
-
-        #     print('\n * Finished epoch {:3d}  model mAP: {:5.1%}  best: {:5.1%}{}\n'.
-        #           format(epoch, mAP, best_mAP, ' *' if is_best else ''))
 
         if ((epoch + 1) % args.eval_step == 0 or (epoch == args.epochs - 1)):
             mAP_1 = evaluator.evaluate(test_loader, dataset.query, dataset.gallery, cmc_flag=False)
