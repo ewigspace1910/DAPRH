@@ -90,7 +90,8 @@ class PreTrainer(object):
 
 class MMTTrainer(object):
     def __init__(self, model_1, model_2,
-                       model_1_ema, model_2_ema, num_cluster=500, alpha=0.999, aals_epoch=5) :
+                       model_1_ema, model_2_ema, num_cluster=500, alpha=0.999, 
+                       aals_epoch=5, num_part=3, batch_size=None) :
         super(MMTTrainer, self).__init__()
         self.model_1 = model_1
         self.model_2 = model_2
@@ -101,9 +102,10 @@ class MMTTrainer(object):
         self.alpha = alpha
 
         #pplr loss
-        self.num_part = 3
+        self.num_part = num_part
         self.aals_epoch = aals_epoch
-
+        assert batch_size != None, "set batch_size for MMTT"
+        self.bs = batch_size
         # self.criterion_ce = CrossEntropyLabelSmoothFilterNoise(num_cluster).cuda()
         self.criterion_ce = CrossEntropyLabelSmooth(num_cluster).cuda()
         self.criterion_ce_soft = KLDivLoss().cuda()
@@ -114,7 +116,7 @@ class MMTTrainer(object):
 
     def train(self, epoch, data_loader_target,
             optimizer, ce_soft_weight=0.5, tri_soft_weight=0.5, print_freq=1, 
-            train_iters=200, cross_agreements=None):
+            train_iters=200, cross_agreements=None, aals_weight=0.5):
         self.model_1.train()
         self.model_2.train()
         self.model_1_ema.train()
@@ -127,11 +129,13 @@ class MMTTrainer(object):
         precisions = [AverageMeter(),AverageMeter()]
 
         end = time.time()
+
         for i in range(train_iters):
             target_inputs = data_loader_target.next()
             data_time.update(time.time() - end)
             # process inputs
             inputs_1, inputs_2 ,targets = self._parse_data(target_inputs)
+            ca = cross_agreements[i*self.bs:i*self.bs+self.bs].cuda()
             # forward
             g_f_out_t1, p_f_out_t1, g_p_out_t1, p_p_out_t1 = self.model_1(inputs_1) # features and predictions of global and 3 part
             g_f_out_t2, p_f_out_t2, g_p_out_t2, p_p_out_t2 = self.model_2(inputs_2)
@@ -158,8 +162,8 @@ class MMTTrainer(object):
             #ID loss
             # loss_ce_1 = self.criterion_ce(g_p_out_t1, targets)
             # loss_ce_2 = self.criterion_ce(g_p_out_t2, targets)
-            loss_ce_1 = self.criterion_pglr(g_p_out_t1, p_p_out_t1, targets, cross_agreements)
-            loss_ce_2 = self.criterion_pglr(g_p_out_t1, p_p_out_t2, targets, cross_agreements)
+            loss_ce_1 = self.criterion_pglr(g_p_out_t1, p_p_out_t1, targets, ca)
+            loss_ce_2 = self.criterion_pglr(g_p_out_t1, p_p_out_t2, targets, ca)
             
             #Triplet loss for global
             loss_tri_1 = self.criterion_tri(g_f_out_t1, g_f_out_t1, targets)
@@ -170,8 +174,8 @@ class MMTTrainer(object):
             if self.num_part > 0:
                 if epoch >= self.aals_epoch:
                     for part in range(self.num_part):
-                        loss_pce += self.criterion_aals(p_p_out_t1[:, :, part], targets, cross_agreements[:, part])
-                        loss_pce += self.criterion_aals(p_p_out_t2[:, :, part], targets, cross_agreements[:, part])
+                        loss_pce += self.criterion_aals(p_p_out_t1[:, :, part], targets, ca[:, part])
+                        loss_pce += self.criterion_aals(p_p_out_t2[:, :, part], targets, ca[:, part])
                 else:
                     for part in range(self.num_part):
                         loss_pce += self.criterion_ce(p_p_out_t1[:, :, part], targets)
@@ -195,7 +199,7 @@ class MMTTrainer(object):
             loss = (loss_ce_1 + loss_ce_2)*(1-ce_soft_weight) + \
                     (loss_tri_1 + loss_tri_2)*(1-tri_soft_weight) + \
                     loss_ce_soft*ce_soft_weight + loss_tri_soft*tri_soft_weight +\
-                    0.5 * loss_pce + 0.5 * loss_tri_soft_local
+                    aals_weight * loss_pce + aals_weight * loss_tri_soft_local
 
             
             #optimize

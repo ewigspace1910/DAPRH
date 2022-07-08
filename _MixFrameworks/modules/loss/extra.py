@@ -24,15 +24,15 @@ class PGLR(nn.Module):
     """ Part-guided label refinement """
     def __init__(self, lam=0.5):
         super(PGLR, self).__init__()
-        self.softmax = nn.Softmax(dim=1)
-        self.logsoftmax = nn.LogSoftmax(dim=1)
+        self.softmax = nn.Softmax(dim=1).cuda()
+        self.logsoftmax = nn.LogSoftmax(dim=1).cuda()
         self.lam = lam
 
     def forward(self, logits_g, logits_p, targets, ca):
         targets = torch.zeros_like(logits_g).scatter_(1, targets.unsqueeze(1), 1)
         w = torch.softmax(ca, dim=1)  # B * P
         w = torch.unsqueeze(w, 1)  # B * 1 * P
-        preds_p = self.softmax(logits_p)  # B * C * P
+        preds_p = self.softmax(logits_p)  # B * numClusters * numParts
         ensembled_preds = (preds_p * w).sum(2).detach()  # B * class_num
         refined_targets = self.lam * targets + (1-self.lam) * ensembled_preds
 

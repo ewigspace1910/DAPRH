@@ -59,15 +59,16 @@ class ProbUncertain():
         uncertainties = self.kl_loss(pred_probs, ideal_probs).sum(1).numpy()
         return uncertainties
 
-
 prob_uncertainty = ProbUncertain()
+len_train_set = 0
+
 def get_train_loader(dataset, height, width, batch_size, workers,
                      num_instances, iters, centers, target_label, cf, pt):
 
     normalizer = T.Normalize(mean=[0.485, 0.456, 0.406],
                              std=[0.229, 0.224, 0.225])
     train_transformer = T.Compose([
-        T.Resize((height, width), interpolation=3),
+        T.Resize((height, width), interpolation=T.InterpolationMode.BICUBIC),
         T.RandomHorizontalFlip(p=0.5),
         T.Pad(10),
         T.RandomCrop((height, width)),
@@ -94,6 +95,7 @@ def get_train_loader(dataset, height, width, batch_size, workers,
         train_set[i] = tuple(train_set[i])
 
     print('select {}/{} samples'.format(len(train_set), N))
+    len_train_set = len(train_set)
 
     train_set = sorted(train_set)
     rmgs_flag = num_instances > 0
@@ -115,7 +117,7 @@ def get_test_loader(dataset, height, width, batch_size, workers, testset=None):
                              std=[0.229, 0.224, 0.225])
 
     test_transformer = T.Compose([
-        T.Resize((height, width), interpolation=3),
+        T.Resize((height, width), interpolation=T.InterpolationMode.BICUBIC),
         T.ToTensor(),
         normalizer
     ])
@@ -191,7 +193,7 @@ def main_worker(args):
     cluster_loader = get_test_loader(dataset_target, args.height, args.width, 4 * args.batch_size, args.workers, testset=dataset_target.train)
 
     # Create model
-    assert args.a == "resnet50part" or args.a == "resnet101part" or args.a == "resnet152part", "need set backbone is resnetpart"
+    assert args.arch == "resnet50part" or args.arch == "resnet101part" or args.arch == "resnet152part", "need set backbone is resnetpart"
     model_1, model_2, model_1_ema, model_2_ema = create_model(args)
 
     # Evaluator
@@ -210,7 +212,7 @@ def main_worker(args):
 
     print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
     if args.fast_kmeans:
-        km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=200, batch_size=300, init_size=1500).fit(cf)        
+        km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=150, batch_size=300, init_size=2500).fit(cf)        
         model_1.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
         model_2.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
         model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
@@ -236,7 +238,6 @@ def main_worker(args):
         train_loader_target, select_pseudo_samples, select_pseudo_samples_labels = get_train_loader(dataset_target,
                                                             args.height, args.width, args.batch_size, args.workers,
                                                             args.num_instances, iters, centers,target_label, cf, pt)
-
         # Setting Optimizer
         params = []
         for key, value in model_1.named_parameters():
@@ -258,22 +259,24 @@ def main_worker(args):
         """
         ##########
         # calculate parts feature
-        features_g, features_p, _ = extract_all_features(model_1, model_2, train_loader_target)
-        features_g = torch.cat([features_g[f].unsqueeze(0) for _, _, f, _ in train_loader_target], 0)
-        features_p = torch.cat([features_p[f].unsqueeze(0) for _, _, f, _ in train_loader_target], 0)
+        features_g, features_p, _ , fnames = extract_all_features(model_1, model_2, train_loader_target)
+        features_g = torch.cat([features_g[f].unsqueeze(0) for f in fnames], 0)
+        features_p = torch.cat([features_p[f].unsqueeze(0) for f in fnames], 0)
 
         # Compute the cross-agreement
         score = compute_cross_agreement(features_g, features_p, k=args.k)
 
         ## Trainer
         trainer = MMTTrainer(model_1, model_2, model_1_ema, model_2_ema,
-                             num_cluster=args.num_clusters, alpha=args.alpha)
+                             num_cluster=args.num_clusters, alpha=args.alpha, 
+                             aals_epoch=args.aals_epoch, num_part=args.part, batch_size=args.batch_size)
 
         train_loader_target.new_epoch()
 
         trainer.train(epoch, train_loader_target, optimizer,
                       ce_soft_weight=args.soft_ce_weight, tri_soft_weight=args.soft_tri_weight,
-                      print_freq=args.print_freq, train_iters=len(train_loader_target), ca=score)
+                      print_freq=args.print_freq, train_iters=len(train_loader_target), 
+                      aals_weight=args.beta,cross_agreements=score)
 
         def save_model(model_ema, is_best, best_mAP, mid):
             save_checkpoint({
@@ -310,7 +313,7 @@ def main_worker(args):
         print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
         if args.multiple_kmeans:
             if args.fast_kmeans:
-                km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=200, batch_size=300, init_size=1500).fit(cf) 
+                km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=200, batch_size=300, init_size=2500).fit(cf) 
                 centers = normalize(km.cluster_centers_, axis=1)
                 target_label = km.labels_
             else:
@@ -339,7 +342,10 @@ def extract_all_features(model_1, model_2, data_loader):
     labels = OrderedDict()
 
     with torch.no_grad():
-        for i, (imgs_1, imgs_2, fnames, pids) in enumerate(data_loader):
+        data_loader.new_epoch()
+        fnames_list = []
+        for i in range(len(data_loader)):
+            imgs_1, imgs_2, fnames, pids = data_loader.next()
             inputs_1 = to_torch(imgs_1).cuda()
             inputs_2 = to_torch(imgs_2).cuda()
             if isinstance(model_1, nn.DataParallel):
@@ -355,13 +361,12 @@ def extract_all_features(model_1, model_2, data_loader):
             del outputs_g_
 
             outputs_g, outputs_p = outputs_g.data.cpu(), outputs_p.data.cpu()
-
             for fname, output_g, output_p, pid in zip(fnames, outputs_g, outputs_p, pids):
                 features_g[fname] = output_g
                 features_p[fname] = output_p
                 labels[fname] = pid
-
-        return features_g, features_p, labels
+            fnames_list += fnames
+        return features_g, features_p, labels, fnames_list
 
 
 
@@ -421,6 +426,14 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--print-freq', type=int, default=10)
     parser.add_argument('--eval-step', type=int, default=1)
+    # cross agreement configs
+    parser.add_argument('--part', type=int, default=3, help="number of part")
+    parser.add_argument('--k', type=int, default=20,
+                        help="hyperparameter for cross agreement score")
+    parser.add_argument('--beta', type=float, default=0.5,
+                        help="weighting parameter for part-guided label refinement")
+    parser.add_argument('--aals-epoch', type=int, default=5,
+                        help="starting epoch for agreement-aware label smoothing")
     # path
     working_dir = osp.dirname(osp.abspath(__file__))
     parser.add_argument('--data-dir', type=str, metavar='PATH',

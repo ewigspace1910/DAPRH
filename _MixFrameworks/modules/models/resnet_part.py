@@ -117,9 +117,9 @@ class ResNetPart(nn.Module):
         
         ######################
         if self.norm:
-            bn_x = F.normalize(bn_x)
+            bn_x_ = F.normalize(bn_x)
         elif self.has_embedding:
-            bn_x = F.relu(bn_x) 
+            bn_x_ = F.relu(bn_x) 
         if self.dropout > 0:
             bn_x_ = self.drop(bn_x)
         logits_g = self.classifier(bn_x_)
