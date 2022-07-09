@@ -374,11 +374,11 @@ def extract_all_features(model_1, model_2, data_loader):
 
 
 
-def compute_cross_agreement(features_g, features_p, k, search_option=2):
+def compute_cross_agreement(features_g, features_p, k, search_option=0):
     print("Compute cross agreement score...")
     N, D, P = features_p.size()
     score = torch.FloatTensor()
-    ranked_list_g = compute_ranked_list(features_g, k=k, search_option=search_option, verbose=False) #[N x 20]
+    ranked_list_g = compute_ranked_list(features_g, k=k, search_option=search_option, verbose=True) #[N x 20]
     for i in range(P):
         ranked_list_p_i = compute_ranked_list(features_p[:, :, i], k=k, search_option=search_option, verbose=False)
         intersect_i = torch.FloatTensor([len(np.intersect1d(ranked_list_g[j], ranked_list_p_i[j])) for j in range(N)]) #[Nx1] -> scalar array
