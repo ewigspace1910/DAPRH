@@ -209,10 +209,12 @@ def main_worker(args):
     cf_2 = torch.stack(list(dict_f.values())).numpy()
     cf = (cf_1 + cf_2) / 2
     cf = normalize(cf, axis=1)
+    del dict_f, cf_1, cf_2
+
 
     print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
     if args.fast_kmeans:
-        km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=150, batch_size=300, init_size=2500).fit(cf)        
+        km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=2500).fit(cf)        
         model_1.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
         model_2.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
         model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
@@ -228,16 +230,20 @@ def main_worker(args):
         centers = normalize(km.cluster_centers_, axis=1)
         target_label = km.labels_
     start_percentage = args.p
+    del km
 
     def scheduler(t, T, p0, h=1.5):
         return p0 + 1 / h * math.log(1 + t / T * (pow(math.e, h*(1 - p0)) - 1))
 
     for epoch in range(args.epochs):
+        ############################################
+        #Resamples with probabilistic uncertainty
         pt = scheduler(epoch, args.epochs-1, start_percentage, h=1.5)
         print('Current epoch selects {:.4f} unlabeled data'.format(pt))
         train_loader_target, select_pseudo_samples, select_pseudo_samples_labels = get_train_loader(dataset_target,
                                                             args.height, args.width, args.batch_size, args.workers,
                                                             args.num_instances, iters, centers,target_label, cf, pt)
+        del cf
         # Setting Optimizer
         params = []
         for key, value in model_1.named_parameters():
@@ -259,20 +265,17 @@ def main_worker(args):
         """
         ##########
         # calculate parts feature
-        features_g, features_p, _ , fnames = extract_all_features(model_1, model_2, train_loader_target)
-        features_g = torch.cat([features_g[f].unsqueeze(0) for f in fnames], 0)
-        features_p = torch.cat([features_p[f].unsqueeze(0) for f in fnames], 0)
-
+        features_g, features_p = extract_all_features(model_1, model_2, train_loader_target)
         # Compute the cross-agreement
         score = compute_cross_agreement(features_g, features_p, k=args.k)
-
-        ## Trainer
+        del features_g, features_p
+        ############################################## 
+        # Trainer + Checkpoint
+        print("Finetune by MMTT...")
         trainer = MMTTrainer(model_1, model_2, model_1_ema, model_2_ema,
                              num_cluster=args.num_clusters, alpha=args.alpha, 
                              aals_epoch=args.aals_epoch, num_part=args.part, batch_size=args.batch_size)
-
         train_loader_target.new_epoch()
-
         trainer.train(epoch, train_loader_target, optimizer,
                       ce_soft_weight=args.soft_ce_weight, tri_soft_weight=args.soft_tri_weight,
                       print_freq=args.print_freq, train_iters=len(train_loader_target), 
@@ -285,6 +288,7 @@ def main_worker(args):
                 'best_mAP': best_mAP,
             }, is_best, fpath=osp.join(args.logs_dir, 'model'+str(mid)+'_checkpoint.pth.tar'))
         if args.offline_test:
+            print("save model 4 offline test in epoch {}".format(epoch+1))
             save_model(model_1_ema,is_best=False,best_mAP=0.0,mid=(epoch+1)*10+1)
             save_model(model_2_ema,is_best=False,best_mAP=0.0,mid=(epoch+1)*10+2)
         elif ((epoch+1)%args.eval_step==0 or (epoch==args.epochs-1)):
@@ -297,7 +301,6 @@ def main_worker(args):
 
             print('\n * Finished epoch {:3d}  model no.1 mAP: {:5.1%} model no.2 mAP: {:5.1%}  best: {:5.1%}{}\n'.
                   format(epoch, mAP_1, mAP_2, best_mAP, ' *' if is_best else ''))
-
 
 
         ######################################
@@ -313,7 +316,7 @@ def main_worker(args):
         print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
         if args.multiple_kmeans:
             if args.fast_kmeans:
-                km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=200, batch_size=300, init_size=2500).fit(cf) 
+                km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=2500).fit(cf) 
                 centers = normalize(km.cluster_centers_, axis=1)
                 target_label = km.labels_
             else:
@@ -339,13 +342,13 @@ def extract_all_features(model_1, model_2, data_loader):
 
     features_g = OrderedDict()
     features_p = OrderedDict()
-    labels = OrderedDict()
+
 
     with torch.no_grad():
         data_loader.new_epoch()
         fnames_list = []
         for i in range(len(data_loader)):
-            imgs_1, imgs_2, fnames, pids = data_loader.next()
+            imgs_1, imgs_2, fnames, _ = data_loader.next()
             inputs_1 = to_torch(imgs_1).cuda()
             inputs_2 = to_torch(imgs_2).cuda()
             if isinstance(model_1, nn.DataParallel):
@@ -357,16 +360,17 @@ def extract_all_features(model_1, model_2, data_loader):
 
             outputs_g = (outputs_g + outputs_g_)/2
             outputs_p = (outputs_p + outputs_p_)/2
-            del outputs_p_
-            del outputs_g_
+            del outputs_p_, outputs_g_
 
             outputs_g, outputs_p = outputs_g.data.cpu(), outputs_p.data.cpu()
-            for fname, output_g, output_p, pid in zip(fnames, outputs_g, outputs_p, pids):
+            for fname, output_g, output_p in zip(fnames, outputs_g, outputs_p):
                 features_g[fname] = output_g
                 features_p[fname] = output_p
-                labels[fname] = pid
             fnames_list += fnames
-        return features_g, features_p, labels, fnames_list
+        
+        features_g = torch.cat([features_g[f].unsqueeze(0) for f in fnames_list], 0)
+        features_p = torch.cat([features_p[f].unsqueeze(0) for f in fnames_list], 0)
+        return features_g, features_p
 
 
 
