@@ -243,7 +243,7 @@ def main_worker(args):
         train_loader_target, select_pseudo_samples, select_pseudo_samples_labels = get_train_loader(dataset_target,
                                                             args.height, args.width, args.batch_size, args.workers,
                                                             args.num_instances, iters, centers,target_label, cf, pt)
-        del cf
+        del cf, centers
         # Setting Optimizer
         params = []
         for key, value in model_1.named_parameters():
@@ -280,7 +280,7 @@ def main_worker(args):
                       ce_soft_weight=args.soft_ce_weight, tri_soft_weight=args.soft_tri_weight,
                       print_freq=args.print_freq, train_iters=len(train_loader_target), 
                       aals_weight=args.beta,cross_agreements=score)
-
+        del trainer
         def save_model(model_ema, is_best, best_mAP, mid):
             save_checkpoint({
                 'state_dict': model_ema.state_dict(),
@@ -312,6 +312,7 @@ def main_worker(args):
         cf_2 = torch.stack(list(dict_f.values())).numpy()
         cf = (cf_1 + cf_2) / 2
         cf = normalize(cf, axis=1)
+        del dict_f, cf_1, cf_2
         # using select cf to update centers
         print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
         if args.multiple_kmeans:
@@ -328,13 +329,13 @@ def main_worker(args):
             model_2.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
             model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
             model_2_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-                
+            del km       
         else:
             for id in range(args.num_clusters):
                 indexs = select_pseudo_samples[np.where(select_pseudo_samples_labels==id)]
                 if len(indexs)>0:
                     centers[id] = np.mean(cf[indexs],0)
-
+        
 
 def extract_all_features(model_1, model_2, data_loader):
     model_1.eval()
