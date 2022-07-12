@@ -30,8 +30,9 @@ class ResNet(nn.Module):
         if depth not in ResNet.__factory:
             raise KeyError("Unsupported depth:", depth)
         resnet = ResNet.__factory[depth](pretrained=pretrained)
-        resnet.layer4[0].conv2.stride = (1,1)
-        resnet.layer4[0].downsample[0].stride = (1,1)
+        if depth >= 50:
+            resnet.layer4[0].conv2.stride = (1,1)
+            resnet.layer4[0].downsample[0].stride = (1,1)
         self.base = nn.Sequential(
             resnet.conv1, resnet.bn1, resnet.relu, resnet.maxpool,
             resnet.layer1, resnet.layer2, resnet.layer3, resnet.layer4)
