@@ -21,7 +21,7 @@ class NSMall(BaseImageDataset):
         self.dataset_dir = osp.join(root, self.dataset_dir)
         self.train_dir = osp.join(self.dataset_dir)
 
-        train = self._process_dir(self.train_dir, relabel=True)
+        train = self._process_merge(self.train_dir, relabel=True)
 
 
         if verbose:
@@ -33,7 +33,7 @@ class NSMall(BaseImageDataset):
 
         self.num_train_pids, self.num_train_imgs, self.num_train_cams = self.get_imagedata_info(self.train)
         
-    def _process_dir(self, dir_path, relabel=False):
+    def _process_merge(self, dir_path, relabel=False):
         folder_paths = [p.path for p in os.scandir(dir_path)]
         img_paths = []
         for x in folder_paths:

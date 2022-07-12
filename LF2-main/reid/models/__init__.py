@@ -10,11 +10,15 @@ from .inceptionv3 import *
 
 __factory = {
     'resnet18': resnet18,
+    'resnet18_source': resnet18_source,
     'resnet34': resnet34,
+    'resnet34_source':resnet34_source,
     'resnet50': resnet50,
     'resnet50_source':resnet50_source,
     'resnet101': resnet101,
+    'resnet101_source':resnet101_source,
     'resnet152': resnet152,
+    'resnet152_source':resnet152_source,
     'resnet_ibn50a': resnet_ibn50a,
     'resnet_ibn101a': resnet_ibn101a,
     'resnext50': resnext50,

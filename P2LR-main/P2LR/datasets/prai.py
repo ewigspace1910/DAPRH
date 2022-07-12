@@ -25,14 +25,14 @@ class PRAI(BaseImageDataset):
         required_files = [self.train_path]
         #self.check_before_run(required_files)
 
-        self._for_merge = self.process_train(self.train_path)
+        self._for_merge = self._process_merge(self.train_path)
 
         super().__init__()
         if verbose:
             print("=> PRAI loaded")
             self.print_dataset_statistics(self._for_merge)
 
-    def process_train(self, train_path):
+    def _process_merge(self, train_path):
         data = []
         img_paths = glob(os.path.join(train_path, "*.jpg"))
         for img_path in img_paths:

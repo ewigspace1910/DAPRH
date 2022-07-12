@@ -70,10 +70,10 @@ class MSMT17(BaseImageDataset):
         ]
         
 
-        train = self.process_dir(self.train_dir, self.list_train_path)
-        val = self.process_dir(self.train_dir, self.list_val_path)
-        query = self.process_dir(self.test_dir, self.list_query_path, is_train=False)
-        gallery = self.process_dir(self.test_dir, self.list_gallery_path, is_train=False)
+        train = self._process_merge(self.train_dir, self.list_train_path)
+        val = self._process_merge(self.train_dir, self.list_val_path)
+        query = self._process_merge(self.test_dir, self.list_query_path, is_train=False)
+        gallery = self._process_merge(self.test_dir, self.list_gallery_path, is_train=False)
 
         num_train_pids = self.parse_data(train)[0]
         query_tmp = []
@@ -100,7 +100,7 @@ class MSMT17(BaseImageDataset):
             print("=> MSMT loaded")
             self.print_dataset_statistics(train, query, gallery)
 
-    def process_dir(self, dir_path, list_path, is_train=True):
+    def _process_merge(self, dir_path, list_path, is_train=True):
         with open(list_path, 'r') as txt:
             lines = txt.readlines()
         data = []

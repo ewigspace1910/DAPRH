@@ -53,7 +53,7 @@ class DukeMTMC(BaseImageDataset):
         self.num_query_pids, self.num_query_imgs, self.num_query_cams = self.get_imagedata_info(self.query)
         self.num_gallery_pids, self.num_gallery_imgs, self.num_gallery_cams = self.get_imagedata_info(self.gallery)
 
-        self._for_merge = self.process_train(self.train_dir)
+        self._for_merge = self._process_merge(self.train_dir)
         
     def _download_data(self):
         if osp.exists(self.dataset_dir):
@@ -103,7 +103,7 @@ class DukeMTMC(BaseImageDataset):
 
         return dataset
 
-    def process_train(self, dir_path, is_train=True):
+    def _process_merge(self, dir_path, is_train=True):
         img_paths = glob.glob(osp.join(dir_path, '*.jpg'))
         pattern = re.compile(r'([-\d]+)_c(\d)')
         data = []

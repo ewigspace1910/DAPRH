@@ -7,8 +7,8 @@ import torchvision
 import torch
 
 
-__all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50_source', 'resnet101',
-           'resnet152']
+__all__ = ['ResNet', 'resnet18_source', 'resnet34_source', 'resnet50_source', 'resnet101_source',
+           'resnet152_source']
 
 
 class ResNet(nn.Module):
@@ -130,11 +130,11 @@ class ResNet(nn.Module):
         self.base[5].load_state_dict(resnet.layer3.state_dict())
         self.base[6].load_state_dict(resnet.layer4.state_dict())
 
-def resnet18(**kwargs):
+def resnet18_source(**kwargs):
     return ResNet(18, **kwargs)
 
 
-def resnet34(**kwargs):
+def resnet34_source(**kwargs):
     return ResNet(34, **kwargs)
 
 
@@ -142,9 +142,9 @@ def resnet50_source(**kwargs):
     return ResNet(50, **kwargs)
 
 
-def resnet101(**kwargs):
+def resnet101_source(**kwargs):
     return ResNet(101, **kwargs)
 
 
-def resnet152(**kwargs):
+def resnet152_source(**kwargs):
     return ResNet(152, **kwargs)
