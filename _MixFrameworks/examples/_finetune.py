@@ -1,5 +1,6 @@
 from __future__ import print_function, absolute_import
 import argparse
+from ast import arg
 import os.path as osp
 import random
 import numpy as np
@@ -18,7 +19,7 @@ from torch.utils.data import DataLoader
 
 from modules import datasets
 from modules import models
-from modules.trainers import MMTTrainer
+from modules.trainers import MMTTrainer, MMTwCaTrainer
 from modules.evaluators import Evaluator, extract_features
 from modules.utils.data import IterLoader
 from modules.utils.data import transforms as T
@@ -240,7 +241,7 @@ def main_worker(args):
         #Resamples with probabilistic uncertainty
         pt = scheduler(epoch, args.epochs-1, start_percentage, h=1.5)
         print('Current epoch selects {:.4f} unlabeled data'.format(pt))
-        train_loader_target, select_pseudo_samples, select_pseudo_samples_labels = get_train_loader(dataset_target,
+        train_loader_target, _, _ = get_train_loader(dataset_target,
                                                             args.height, args.width, args.batch_size, args.workers,
                                                             args.num_instances, iters, centers,target_label, cf, pt)
         del cf, centers
@@ -256,30 +257,39 @@ def main_worker(args):
             params += [{"params": [value], "lr": args.lr, "weight_decay": args.weight_decay}]
         optimizer = torch.optim.Adam(params)
 
-        ###############################################
-        #Calculate cross agreements on refined sample
-        """
-        Yoonki Cho, Woo Jae Kim, Seunghoon Hong, Sung-Eui Yoon. 28 Mar 2022
-        url:https://arxiv.org/abs/2203.14675
-        github:https://github.com/yoonkicho/pplr
-        """
-        ##########
-        # calculate parts feature
-        features_g, features_p = extract_all_features(model_1, model_2, train_loader_target)
-        # Compute the cross-agreement
-        score = compute_cross_agreement(features_g, features_p, k=args.k)
-        del features_g, features_p
-        ############################################## 
-        # Trainer + Checkpoint
-        print("Finetune by MMTT...")
-        trainer = MMTTrainer(model_1, model_2, model_1_ema, model_2_ema,
+        if args.flag_ca: 
+            ###############################################
+            #Calculate cross agreements on refined sample
+            """
+            Yoonki Cho, Woo Jae Kim, Seunghoon Hong, Sung-Eui Yoon. 28 Mar 2022
+            url:https://arxiv.org/abs/2203.14675
+            github:https://github.com/yoonkicho/pplr
+            """
+            ##########
+            # calculate parts feature
+            features_g, features_p = extract_all_features(model_1, model_2, train_loader_target)
+            # Compute the cross-agreement
+            score = compute_cross_agreement(features_g, features_p, k=args.k)
+            del features_g, features_p
+            ############################################## 
+            print("Finetune by MMTT...")
+            trainer = MMTwCaTrainer(model_1, model_2, model_1_ema, model_2_ema,
                              num_cluster=args.num_clusters, alpha=args.alpha, 
                              aals_epoch=args.aals_epoch, num_part=args.part, batch_size=args.batch_size)
-        train_loader_target.new_epoch()
-        trainer.train(epoch, train_loader_target, optimizer,
+            train_loader_target.new_epoch()
+            trainer.train(epoch, train_loader_target, optimizer,
                       ce_soft_weight=args.soft_ce_weight, tri_soft_weight=args.soft_tri_weight,
                       print_freq=args.print_freq, train_iters=len(train_loader_target), 
                       aals_weight=args.beta,cross_agreements=score)
+
+        else:
+            trainer = MMTTrainer(model_1, model_2, model_1_ema, model_2_ema,
+                             num_cluster=args.num_clusters, alpha=args.alpha)
+            train_loader_target.new_epoch()
+            trainer.train(epoch, train_loader_target, optimizer,
+                      ce_soft_weight=args.soft_ce_weight, tri_soft_weight=args.soft_tri_weight,
+                      print_freq=args.print_freq, train_iters=len(train_loader_target))
+        
         del trainer
         def save_model(model_ema, is_best, best_mAP, mid):
             save_checkpoint({
@@ -315,26 +325,26 @@ def main_worker(args):
         del dict_f, cf_1, cf_2
         # using select cf to update centers
         print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
-        if args.multiple_kmeans:
-            if args.fast_kmeans:
-                km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=2500).fit(cf) 
-                centers = normalize(km.cluster_centers_, axis=1)
-                target_label = km.labels_
-            else:
-                km = KMeans(n_clusters=args.num_clusters, random_state=args.seed, n_jobs=4,max_iter=300).fit(cf)
-                centers = normalize(km.cluster_centers_, axis=1)
-                target_label = km.labels_
-                
-            model_1.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-            model_2.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-            model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-            model_2_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-            del km       
+        # if args.multiple_kmeans:
+        if args.fast_kmeans:
+            km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=2500).fit(cf) 
+            centers = normalize(km.cluster_centers_, axis=1)
+            target_label = km.labels_
         else:
-            for id in range(args.num_clusters):
-                indexs = select_pseudo_samples[np.where(select_pseudo_samples_labels==id)]
-                if len(indexs)>0:
-                    centers[id] = np.mean(cf[indexs],0)
+            km = KMeans(n_clusters=args.num_clusters, random_state=args.seed, n_jobs=4,max_iter=300).fit(cf)
+            centers = normalize(km.cluster_centers_, axis=1)
+            target_label = km.labels_
+                
+        model_1.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+        model_2.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+        model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+        model_2_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+        del km       
+        # else:
+        #     for id in range(args.num_clusters):
+        #         indexs = select_pseudo_samples[np.where(select_pseudo_samples_labels==id)]
+        #         if len(indexs)>0:
+        #             centers[id] = np.mean(cf[indexs],0)
         
 
 def extract_all_features(model_1, model_2, data_loader):
@@ -432,6 +442,8 @@ if __name__ == '__main__':
     parser.add_argument('--print-freq', type=int, default=10)
     parser.add_argument('--eval-step', type=int, default=1)
     # cross agreement configs
+    parser.add_argument('--flag_ca', action='store_true',
+                        help='using cross agreement')
     parser.add_argument('--part', type=int, default=3, help="number of part")
     parser.add_argument('--k', type=int, default=20,
                         help="hyperparameter for cross agreement score")
@@ -449,6 +461,6 @@ if __name__ == '__main__':
                         help='using fast clustering with --fast_kmeans')
     parser.add_argument('--offline_test', action='store_true',
                         help='offline test models')
-    parser.add_argument('--multiple_kmeans', action='store_true',
-                        help='using kmeans to update centers')
+    # parser.add_argument('--multiple_kmeans', action='store_true',
+    #                     help='using kmeans to update centers')
     main()
