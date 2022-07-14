@@ -193,7 +193,7 @@ def main_worker(args):
     cluster_loader = get_test_loader(dataset_target, args.height, args.width, 4 * args.batch_size, args.workers, testset=dataset_target.train)
 
     # Create model
-    assert args.arch == "resnet50part" or args.arch == "resnet101part" or args.arch == "resnet152part", "need set backbone is resnetpart"
+    assert args.arch.find("part") >= 0, "need set backbone is resnetpart"
     model_1, model_2, model_1_ema, model_2_ema = create_model(args)
 
     # Evaluator
