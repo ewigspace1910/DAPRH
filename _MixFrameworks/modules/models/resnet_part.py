@@ -87,13 +87,13 @@ class ResNetPart(nn.Module):
         # part feature classifiers
         for i in range(self.num_parts):
             name = 'bnneck' + str(i)
-            setattr(self, name, nn.BatchNorm1d(2048))
+            setattr(self, name, nn.BatchNorm1d(num_features))
             init.constant_(getattr(self, name).weight, 1)
             init.constant_(getattr(self, name).bias, 0)
             getattr(self, name).bias.requires_grad_(False)
 
             name = 'classifier' + str(i)
-            setattr(self, name, nn.Linear(2048, self.num_classes, bias=False))
+            setattr(self, name, nn.Linear(num_features, self.num_classes, bias=False))
 
         if not pretrained:
             self.reset_params()
