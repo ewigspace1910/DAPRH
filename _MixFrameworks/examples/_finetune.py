@@ -266,12 +266,13 @@ def main_worker(args):
             github:https://github.com/yoonkicho/pplr
             """
             ##########
+            print("using cross agreement...")
             # calculate parts feature
             features_g, features_p = extract_all_features(model_1, model_2, train_loader_target)
             # Compute the cross-agreement
             score = compute_cross_agreement(features_g, features_p, k=args.k)
             del features_g, features_p
-            ############################################## 
+            
             print("Finetune by MMTT...")
             trainer = MMTwCaTrainer(model_1, model_2, model_1_ema, model_2_ema,
                              num_cluster=args.num_clusters, alpha=args.alpha, 

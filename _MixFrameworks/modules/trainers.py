@@ -206,7 +206,7 @@ class MMTTrainer(object):
             ema_param.data.mul_(alpha).add_(1 - alpha, param.data)
 
     def _parse_data(self, inputs):
-        imgs_1, imgs_2, pids = inputs
+        imgs_1, imgs_2, _, pids = inputs
         inputs_1 = imgs_1.cuda()
         inputs_2 = imgs_2.cuda()
         targets = pids.cuda()
