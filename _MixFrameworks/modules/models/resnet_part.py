@@ -29,7 +29,7 @@ class ResNetPart(nn.Module):
         # Construct base (pretrained) resnet
         if depth not in ResNetPart.__factory:
             raise KeyError("Unsupported depth:", depth)
-        resnet = ResNetPart.__factory[depth](pretrained=pretrained)
+        resnet = ResNetPart.__factory[depth](weights=None) #(pretrained=pretrained)
         if depth >= 50:
             resnet.layer4[0].conv2.stride = (1,1)
             resnet.layer4[0].downsample[0].stride = (1,1)
@@ -75,25 +75,16 @@ class ResNetPart(nn.Module):
         self.num_parts = num_parts
         self.rap = nn.AdaptiveAvgPool2d((self.num_parts, 1))
 
-        # # global feature classifiers
-        # self.bnneck = nn.BatchNorm1d(2048)
-        # init.constant_(self.bnneck.weight, 1)
-        # init.constant_(self.bnneck.bias, 0)
-        # self.bnneck.bias.requires_grad_(False)
-
-        # self.classifier = nn.Linear(2048, self.num_classes, bias=False)
-        # init.normal_(self.classifier.weight, std=0.001)
-
         # part feature classifiers
         for i in range(self.num_parts):
             name = 'bnneck' + str(i)
-            setattr(self, name, nn.BatchNorm1d(num_features))
+            setattr(self, name, nn.BatchNorm1d(self.num_features))
             init.constant_(getattr(self, name).weight, 1)
             init.constant_(getattr(self, name).bias, 0)
             getattr(self, name).bias.requires_grad_(False)
 
             name = 'classifier' + str(i)
-            setattr(self, name, nn.Linear(num_features, self.num_classes, bias=False))
+            setattr(self, name, nn.Linear(self.num_features, self.num_classes, bias=False))
 
         if not pretrained:
             self.reset_params()
