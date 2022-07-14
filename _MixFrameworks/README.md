@@ -35,11 +35,14 @@ My approach is UDA includes 2 stages:
 
 ```python
 !python _finetune.py \
--dt unlabelwCam -b 64 -j 2 --num-clusters 2500 \
--a resnet50part --features 2048 \
---lr 0.0003 --alpha 0.999 --soft-ce-weight 0.5 --soft-tri-weight 0.8 \
---epochs 80 --iters 400 --print-freq 100 \
---multiple_kmeans --fast_kmeans \
+%cd /content/hahaha
+!python examples/_finetune.py \
+-dt unlabelwCam -b 64 -j 2 --num-clusters 3200 \
+-a resnet18part --features 512 \
+--lr 0.00035 --alpha 0.999 --soft-ce-weight 0.5 --soft-tri-weight 0.8 \
+--flag_ca --k 20 --beta 0.25 --aals-epoch 5 --part 2 \
+--epochs 80 --iters 125 --print-freq 50 \
+--fast_kmeans \
 --data-dir "_MixFrameworks/datasets" \
 --logs-dir "_MixFrameworks/logs/stage2" \
 --init-1 "_MixFrameworks/logs/stage1/model1/model_best.pth.tar" \
