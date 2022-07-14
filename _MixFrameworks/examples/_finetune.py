@@ -194,7 +194,10 @@ def main_worker(args):
     cluster_loader = get_test_loader(dataset_target, args.height, args.width, 4 * args.batch_size, args.workers, testset=dataset_target.train)
 
     # Create model
-    assert args.arch.find("part") >= 0, "need set backbone is resnetpart"
+    if args.arch.find("part") >= 0 and not args.flag_ca:
+        assert False, "only use [network]_part if you use flag_ca"
+    elif args.arch.find("part") < 0 and args.flag_ca:
+        assert False, "If you turn on flag_ca, must using [network]_part"
     model_1, model_2, model_1_ema, model_2_ema = create_model(args)
 
     # Evaluator
