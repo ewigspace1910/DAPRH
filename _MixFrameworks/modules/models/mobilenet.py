@@ -7,30 +7,33 @@ import torchvision
 import torch
 
 
-__all__ = ['ResNeXt', 'resnext50']
+__all__ = ['MobileNet', 'mobilenetL', 'mobilenetS']
 
 
-class ResNeXt(nn.Module):
+class MobileNetv3(nn.Module):
     __factory = {
-        50: torchvision.models.resnext50_32x4d,
+        "L": torchvision.models.mobilenet_v3_large,
+        "S": torchvision.models.mobilenet_v3_small,
     }
 
     def __init__(self, depth, pretrained=True, cut_at_pooling=False,
                  num_features=0, norm=False, dropout=0, num_classes=0):
-        super(ResNeXt, self).__init__()
+        super(MobileNetv3, self).__init__()
         self.pretrained = pretrained
         self.depth = depth
         self.cut_at_pooling = cut_at_pooling
         # Construct base (pretrained) resnet
-        if depth not in ResNeXt.__factory:
+        if depth not in MobileNetv3.__factory:
             raise KeyError("Unsupported depth:", depth)
-        resnet = ResNeXt.__factory[depth](pretrained=pretrained)
-        if depth >= 50:
-            resnet.layer4[0].conv2.stride = (1,1)
-            resnet.layer4[0].downsample[0].stride = (1,1)
-        self.base = nn.Sequential(
-            resnet.conv1, resnet.bn1, resnet.maxpool, # no relu
-            resnet.layer1, resnet.layer2, resnet.layer3, resnet.layer4)
+        if depth == "L":
+            resnet = MobileNetv3.__factory[depth](weights="IMAGENET1K_V2") #(pretrained=pretrained)
+        else:
+            resnet = MobileNetv3.__factory[depth](weights="IMAGENET1K_V1")
+        
+        # if depth >= 50:
+        #     # resnet.layer4[0].conv2.stride = (1,1)
+        #     # resnet.layer4[0].downsample[0].stride = (1,1)
+        self.base = resnet.features
         self.gap = nn.AdaptiveAvgPool2d(1)
 
         if not self.cut_at_pooling:
@@ -65,8 +68,7 @@ class ResNeXt(nn.Module):
             self.reset_params()
 
     def forward(self, x, feature_withbn=False):
-
-        x = self.base(x)
+        x = self.base(x) # [bs, channel, 16, 8]
 
         x = self.gap(x)
         x = x.view(x.size(0), -1)
@@ -117,16 +119,14 @@ class ResNeXt(nn.Module):
                 if m.bias is not None:
                     init.constant_(m.bias, 0)
 
-        resnet = ResNeXt.__factory[self.depth](pretrained=self.pretrained)
-        self.base[0].load_state_dict(resnet.conv1.state_dict())
-        self.base[1].load_state_dict(resnet.bn1.state_dict())
-        self.base[2].load_state_dict(resnet.maxpool.state_dict())
-        self.base[3].load_state_dict(resnet.layer1.state_dict())
-        self.base[4].load_state_dict(resnet.layer2.state_dict())
-        self.base[5].load_state_dict(resnet.layer3.state_dict())
-        self.base[6].load_state_dict(resnet.layer4.state_dict())
+        resnet = MobileNetv3.__factory[self.depth](pretrained=self.pretrained)
+        self.base.load_state_dict(resnet.features.state_dict())
 
 
-def resnext50(**kwargs):
-    return ResNeXt(50, **kwargs)
+def mobileNetS(**kwargs):
+    return MobileNetv3("S", **kwargs)
+
+
+def mobileNetL(**kwargs):
+    return MobileNetv3("L", **kwargs)
 
