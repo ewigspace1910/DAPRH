@@ -11,7 +11,7 @@ setup(name='Ewig@S.P-MixFramework',
           'numpy', 'torch', 'torchvision', 'tensorboard',
           'six', 'h5py', 'Pillow', 'scipy',
           'scikit-learn', 'scikit-image', 'seaborn', 'pandas',
-          'metric-learn', 'faiss_gpu==1.6.3'],
+          'metric-learn', 'faiss_gpu==1.6.3', 'gdown'],
 
       packages=find_packages()
       )
