@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 
 from .mobilenet import mobileNetL, mobileNetS
+from .part.mobilenet_part import  mobileNetLpart, mobileNetSpart
 
 from .resnet import *
 from .resnet_ibn import *
@@ -22,6 +23,8 @@ __factory = {
     #mobile net
     'mobilenetS': mobileNetS,
     'mobilenetL': mobileNetL,
+    'mobilenetSpart': mobileNetSpart,
+    'mobilenetLpart': mobileNetLpart,
     #RegNet
 
     #MNastNet

@@ -43,7 +43,7 @@ class MobileNetv3(nn.Module):
             self.has_embedding = num_features > 0
             self.num_classes = num_classes
 
-            out_planes = resnet.fc.in_features
+            out_planes = resnet.classifier[0].in_features
 
             # Append new layers
             if self.has_embedding:
