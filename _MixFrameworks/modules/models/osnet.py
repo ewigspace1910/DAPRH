@@ -42,7 +42,7 @@ class OSNet(nn.Module):
             self.num_classes = num_classes
             
             
-            out_planes = model.classifier[0].in_features #check orginal structure if get error!
+            out_planes = model.classifier.in_features #check orginal structure if get error!
             
             # Append new layers
             if self.has_embedding:
