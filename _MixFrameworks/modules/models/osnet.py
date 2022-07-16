@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-import orginal
+from  .part import orginal
 
 from torch import nn
 from torch.nn import functional as F
@@ -8,7 +8,7 @@ from torch.nn import init
 import torchvision
 import torch
 
-__all__ = [  "OSNet", "osnet_0.25", "osnet0_5",   "osnet0_75",   "osnet1_0",   "osnet1_0ibt" ]
+__all__ = [  "OSNet", "osnet0_25", "osnet0_5",   "osnet0_75",   "osnet1_0",   "osnet1_0ibt" ]
 
 class OSNet(nn.Module):
     __factory = {
