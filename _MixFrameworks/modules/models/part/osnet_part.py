@@ -1,6 +1,6 @@
 from __future__ import absolute_import
 
-import orginal
+from .orginal import *
 
 from torch import nn
 from torch.nn import functional as F
@@ -12,11 +12,11 @@ __all__ = [  "OSNetpart", "osnet0_25part", "osnet0_5part",   "osnet0_75part",   
 
 class OSNetpart(nn.Module):
     __factory = {
-        "1_0": orginal.osnet_x1_0,
-        "1_0ibn": orginal.osnet_ibn_x1_0,
-        "0_75": orginal.osnet_x0_75,
-        "0_5": orginal.osnet_x0_5,
-        "0_25": orginal.osnet_x0_25       
+        "1_0": osnet_x1_0,
+        "1_0ibn": osnet_ibn_x1_0,
+        "0_75": osnet_x0_75,
+        "0_5": osnet_x0_5,
+        "0_25": osnet_x0_25       
     }
 
     def __init__(self, depth, pretrained=True, cut_at_pooling=False,
