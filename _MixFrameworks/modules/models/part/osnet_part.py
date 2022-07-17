@@ -20,7 +20,7 @@ class OSNetpart(nn.Module):
     }
 
     def __init__(self, depth, pretrained=True, cut_at_pooling=False,
-                 num_features=0, norm=False, dropout=0, num_classes=0):
+                 num_features=0, norm=False, dropout=0, num_classes=0, **kwargs):
         super(OSNetpart, self).__init__()
         self.pretrained = pretrained
         self.depth = depth
@@ -71,6 +71,13 @@ class OSNetpart(nn.Module):
 
         # part feature classifiers
         for i in range(self.num_parts):
+            # Append new layers
+            if self.has_embedding:
+                name = 'embedding' + str(i)
+                setattr(self, name, nn.Linear(out_planes, self.num_features, bias=False))
+            else:
+                # Change the num_features to CNN output channels
+                self.num_features = out_planes
             name = 'bnneck' + str(i)
             setattr(self, name, nn.BatchNorm1d(self.num_features))
             init.constant_(getattr(self, name).weight, 1)
@@ -114,6 +121,8 @@ class OSNetpart(nn.Module):
         fs_p = []
         for i in range(self.num_parts):
             f_p_i = f_p[:, :, i]
+            if self.has_embedding:
+                f_p_i = getattr(self, 'embedding' + str(i))(f_p_i)
             f_p_i = getattr(self, 'bnneck' + str(i))(f_p_i)
             logits_p_i = getattr(self, 'classifier' + str(i))(f_p_i)
             logits_p.append(logits_p_i)
@@ -168,6 +177,8 @@ class OSNetpart(nn.Module):
         fs_p = []
         for i in range(self.num_parts):
             f_p_i = f_p[:, :, i]
+            if self.has_embedding:
+                f_p_i = getattr(self, 'embedding' + str(i))(f_p_i)
             f_p_i = getattr(self, 'bnneck' + str(i))(f_p_i)
             f_p_i = F.normalize(f_p_i)
             fs_p.append(f_p_i)
