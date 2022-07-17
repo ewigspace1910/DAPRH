@@ -218,7 +218,7 @@ def main_worker(args):
 
     print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
     if args.fast_kmeans:
-        km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=2500).fit(cf)        
+        km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=3500).fit(cf)        
         model_1.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
         model_2.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
         model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
@@ -331,7 +331,7 @@ def main_worker(args):
         print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
         # if args.multiple_kmeans:
         if args.fast_kmeans:
-            km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=2500).fit(cf) 
+            km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=3500).fit(cf) 
             centers = normalize(km.cluster_centers_, axis=1)
             target_label = km.labels_
         else:
