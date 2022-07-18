@@ -93,7 +93,7 @@ class MobileNetv3part(nn.Module):
 
     def forward(self, x): #just training and cant using to evaluate
         x = self.base(x) # [bs, channel, 16, 8]
-        f_g = self.gap(x) # [bs, channel, 1, 1]
+        f_g = self.gap(x) # [bs, 2048, 1, 1]
         f_g = f_g.view(x.size(0), -1)
 
         if self.cut_at_pooling:

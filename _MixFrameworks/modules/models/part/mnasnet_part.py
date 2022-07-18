@@ -95,15 +95,15 @@ class Mnasnetpart(nn.Module):
 
     def forward(self, x, feature_withbn=False):
         x = self.base(x) # [bs, channel, 16, 8]
-        x = self.gap(x)
-        x = x.view(x.size(0), -1)
+        f_g = self.gap(x) # [bs, channel, 1, 1]
+        f_g = f_g.view(x.size(0), -1)
 
         if self.cut_at_pooling:
-            return x
+            return f_g
         if self.has_embedding:
-            bn_x = self.feat_bn(self.feat(x))
+            bn_x = self.feat_bn(self.feat(f_g))
         else:
-            bn_x = self.feat_bn(x)
+            bn_x = self.feat_bn(f_g)
         if self.training is False:
             bn_x = F.normalize(bn_x)
             return bn_x
