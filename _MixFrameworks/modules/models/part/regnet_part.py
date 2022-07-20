@@ -195,25 +195,25 @@ class Regnetpart(nn.Module):
 
 ####------------------------------####
 def regnetY128gf_part(**kwargs):
-    return Regnetpart("regnetY128gf", **kwargs)
+    return Regnetpart("regnetY128gf_part", **kwargs)
 
 def regnetY32gf_part(**kwargs):
-    return Regnetpart("regnetY32gf", **kwargs)
+    return Regnetpart("regnetY32gf_part", **kwargs)
 
 def regnetY16gf_part(**kwargs):
-    return Regnetpart("regnetY16gf", **kwargs)
+    return Regnetpart("regnetY16gf_part", **kwargs)
 
 def regnetY3_2gf_part(**kwargs):
-    return Regnetpart("regnetY3_2gf", **kwargs)
+    return Regnetpart("regnetY3_2gf_part", **kwargs)
 
 def regnetY1_6gf_part(**kwargs):
-    return Regnetpart("regnetY1_6gf", **kwargs)
+    return Regnetpart("regnetY1_6gf_part", **kwargs)
 
 def regnetY400_part(**kwargs):
-    return Regnetpart("regnetY400", **kwargs)
+    return Regnetpart("regnetY400_part", **kwargs)
 
 def regnetY800_part(**kwargs):
-    return Regnetpart("regnetY800", **kwargs)
+    return Regnetpart("regnetY800_part", **kwargs)
 
 
 
