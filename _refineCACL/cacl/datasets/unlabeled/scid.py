@@ -14,7 +14,7 @@ class SCID(BaseImageDataset):
 
     def __init__(self, root="./datasets", verbose=True, **kwargs):
         super(SCID, self).__init__()
-        self.dataset_name = 'unlabeled_wcam_dataset'
+        self.dataset_name = 'SCID_Unlabeled'
         self.dataset_dir = osp.join(root, self.dataset_dir)
         self.train_dir = osp.join(self.dataset_dir, 'bounding_box_test')
         self.query_dir = osp.join(self.dataset_dir, 'query')

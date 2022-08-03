@@ -36,7 +36,7 @@ import os
 
 
 def get_data(name, data_dir):
-    root = osp.join(data_dir, name)
+    root = osp.join(data_dir)
     dataset = datasets.create(name, root)
     return dataset
 
