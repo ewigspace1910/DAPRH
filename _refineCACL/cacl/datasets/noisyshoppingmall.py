@@ -19,8 +19,12 @@ class NSMall(BaseImageDataset):
         self.dataset_dir = osp.join(root, self.dataset_dir)
         self.train_dir = osp.join(self.dataset_dir)
 
-        train = self._process_dir(self.train_dir, relabel=True)
-        if for_merge:  self._for_merge = self.train = train
+    
+        if for_merge:  
+            train = self._for_merge = self._process_merge(self.train_dir, relabel=True)
+
+        else:  
+            train = self.train = self._process_dir(self.train_dir, relabel=True)
 
         if verbose:
             print("=> Noisy shopping mall dataset loaded")
