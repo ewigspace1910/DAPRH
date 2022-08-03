@@ -23,10 +23,10 @@ from cacl import models
 from cacl.models.hm import HybridMemory
 from cacl.trainers import CACLTrainer_USL,CACLSIC_USL
 from cacl.evaluators import Evaluator, extract_features
-from cacl.utils.data import IterLoader
-from cacl.utils.data import transforms as T
-from cacl.utils.data.sampler import RandomMultipleGallerySampler
-from cacl.utils.data.preprocessor import Preprocessor
+from cacl.datasets.data import IterLoader
+from cacl.datasets.data import transforms as T
+from cacl.datasets.data.sampler import RandomMultipleGallerySampler
+from cacl.datasets.data.preprocessor import Preprocessor
 from cacl.utils.logging import Logger
 from cacl.utils.serialization import load_checkpoint, save_checkpoint, copy_state_dict
 from cacl.utils.faiss_rerank import compute_jaccard_distance
