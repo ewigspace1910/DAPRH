@@ -18,5 +18,6 @@ some popular repos I refined for my dataset and verify its effectiveness include
  2. P2LR 	- [Probabilistic uncertainty guided Progressive Label Refinery](https://github.com/JeyesHan/P2LR)
  3. FL2   	- [Learning Feature Fusion for Unsupervised Domain Adaptive Person Re-identification](https://github.com/DJEddyking/LF2)
  4. PPLR	- [Part-based Pseudo Label Refinement for Unsupervised Person Re-identification](https://github.com/yoonkicho/pplr)
- 5. HDCRL	 	- [Hybrid Dynamic Contrast and Probability Distillation for Unsupervised Person Re-Id ](https://github.com/zjy2050/HDCRL-ReID)
+ 5. HDCRL	- [Hybrid Dynamic Contrast and Probability Distillation for Unsupervised Person Re-Id ](https://github.com/zjy2050/HDCRL-ReID)
+ 6. CACL 	- [Cluster-guided Asymmetric Contrastive Learning for Unsupervised Person Re-Identification](https://github.com/MingkunLishigure/CACL)
 
