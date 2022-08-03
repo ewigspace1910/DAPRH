@@ -151,7 +151,7 @@ class CACLSIC_USL(object):
         self.memory1 = memory1
         self.memory2 = memory2
 
-    def train(self, epoch, data_loader1, data_loader2, optimizer, print_freq=10, train_iters=400):
+    def train(self, epoch, data_loader1, optimizer, print_freq=10, train_iters=400):
         self.encoder1.train()
         self.encoder2.train()
 
@@ -160,14 +160,10 @@ class CACLSIC_USL(object):
 
         losses = AverageMeter()
         
-        losses1 = AverageMeter()
-        losses2 = AverageMeter()
-
         end = time.time()
         for i in range(train_iters):
             # load data
             inputs1 = data_loader1.next()
-            inputs3 = data_loader2.next()
             
             data_time.update(time.time() - end)
 

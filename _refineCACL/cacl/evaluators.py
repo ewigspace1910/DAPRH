@@ -50,7 +50,7 @@ def extract_features(model, data_loader, print_freq=50):
                               batch_time.val, batch_time.avg,
                               data_time.val, data_time.avg))
 
-    return features, features2,labels
+    return features, features2, labels
 
 def pairwise_distance(features, query=None, gallery=None):
     if query is None and gallery is None:

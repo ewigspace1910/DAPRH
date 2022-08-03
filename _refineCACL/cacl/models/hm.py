@@ -113,7 +113,9 @@ class HybridMemory(nn.Module):
         if back == 0:
             return self.focal_loss( targets.detach().clone(),weight.detach().clone(),label_count.detach().clone(),sim.clone(),mask.clone())
         else:
-            return self.focal_loss( targets.detach().clone(),weight.detach().clone(),label_count.detach().clone(),sim.clone(),mask.clone()) +  self.contrasmemotyloss(targets.detach().clone(),sim.clone(),mask.clone(),old_inputs.detach().clone(),another_inputs_full.clone())  +  self.contrasloss(targets.detach().clone(),sim.clone(),mask.clone(),old_inputs.detach().clone(),another_inputs_full.clone())
+            return self.focal_loss( targets.detach().clone(),weight.detach().clone(),label_count.detach().clone(),sim.clone(),mask.clone()) \
+                +  self.contrasmemotyloss(targets.detach().clone(),sim.clone(),mask.clone(),old_inputs.detach().clone(),another_inputs_full.clone())  \
+                +  self.contrasloss(targets.detach().clone(),sim.clone(),mask.clone(),old_inputs.detach().clone(),another_inputs_full.clone())
          
   
     def focal_loss(self,targets,weights,label_count ,sim, mask):

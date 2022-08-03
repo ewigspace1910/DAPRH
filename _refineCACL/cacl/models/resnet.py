@@ -95,6 +95,7 @@ class ResNet(nn.Module):
 
         if self.has_embedding:
             bn_x = self.feat_bn(self.feat(x))
+            dn_x = bn_x
         else:
             dn_x = x
             bn_x = self.feat_bn(x)

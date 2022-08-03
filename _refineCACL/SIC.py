@@ -73,7 +73,7 @@ def get_train_loader(args, dataset, height, width, batch_size, workers,
     else:
         sampler = None
     train_loader = IterLoader(
-                DataLoader(Preprocessor(train_set, root=dataset.images_dir, transform1=train_transformer,transform2 = train_transformer2),
+                DataLoader(Preprocessor(train_set, root=dataset.images_dir, transform1=train_transformer,transform2 = train_transformer2, mutual=True),
                             batch_size=batch_size, num_workers=workers, sampler=sampler,
                             shuffle=not rmgs_flag, pin_memory=True, drop_last=True), length=iters)
 
@@ -95,7 +95,7 @@ def get_test_loader(dataset, height, width, batch_size, workers, testset=None):
         testset = list(set(dataset.query) | set(dataset.gallery))
 
     test_loader = DataLoader(
-        Preprocessor(testset, root=dataset.images_dir, transform1=test_transformer,transform2 = test_transformer),
+        Preprocessor(testset, root=dataset.images_dir, transform1=test_transformer,transform2 = test_transformer, mutual=True),
         batch_size=batch_size, num_workers=workers,
         shuffle=False, pin_memory=True)
 
@@ -130,7 +130,6 @@ def main_worker(args):
 
     iters = args.iters if (args.iters>0) else None
     print("==> Load unlabeled dataset")
-    args.data_dir = '/home/limingkun/Re-ID/data'
     dataset = get_data(args.dataset, args.data_dir)
     test_loader = get_test_loader(dataset, args.height, args.width, args.batch_size, args.workers)
     model1 = create_model(args)
@@ -216,7 +215,7 @@ def main_worker(args):
         pseudo_labels_tight = generate_pseudo_labels(pseudo_labels_tight, num_ids_tight)
         
         
-        
+        #????????????????
         index2label = collections.defaultdict(int)
         for label in pseudo_labels:
             index2label[label.item()]+=1
@@ -224,24 +223,25 @@ def main_worker(args):
         print('==> Statistics for epoch {}: {} clusters, {} un-clustered instances\n'
                     .format(epoch, (index2label>1).sum(), (index2label==1).sum()))
 
-        pseudo_weight = torch.ones(len(rerank_dist)).float()
-        num_label = len(pseudo_labels)
         rerank_dist_tensor = torch.tensor(rerank_dist)
         N = pseudo_labels.size(0)
         label_sim = pseudo_labels.expand(N, N).eq(pseudo_labels.expand(N, N).t()).float()
         label_sim_tight = pseudo_labels_tight.expand(N, N).eq(pseudo_labels_tight.expand(N, N).t()).float()
         
-        index2label = collections.defaultdict(int)
-        for label in pseudo_labels:
-            index2label[label.item()]+=1
-        index2label = np.fromiter(index2label.values(), dtype=float)
-        print('==> Statistics for epoch {}: {} clusters, {} un-clustered instances\n'
-                    .format(epoch, (index2label>1).sum(), (index2label==1).sum()))
-        num_label = len(pseudo_labels)
-        rerank_dist_tensor = torch.tensor(rerank_dist)
-        N = pseudo_labels.size(0)
-        label_sim = pseudo_labels.expand(N, N).eq(pseudo_labels.expand(N, N).t()).float()
-        label_sim_tight = pseudo_labels_tight.expand(N, N).eq(pseudo_labels_tight.expand(N, N).t()).float()
+        # index2label = collections.defaultdict(int)
+        # for label in pseudo_labels:
+        #     index2label[label.item()]+=1
+        # index2label = np.fromiter(index2label.values(), dtype=float)
+        # print('==> Statistics for epoch {}: {} clusters, {} un-clustered instances\n'
+        #             .format(epoch, (index2label>1).sum(), (index2label==1).sum()))
+        
+        # rerank_dist_tensor = torch.tensor(rerank_dist)
+        # N = pseudo_labels.size(0)
+        # label_sim = pseudo_labels.expand(N, N).eq(pseudo_labels.expand(N, N).t()).float()
+        # label_sim_tight = pseudo_labels_tight.expand(N, N).eq(pseudo_labels_tight.expand(N, N).t()).float()
+        #??????????????????
+        
+        #Refine label?????
         sim_distance = rerank_dist_tensor.clone() * label_sim
         dists_label_add = (label_sim.sum(-1))
         for i in range(len(dists_label_add)):
@@ -294,7 +294,7 @@ def main_worker(args):
         for label in pseudo_labels:
             index2label[label.item()]+=1
         index2label = np.fromiter(index2label.values(), dtype=float)
-        print('==> Statistics for epoch {}: {} clusters, {} un-clustered instances\n'
+        print('==> Statistics for epoch {}: {} refined clusters, {} un-clustered instances\n'
                     .format(epoch, (index2label>1).sum(), (index2label==1).sum()))
         label_count = pseudo_labels.expand(N, N).eq(pseudo_labels.expand(N, N).t()).float()
         label_count = label_count.sum(-1)
@@ -306,18 +306,13 @@ def main_worker(args):
         memory2.labels = pseudo_labels.cuda()
         memory1.sic_weight = torch.tensor(args.sic_weight).cuda()
         memory2.sic_weight = torch.tensor(args.sic_weight).cuda()
-        train_loader1 = get_train_loader(args, dataset, args.height, args.width,
-                                            args.batch_size, args.workers, args.num_instances, iters,
-                                            trainset=pseudo_labeled_dataset)
-        train_loader2 = get_train_loader(args, dataset, args.height, args.width,
+        train_loader = get_train_loader(args, dataset, args.height, args.width,
                                             args.batch_size, args.workers, args.num_instances, iters,
                                             trainset=pseudo_labeled_dataset)
 
-        train_loader1.new_epoch()
-        train_loader2.new_epoch()
+        train_loader.new_epoch()
 
-        trainer.train(epoch, train_loader1,train_loader2, optimizer,
-                    print_freq=args.print_freq, train_iters=len(train_loader1))
+        trainer.train(epoch, train_loader, optimizer, print_freq=args.print_freq, train_iters=len(train_loader))
         
         
         now_time_after_epoch =  time.monotonic()
@@ -326,7 +321,11 @@ def main_worker(args):
         print(
             'the time of cluster refinement is {}'.format(now_time_after_epoch-now_time_before_cluster)
         )
-        if ((epoch+1)%args.eval_step==0 or (epoch==args.epochs-1)):
+        if args.offline_test:
+            print("save model 2 offline test in epoch {}".format(epoch+1))
+            save_model(model1,is_best=False,best_mAP=0.0,mid=(epoch+1)*10+1, epoch=epoch, logs_dir=args.logs_dir)
+            # save_model(model2,is_best=False,best_mAP=0.0,mid=(epoch+1)*10+2, epoch=epoch, logs_dir=args.logs_dir)
+        elif ((epoch+1)%args.eval_step==0 or (epoch==args.epochs-1)):
             cmc_socore1,mAP1 = evaluator1.evaluate(test_loader, dataset.query, dataset.gallery, cmc_flag=False)
             mAP = mAP1
             print('model1 is better')
@@ -340,13 +339,21 @@ def main_worker(args):
             print('\n * Finished epoch {:3d}  model mAP: {:5.1%}  best: {:5.1%}{}\n'.format(epoch, mAP, best_mAP, ' *' if is_best else ''))
         lr_scheduler.step()
 
-    print ('==> Test with the best model:')
-    checkpoint = load_checkpoint(osp.join(args.logs_dir, 'seed_{}_dataset_{}_model_best.pth.tar'.format(args.seed,args.dataset)))
-    model1.load_state_dict(checkpoint['state_dict'])
-    evaluator1.evaluate(test_loader, dataset.query, dataset.gallery, cmc_flag=True)
+    if not args.offline_test:
+        print ('==> Test with the best model:')
+        checkpoint = load_checkpoint(osp.join(args.logs_dir, 'seed_{}_dataset_{}_model_best.pth.tar'.format(args.seed,args.dataset)))
+        model1.load_state_dict(checkpoint['state_dict'])
+        evaluator1.evaluate(test_loader, dataset.query, dataset.gallery, cmc_flag=True)
 
     end_time = time.monotonic()
     print('Total running time: ', timedelta(seconds=end_time - start_time))
+
+def save_model(model, is_best, best_mAP, mid, logs_dir, epoch):
+    save_checkpoint({
+    'state_dict': model.state_dict(),
+    'epoch': epoch + 1,
+    'best_mAP': best_mAP,
+    }, is_best, fpath=osp.join(logs_dir, 'model'+str(mid)+'_checkpoint.pth.tar'))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Cluster-guided Asymmetric Contrastive Learning for Unsupervised Person Re-Identification")
@@ -398,6 +405,8 @@ if __name__ == '__main__':
     parser.add_argument('--eval-step', type=int, default=5)
     parser.add_argument('--temp', type=float, default=0.05,
                         help="temperature for scaling contrastive loss")
+    parser.add_argument('--offline_test', action='store_true',
+                        help='offline test models')
     # path
     working_dir = osp.dirname(osp.abspath(__file__))
     parser.add_argument('--data-dir', type=str, metavar='PATH',
