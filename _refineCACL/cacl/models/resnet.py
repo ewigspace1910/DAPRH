@@ -56,6 +56,9 @@ class ResNet(nn.Module):
                 # Change the num_features to CNN output channels
                 self.num_features = out_planes
                 self.feat_bn = nn.BatchNorm1d(self.num_features)
+                self.full_connect = nn.Linear(self.num_features, self.num_features)
+                init.kaiming_normal_(self.full_connect.weight, mode='fan_out')
+                init.constant_(self.full_connect.bias, 0)
             self.feat_bn.bias.requires_grad_(False)
             if self.dropout > 0:
                 self.drop = nn.Dropout(self.dropout)
@@ -64,14 +67,7 @@ class ResNet(nn.Module):
                 init.normal_(self.classifier.weight, std=0.001)
         init.constant_(self.feat_bn.weight, 1)
         init.constant_(self.feat_bn.bias, 0)
-        
-        
-        
-        
-        self.full_connect = nn.Linear(self.num_features, self.num_features)
-        init.kaiming_normal_(self.full_connect.weight, mode='fan_out')
-        init.constant_(self.full_connect.bias, 0)
-        
+                
         
         self.full_bn = nn.BatchNorm1d(self.num_features)
         self.full_bn.bias.requires_grad_(False)
@@ -112,6 +108,9 @@ class ResNet(nn.Module):
 
         if self.num_classes > 0:
             prob = self.classifier(bn_x)
+        elif self.has_embedding:
+            full_x = self.full_bn(dn_x)
+            full_x = F.normalize(full_x)            
         else:
             full_x = self.full_connect(dn_x)
             full_x = self.full_bn(full_x)
