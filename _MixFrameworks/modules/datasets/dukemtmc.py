@@ -5,9 +5,9 @@ import re
 import urllib
 import zipfile
 
-from ..utils.data import BaseImageDataset
-from ..utils.osutils import mkdir_if_missing
-from ..utils.serialization import write_json
+from .data import BaseImageDataset
+# from ..utils.osutils import mkdir_if_missing
+# from ..utils.serialization import write_json
 
 
 class DukeMTMC(BaseImageDataset):
@@ -25,7 +25,7 @@ class DukeMTMC(BaseImageDataset):
     """
     dataset_dir = '.'
 
-    def __init__(self, root="./datasets", verbose=True, **kwargs):
+    def __init__(self, root="./datasets", verbose=True, for_merge=False, **kwargs):
         super(DukeMTMC, self).__init__()
         self.dataset_name = 'duke'
         self.dataset_dir = root #osp.join(root, self.dataset_dir)
@@ -52,25 +52,26 @@ class DukeMTMC(BaseImageDataset):
         self.num_train_pids, self.num_train_imgs, self.num_train_cams = self.get_imagedata_info(self.train)
         self.num_query_pids, self.num_query_imgs, self.num_query_cams = self.get_imagedata_info(self.query)
         self.num_gallery_pids, self.num_gallery_imgs, self.num_gallery_cams = self.get_imagedata_info(self.gallery)
-
-        self._for_merge = self.process_train(self.train_dir)
         
-    def _download_data(self):
-        if osp.exists(self.dataset_dir):
-            print("This dataset has been downloaded.")
-            return
+        if for_merge:
+            self._for_merge = self.process_merge(self.train_dir)
+        
+    # def _download_data(self):
+    #     if osp.exists(self.dataset_dir):
+    #         print("This dataset has been downloaded.")
+    #         return
 
-        print("Creating directory {}".format(self.dataset_dir))
-        mkdir_if_missing(self.dataset_dir)
-        fpath = osp.join(self.dataset_dir, osp.basename(self.dataset_url))
+    #     print("Creating directory {}".format(self.dataset_dir))
+    #     mkdir_if_missing(self.dataset_dir)
+    #     fpath = osp.join(self.dataset_dir, osp.basename(self.dataset_url))
 
-        print("Downloading DukeMTMC-reID dataset")
-        urllib.request.urlretrieve(self.dataset_url, fpath)
+    #     print("Downloading DukeMTMC-reID dataset")
+    #     urllib.request.urlretrieve(self.dataset_url, fpath)
 
-        print("Extracting files")
-        zip_ref = zipfile.ZipFile(fpath, 'r')
-        zip_ref.extractall(self.dataset_dir)
-        zip_ref.close()
+    #     print("Extracting files")
+    #     zip_ref = zipfile.ZipFile(fpath, 'r')
+    #     zip_ref.extractall(self.dataset_dir)
+    #     zip_ref.close()
 
     def _check_before_run(self):
         """Check if all files are available before going deeper"""
@@ -103,7 +104,7 @@ class DukeMTMC(BaseImageDataset):
 
         return dataset
 
-    def process_train(self, dir_path, is_train=True):
+    def process_merge(self, dir_path, is_train=True):
         img_paths = glob.glob(osp.join(dir_path, '*.jpg'))
         pattern = re.compile(r'([-\d]+)_c(\d)')
         data = []

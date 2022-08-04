@@ -5,9 +5,7 @@ import re
 import urllib
 import zipfile
 
-from ..utils.data import BaseImageDataset
-from ..utils.osutils import mkdir_if_missing
-from ..utils.serialization import write_json
+from .data import BaseImageDataset
 
 class Market1501(BaseImageDataset):
     """
@@ -22,7 +20,7 @@ class Market1501(BaseImageDataset):
     """
     dataset_dir = 'Market-1501-v15.09.15'
 
-    def __init__(self, root="./datasets", verbose=True, **kwargs):
+    def __init__(self, root="./datasets", verbose=True, for_merge=False,**kwargs):
         super(Market1501, self).__init__()
         self.dataset_name = 'market'
         self.dataset_dir = osp.join(root, self.dataset_dir)
@@ -48,7 +46,8 @@ class Market1501(BaseImageDataset):
         self.num_query_pids, self.num_query_imgs, self.num_query_cams = self.get_imagedata_info(self.query)
         self.num_gallery_pids, self.num_gallery_imgs, self.num_gallery_cams = self.get_imagedata_info(self.gallery)
         
-        self._for_merge = self.process_train(self.train_dir)
+        if for_merge:
+            self._for_merge = self.process_merge(self.train_dir)
         
 
     def _check_before_run(self):
@@ -85,7 +84,7 @@ class Market1501(BaseImageDataset):
 
         return dataset
 
-    def process_train(self, dir_path, is_train=True):
+    def process_merge(self, dir_path, is_train=True):
         img_paths = glob.glob(osp.join(dir_path, '*.jpg'))
         pattern = re.compile(r'([-\d]+)_c(\d)')
         data = []

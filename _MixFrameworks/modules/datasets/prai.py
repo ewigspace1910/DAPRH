@@ -7,8 +7,8 @@
 import os
 from glob import glob
 
-from ..utils.data import BaseImageDataset
-import pdb
+from .data import BaseImageDataset
+
 
 __all__ = ['PRAI',]
 
@@ -18,21 +18,21 @@ class PRAI(BaseImageDataset):
     dataset_dir = "PRAI-1581"
     dataset_name = 'prai'
 
-    def __init__(self, root='datasets', verbose=False,**kwargs):
+    def __init__(self, root='datasets', verbose=False, for_merge=True, **kwargs):
         self.root = root
         self.train_path = os.path.join(self.root, self.dataset_dir, 'images')
 
         required_files = [self.train_path]
         #self.check_before_run(required_files)
 
-        self._for_merge = self.process_train(self.train_path)
+        self._for_merge = self.process_merge(self.train_path)
 
         super().__init__()
         if verbose:
             print("=> PRAI loaded")
             self.print_dataset_statistics(self._for_merge)
 
-    def process_train(self, train_path):
+    def process_merge(self, train_path):
         data = []
         img_paths = glob(os.path.join(train_path, "*.jpg"))
         for img_path in img_paths:

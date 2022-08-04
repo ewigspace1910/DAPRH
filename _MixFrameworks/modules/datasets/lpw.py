@@ -7,7 +7,7 @@
 import os
 from glob import glob
 
-from ..utils.data import BaseImageDataset
+from .data import BaseImageDataset
 
 __all__ = ['LPW', ]
 
@@ -16,14 +16,13 @@ class LPW(BaseImageDataset):
     dataset_dir = "pep_256x128"
     dataset_name = "lpw"
 
-    def __init__(self, root='datasets', verbose=False,**kwargs):
+    def __init__(self, root='datasets', verbose=False, for_merge=True, **kwargs):
         self.root = root
         self.train_path = os.path.join(self.root, self.dataset_dir)
 
         required_files = [self.train_path]
         #self.check_before_run(required_files)
-
-        self._for_merge = self.process_train(self.train_path)
+        if for_merge: self._for_merge = self.process_merge(self.train_path)
 
         super().__init__(**kwargs)
         if verbose:
@@ -31,7 +30,7 @@ class LPW(BaseImageDataset):
             print("=> LPW loaded")
             self.print_dataset_statistics(self._for_merge)
 
-    def process_train(self, train_path):
+    def process_merge(self, train_path):
         data = []
 
         file_path_list = ['scen1', 'scen2', 'scen3']

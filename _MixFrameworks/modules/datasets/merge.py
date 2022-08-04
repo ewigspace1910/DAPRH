@@ -5,21 +5,18 @@ import re
 import urllib
 import zipfile
 
-from ..utils.data import BaseImageDataset
-from ..utils.osutils import mkdir_if_missing
-from ..utils.serialization import write_json
+from .data import BaseImageDataset
 
 from .dukemtmc import DukeMTMC
 from .market1501 import Market1501
 from .msmt17 import MSMT17
 from .prai import PRAI
 from .lpw import LPW
-from .caviara import CAVIARa
 from .noisyshoppingmall import NSMall
 
 class MergedData(BaseImageDataset):
     """
-    CustomDataset: custom person ReID dataset
+    Merged Dataset: custom person ReID dataset
     """
     dataset_dir = './datasets'
     factory_ = {
@@ -27,17 +24,16 @@ class MergedData(BaseImageDataset):
     'dukemtmc': DukeMTMC,
     'msmt17': MSMT17,
     'prai': PRAI,
-    'caviara': CAVIARa,
     'lpw' : LPW,
     'noisy_shoppingmall' : NSMall
     }
 
-    def __init__(self, list=['market1501', 'dukemtmc', 'msmt17', 'lpw','prai','caviara'], verbose=True, **kwargs):
+    def __init__(self, list=['market1501', 'msmt17', 'lpw','prai'], verbose=True, **kwargs):
         super(MergedData, self).__init__()
         assert 'dukemtmc' in list, "must using duke"
     
         self.train_dir = []
-        for name in list : self.train_dir += self.factory_[name](verbose=True)._for_merge
+        for name in list : self.train_dir += self.factory_[name](verbose=True, for_merge=True)._for_merge
         train = self._process_train(self.train_dir, relabel=True)
         
         duke = self.factory_['dukemtmc'](verbose=False)

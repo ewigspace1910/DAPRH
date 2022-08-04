@@ -9,7 +9,7 @@ import os
 import os.path as osp
 import glob 
 
-from ..utils.data import BaseImageDataset
+from .data import BaseImageDataset
 ##### Log #####
 # 22.01.2019
 # - add v2
@@ -44,7 +44,7 @@ class MSMT17(BaseImageDataset):
     dataset_url = None
     dataset_name = 'msmt17'
 
-    def __init__(self, root='datasets', verbose=False, **kwargs):
+    def __init__(self, root='datasets', verbose=False, for_merge=False, **kwargs):
         self.dataset_dir = root
 
         has_main_dir = False
@@ -93,7 +93,8 @@ class MSMT17(BaseImageDataset):
         #if 'combineall' in kwargs and kwargs['combineall']:
         #    train += val
         train += val
-        self._for_merge = train
+        if for_merge:
+            self._for_merge = self.process_merge(self.train_dir, self.list_train_path)
         super(MSMT17, self).__init__(**kwargs)
         
         if verbose:
@@ -101,6 +102,23 @@ class MSMT17(BaseImageDataset):
             self.print_dataset_statistics(train, query, gallery)
 
     def process_dir(self, dir_path, list_path, is_train=True):
+        with open(list_path, 'r') as txt:
+            lines = txt.readlines()
+        data = []
+
+        for img_idx, img_info in enumerate(lines):
+            img_path, pid = img_info.split(' ')
+            pid = int(pid)  # no need to relabel
+            camid = int(img_path.split('_')[2]) - 1  # index starts from 0
+            img_path = osp.join(dir_path, img_path)
+            if is_train:
+                pid = str(pid)
+                camid = str(camid)
+            data.append((img_path, pid, camid))
+
+        return data
+
+    def process_merge(self, dir_path, list_path, is_train=True):
         with open(list_path, 'r') as txt:
             lines = txt.readlines()
         data = []

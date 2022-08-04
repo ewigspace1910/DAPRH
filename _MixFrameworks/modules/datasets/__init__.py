@@ -4,19 +4,15 @@ import warnings
 from .dukemtmc import DukeMTMC
 from .market1501 import Market1501
 from .msmt17 import MSMT17
-from .custom import CustomData
 from .merge import MergedData
-from .unlabel import UnlabelDs
-from .unlabel_wcam import UnlabelwCamDs
+from .unlabeled.scid import SCID
 
 __factory = {
     'market1501': Market1501,
     'dukemtmc': DukeMTMC,
     'msmt17': MSMT17,
-    'custom': CustomData,
     'merged' : MergedData,
-    'unlabel': UnlabelDs,
-    'unlabelwCam': UnlabelwCamDs
+    'scid': SCID
 }
 
 
@@ -53,7 +49,7 @@ def create(name, root, *args, **kwargs):
     #else
     if name not in __factory:
         raise KeyError("Unknown dataset:", name)
-    return __factory[name](root, *args, **kwargs)
+    return __factory[name](root, for_merge=False, *args, **kwargs)
 
 
 def get_dataset(name, root, *args, **kwargs):
