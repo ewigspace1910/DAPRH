@@ -88,6 +88,8 @@ class ResNet(nn.Module):
         #for onnx
         if self.is_export:
             x = x.squeeze(3).squeeze(2)
+            if self.has_embedding:
+                x = self.feat(x)
             out = self.my_norm(x, self.feat_bn)
             return out
 
