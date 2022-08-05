@@ -10,11 +10,11 @@ sys.path.insert(0, "../../")
 import torch
 from torch import nn
 
-from P2LR import models
-from P2LR.utils.data import transforms as T
-from P2LR.utils.serialization import load_checkpoint, copy_state_dict
-from P2LR.feature_extraction import extract_cnn_feature
-from P2LR.utils import to_torch
+from modules import models
+from modules.utils.data import transforms as T
+from modules.utils.serialization import load_checkpoint, copy_state_dict
+from modules.feature_extraction import extract_cnn_feature
+from modules.utils import to_torch
 
 def get_args():
 	parser = argparse.ArgumentParser(description="Testing the model")

@@ -5,7 +5,7 @@ from torch.nn import functional as F
 from torch.nn import init
 import torchvision
 import torch
-
+from . layers import *
 
 __all__ = ['MobileNet', 'mobilenetL', 'mobilenetS']
 
@@ -17,8 +17,12 @@ class MobileNetv3(nn.Module):
     }
 
     def __init__(self, depth, pretrained=True, cut_at_pooling=False,
-                 num_features=0, norm=False, dropout=0, num_classes=0, **kwargs):
+                 num_features=0, norm=False, dropout=0, num_classes=0, is_export=False, **kwargs):
         super(MobileNetv3, self).__init__()
+        #for onnx
+        self.my_norm = MyBatchNorm1D()
+        self.is_export = is_export
+
         self.pretrained = pretrained
         self.depth = depth
         self.cut_at_pooling = cut_at_pooling
@@ -71,6 +75,11 @@ class MobileNetv3(nn.Module):
         x = self.base(x) # [bs, channel, 16, 8]
 
         x = self.gap(x)
+        #for onnx
+        if self.is_export:
+            x = x.squeeze(3).squeeze(2)
+            out = self.my_norm(x, self.feat_bn)
+            return out
         x = x.view(x.size(0), -1)
 
         if self.cut_at_pooling:

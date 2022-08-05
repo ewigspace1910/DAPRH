@@ -1,10 +1,6 @@
 from __future__ import absolute_import
-import os
 import os.path as osp
-from torch.utils.data import DataLoader, Dataset
-import numpy as np
-import random
-import math
+from torch.utils.data import  Dataset
 from PIL import Image
 
 class Preprocessor(Dataset):

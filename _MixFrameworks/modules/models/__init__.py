@@ -1,13 +1,11 @@
 from __future__ import absolute_import
 
 from .part.regnet_part import regnetY128gf_part, regnetY16gf_part, regnetY1_6gf_part, regnetY32gf_part, regnetY3_2gf_part, regnetY400_part, regnetY800_part
-from .part.mnasnet_part import *
 from .part.osnet_part import *
 from .part.resnet_part import *
 from .part.mobilenet_part import  mobileNetLpart, mobileNetSpart
 
 from .mobilenet import mobileNetL, mobileNetS
-from .mnasnet import *
 from .regnet import *
 from .osnet import *
 from .resnet import *
@@ -49,16 +47,6 @@ __factory = {
     "regnetY1_6gf_part"  : regnetY1_6gf_part,
     "regnetY400_part"    : regnetY400_part,
     "regnetY800_part"    : regnetY800_part,
-
-    #MNastNet
-    "mnasnet0_5": mnasnet0_5,
-    "mnasnet0_75": mnasnet0_75,
-    "mnasnet1_0": mnasnet1_0,
-    "mnasnet1_3": mnasnet1_3,
-    "mnasnet0_5part": mnasnet0_5part,
-    "mnasnet0_75part": mnasnet0_75part,
-    "mnasnet1_0part": mnasnet1_0part,
-    "mnasnet1_3part": mnasnet1_3part,
 
     #OSnet
     "osnet0_5"      : osnet0_5,   
