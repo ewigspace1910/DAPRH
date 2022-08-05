@@ -9,7 +9,7 @@ onnx_model = onnx.load(model_path)
 onnx.checker.check_model(onnx_model)
 
 batch_size = 1
-image_shape = [128, 256]
+image_shape = [256, 128]
 image_channel = 3
 input_shape = [batch_size, image_channel, *image_shape]
 fake_input = np.random.random(input_shape).astype(np.float32)

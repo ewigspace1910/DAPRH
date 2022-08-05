@@ -57,7 +57,7 @@ checkpoint = load_checkpoint(args.resume)
 copy_state_dict(checkpoint['state_dict'], model)
 
 batch_size = 1
-image_shape = [128, 256]
+image_shape = [args.height, args.width] #HxW
 image_channel = 3
 input_shape = [batch_size, image_channel, *image_shape]
 fake_input = np.random.random(input_shape).astype(np.float32)
