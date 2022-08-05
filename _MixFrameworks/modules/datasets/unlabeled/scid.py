@@ -83,14 +83,18 @@ class SCID(BaseImageDataset):
 
         pid_container = set()
         for img_path in img_paths:
-            pid, _ = map(int, pattern.search(img_path).groups())
+            try:
+                pid, _ = map(int, pattern.search(img_path).groups())
+            except: continue
             #if pid == -1: continue  # junk images are just ignored
             pid = 1
             pid_container.add(pid)
         pid2label = {pid: label for label, pid in enumerate(pid_container)}
         dataset = []
         for img_path in img_paths:
-            pid, camid = map(int, pattern.search(img_path).groups())
+            try:
+                pid, camid = map(int, pattern.search(img_path).groups())
+            except: continue
             if relabel: pid = pid2label[pid]
             dataset.append((img_path, pid, camid))
 
