@@ -16,13 +16,13 @@ class SCID(BaseImageDataset):
         super(SCID, self).__init__()
         self.dataset_name = 'SCID_Unlabeled'
         self.dataset_dir = osp.join(root, self.dataset_dir)
-        self.train_dir = osp.join(self.dataset_dir, 'bounding_box_test')
+        self.train_dir = osp.join(self.dataset_dir, 'bounding_box_train')
         self.query_dir = osp.join(self.dataset_dir, 'query')
         self.gallery_dir = osp.join(self.dataset_dir, 'bounding_box_test')
 
         self._check_before_run()
 
-        train = self._process_dir(self.train_dir, relabel=True)
+        train = self._process_dir_train(self.train_dir, relabel=True)
         query = self._process_dir(self.query_dir, relabel=False)
         gallery = self._process_dir(self.gallery_dir, relabel=False)
 
@@ -51,7 +51,7 @@ class SCID(BaseImageDataset):
         if not osp.exists(self.gallery_dir):
             raise RuntimeError("'{}' is not available".format(self.gallery_dir))
 
-    def _process_dir(self, dir_path, relabel=False):
+    def _process_dir_train(self, dir_path, relabel=False):
         folder_paths = [p.path for p in os.scandir(dir_path)]
         img_paths = []
         for x in folder_paths:
@@ -71,6 +71,26 @@ class SCID(BaseImageDataset):
         for img_path in img_paths:
             camid = int(img_path.split("/")[-2].split("_")[-1])  #/unlabeled_wcam_dataset/bounding_box_test/cam_1/00001.jpg
             pid = int(1)
+            if relabel: pid = pid2label[pid]
+            dataset.append((img_path, pid, camid))
+
+        return dataset
+
+    #for pseudo-label-test
+    def _process_dir(self, dir_path, relabel=False):
+        img_paths = glob.glob(osp.join(dir_path, '*.jpg'))        
+        pattern = re.compile(r'id-([\d]+)_cam_(\d+)') #id-22_cam_3_003053.jpg
+
+        pid_container = set()
+        for img_path in img_paths:
+            pid, _ = map(int, pattern.search(img_path).groups())
+            #if pid == -1: continue  # junk images are just ignored
+            pid = 1
+            pid_container.add(pid)
+        pid2label = {pid: label for label, pid in enumerate(pid_container)}
+        dataset = []
+        for img_path in img_paths:
+            pid, camid = map(int, pattern.search(img_path).groups())
             if relabel: pid = pid2label[pid]
             dataset.append((img_path, pid, camid))
 
