@@ -301,19 +301,20 @@ def main_worker(args):
                 'epoch': epoch + 1,
                 'best_mAP': best_mAP,
             }, is_best, fpath=osp.join(args.logs_dir, 'model'+str(mid)+'_checkpoint.pth.tar'))
-        if args.offline_test:
-            print("save model 4 offline test in epoch {}".format(epoch+1))
-            save_model(model_1_ema,is_best=False,best_mAP=0.0,mid=(epoch+1)*10+1)
-            save_model(model_2_ema,is_best=False,best_mAP=0.0,mid=(epoch+1)*10+2)
-        elif ((epoch+1)%args.eval_step==0 or (epoch==args.epochs-1)):
-            mAP_1 = evaluator_1_ema.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, cmc_flag=False)
-            mAP_2 = evaluator_2_ema.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, cmc_flag=False)
-            is_best = (mAP_1>best_mAP) or (mAP_2>best_mAP)
-            best_mAP = max(mAP_1, mAP_2, best_mAP)
-            save_model(model_1_ema, (is_best and (mAP_1>mAP_2)), best_mAP, 1)
-            save_model(model_2_ema, (is_best and (mAP_1<=mAP_2)), best_mAP, 2)
+        if ((epoch+1)%args.eval_step==0 or (epoch==args.epochs-1)):
+            if args.offline_test or (epoch==args.epochs-1):
+                print("save model 4 offline test in epoch {}".format(epoch+1))
+                save_model(model_1_ema,is_best=False,best_mAP=0.0,mid=(epoch+1)*10+1)
+                save_model(model_2_ema,is_best=False,best_mAP=0.0,mid=(epoch+1)*10+2)
+            else:
+                mAP_1 = evaluator_1_ema.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, cmc_flag=False)
+                mAP_2 = evaluator_2_ema.evaluate(test_loader_target, dataset_target.query, dataset_target.gallery, cmc_flag=False)
+                is_best = (mAP_1>best_mAP) or (mAP_2>best_mAP)
+                best_mAP = max(mAP_1, mAP_2, best_mAP)
+                save_model(model_1_ema, (is_best and (mAP_1>mAP_2)), best_mAP, 1)
+                save_model(model_2_ema, (is_best and (mAP_1<=mAP_2)), best_mAP, 2)
 
-            print('\n * Finished epoch {:3d}  model no.1 mAP: {:5.1%} model no.2 mAP: {:5.1%}  best: {:5.1%}{}\n'.
+                print('\n * Finished epoch {:3d}  model no.1 mAP: {:5.1%} model no.2 mAP: {:5.1%}  best: {:5.1%}{}\n'.
                   format(epoch, mAP_1, mAP_2, best_mAP, ' *' if is_best else ''))
 
 
