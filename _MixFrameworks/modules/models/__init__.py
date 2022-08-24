@@ -4,6 +4,7 @@ from .part.regnet_part import regnetY128gf_part, regnetY16gf_part, regnetY1_6gf_
 from .part.osnet_part import *
 from .part.resnet_part import *
 from .part.mobilenet_part import  mobileNetLpart, mobileNetSpart
+from .part.resnet_ibn_part import resnet_ibn50apart, resnet_ibn101apart
 
 from .mobilenet import mobileNetL, mobileNetS
 from .regnet import *
@@ -12,19 +13,23 @@ from .resnet import *
 from .resnet_ibn import *
 
 
+
 __factory = {
     'resnet18': resnet18,
     'resnet34': resnet34,
     'resnet50': resnet50,
     'resnet101': resnet101,
     'resnet152': resnet152,
-    'resnet_ibn50a': resnet_ibn50a,
-    'resnet_ibn101a': resnet_ibn101a,
     'resnet18part': resnet18part,
     'resnet34part': resnet34part,
     'resnet50part': resnet50part,
     'resnet101part': resnet101part,
     'resnet152part': resnet152part,
+
+    'resnet_ibn50a': resnet_ibn50a,
+    'resnet_ibn101a': resnet_ibn101a,
+    'resnet_ibn50apart': resnet_ibn50apart,
+    'resnet_ibn101apart': resnet_ibn101apart,
 
     #mobile net
     'mobilenetS': mobileNetS,
@@ -57,6 +62,8 @@ __factory = {
     "osnet0_75part"     : osnet0_75part,  
     "osnet1_0part"      : osnet1_0part,   
     "osnet1_0ibtpart"   : osnet1_0ibtpart,
+
+
 
     "":None
 }

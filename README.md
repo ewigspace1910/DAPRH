@@ -1,6 +1,6 @@
 # ReID_market1501
 
-A tiny repo Re-implementing some solution for reID problem.
+A tiny repo Re-implementing some solutions for reID problem.
 
  - Using market1501 dataset as the unseen domain
  - Compose some popular available dataset to custom dataset for training.

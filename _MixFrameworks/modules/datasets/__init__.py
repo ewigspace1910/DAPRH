@@ -6,13 +6,15 @@ from .market1501 import Market1501
 from .msmt17 import MSMT17
 from .merge import MergedData
 from .unlabeled.scid import SCID
+from .unlabeled.canifa import Canifa
 
 __factory = {
     'market1501': Market1501,
     'dukemtmc': DukeMTMC,
     'msmt17': MSMT17,
     'merged' : MergedData,
-    'scid': SCID
+    'scid': SCID,
+    'canifa': Canifa
 }
 
 
