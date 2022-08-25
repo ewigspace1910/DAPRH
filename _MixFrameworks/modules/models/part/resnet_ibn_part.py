@@ -5,7 +5,6 @@ from torch.nn import functional as F
 from torch.nn import init
 import torchvision
 import torch
-from . layers import *
 
 from .orginal.resnet_ibn_a import resnet50_ibn_a, resnet101_ibn_a
 
