@@ -226,7 +226,7 @@ def main_worker(args):
         centers = normalize(km.cluster_centers_, axis=1)
         target_label = km.labels_
     else:
-        km = KMeans(n_clusters=args.num_clusters, random_state=args.seed, n_jobs=4,max_iter=250).fit(cf)
+        km = KMeans(n_clusters=args.num_clusters, random_state=args.seed,max_iter=200).fit(cf)
         model_1.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
         model_2.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
         model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
@@ -336,7 +336,7 @@ def main_worker(args):
             centers = normalize(km.cluster_centers_, axis=1)
             target_label = km.labels_
         else:
-            km = KMeans(n_clusters=args.num_clusters, random_state=args.seed, n_jobs=4,max_iter=300).fit(cf)
+            km = KMeans(n_clusters=args.num_clusters, random_state=args.seed,max_iter=400).fit(cf)
             centers = normalize(km.cluster_centers_, axis=1)
             target_label = km.labels_
                 

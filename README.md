@@ -20,4 +20,5 @@ some popular repos I refined for my dataset and verify its effectiveness include
  4. PPLR	- [Part-based Pseudo Label Refinement for Unsupervised Person Re-identification](https://github.com/yoonkicho/pplr)
  5. HDCRL	- [Hybrid Dynamic Contrast and Probability Distillation for Unsupervised Person Re-Id ](https://github.com/zjy2050/HDCRL-ReID)
  6. CACL 	- [Cluster-guided Asymmetric Contrastive Learning for Unsupervised Person Re-Identification](https://github.com/MingkunLishigure/CACL)
+ 7. NFormer - [NFormer: Robust Person Re-identification with Neighbor Transformer](https://github.com/haochenheheda/NFormer)
 
