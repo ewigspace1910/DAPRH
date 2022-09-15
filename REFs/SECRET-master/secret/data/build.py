@@ -28,7 +28,7 @@ class IterLoader:
             return next(self.iter)
 
 def build_data(name, data_dir, mode='ReID'):
-    root = osp.join(data_dir, name)
+    root = osp.join(data_dir) #ops.join(data_dir, name)
     dataset = create(name, root)
     return dataset
 
