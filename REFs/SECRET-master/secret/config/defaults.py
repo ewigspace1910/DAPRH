@@ -100,7 +100,6 @@ _C.DATALOADER.NUM_INSTANCES = 4
 _C.DATALOADER.NUM_WORKERS = 4
 
 _C.DATALOADER.BATCH_SIZE = 64
-_C.DATALOADER.ITER_MODE = True
 _C.DATALOADER.ITERS = 100
 
 # ---------------------------------------------------------------------------- #

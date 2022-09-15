@@ -23,9 +23,10 @@ class PartRandomMultipleGallerySampler(Sampler):
         self.num_instances = num_instances
 
         for index, (_, pid, cam) in enumerate(data_source):
-            self.index_pid[index] = pid[0]
-            self.pid_cam[pid[0]].append(cam)
-            self.pid_index[pid[0]].append(index)
+            pid_ = pid[0]
+            self.index_pid[index] = pid_
+            self.pid_cam[pid_].append(cam)
+            self.pid_index[pid_].append(index)
 
         self.pids = list(self.pid_index.keys())
         self.num_samples = len(self.pids)

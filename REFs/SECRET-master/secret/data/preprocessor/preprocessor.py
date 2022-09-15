@@ -28,5 +28,5 @@ class Preprocessor(Dataset):
         if self.transform is not None:
             img = self.transform(img)
 
-        return img, fname, pid, index
-        # return img, fname, pid, camid
+        #return img, fname, pid, index
+        return img, fname, pid, camid

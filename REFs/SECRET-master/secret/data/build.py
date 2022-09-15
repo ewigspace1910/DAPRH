@@ -48,11 +48,10 @@ def build_loader(cfg, dataset, inputset=None, num_instances = 4, is_train = True
             else:
                 sampler = None
 
-            loader = DataLoader(Preprocessor(dataset, transform=transform),
-                        batch_size=cfg.DATALOADER.BATCH_SIZE, num_workers=cfg.DATALOADER.NUM_WORKERS, sampler=sampler,
-                        shuffle=not rmgs_flag, pin_memory=True, drop_last=True)
-            if cfg.DATALOADER.ITER_MODE:
-                loader = IterLoader(loader, length = cfg.DATALOADER.ITERS)
+            loader =  IterLoader(
+                DataLoader(Preprocessor(dataset, transform=transform),
+                   batch_size=cfg.DATALOADER.BATCH_SIZE, num_workers=cfg.DATALOADER.NUM_WORKERS, sampler=sampler,
+                   shuffle=not rmgs_flag, pin_memory=True, drop_last=True), length=cfg.DATALOADER.ITERS)
 
         elif mode == 'pretrain':
             dataset = sorted(dataset.train) if inputset is None else inputset
@@ -63,11 +62,11 @@ def build_loader(cfg, dataset, inputset=None, num_instances = 4, is_train = True
             else:
                 sampler = None
 
-            loader = DataLoader(Preprocessor(dataset, transform=transform),
-                        batch_size=cfg.DATALOADER.BATCH_SIZE, num_workers=cfg.DATALOADER.NUM_WORKERS, sampler=sampler,
-                        shuffle=not rmgs_flag, pin_memory=True, drop_last=True)
-            if cfg.DATALOADER.ITER_MODE:
-                loader = IterLoader(loader, length = cfg.DATALOADER.ITERS)
+            loader =  IterLoader(
+                DataLoader(Preprocessor(dataset, transform=transform),
+                   batch_size=cfg.DATALOADER.BATCH_SIZE, num_workers=cfg.DATALOADER.NUM_WORKERS, sampler=sampler,
+                   shuffle=not rmgs_flag, pin_memory=True, drop_last=True), length=cfg.DATALOADER.ITERS)
+
         else:
             raise KeyError('NotImplementedError')
     else:
