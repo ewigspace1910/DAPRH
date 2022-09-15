@@ -44,7 +44,7 @@ def build_loader(cfg, dataset, inputset=None, num_instances = 4, is_train = True
 
             rmgs_flag = num_instances > 0
             if rmgs_flag:
-                sampler = PartRandomMultipleGallerySampler(dataset, num_instances)
+                sampler = PartRandomMultipleGallerySampler(dataset, num_instances, cfg.DATALOADER.BATCH_SIZE)
             else:
                 sampler = None
 

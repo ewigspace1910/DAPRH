@@ -30,12 +30,13 @@ class MergedData(BaseImageDataset):
 
     def __init__(self, list=['market1501', 'msmt17', 'lpw','prai'], verbose=True, **kwargs):
         super(MergedData, self).__init__()
-        assert 'dukemtmc' in list, "must using duke"
+        #assert 'dukemtmc' in list, "must using duke"
     
         self.train_dir = []
         for name in list : self.train_dir += self.factory_[name](verbose=True, for_merge=True)._for_merge
         train = self._process_train(self.train_dir, relabel=True)
         
+        print("Warning! \n\t-We use duke-MTMC for validation\n\t- If U dont have duke dataset: either download it or change code in modules/datsets/merge.py")
         duke = self.factory_['dukemtmc'](verbose=False)
         query = duke.query
         gallery = duke.gallery
