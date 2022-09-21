@@ -22,7 +22,7 @@ from ..utils.serialization import save_checkpoint, load_checkpoint, copy_state_d
 from ..cluster.faiss_utils import compute_jaccard_distance
 from ..cluster.RefineCluster import RefineClusterProcess
 from ..utils.osutils import PathManager
-
+import random
 class mutualrefine(object):
 
     def __init__(self, cfg):
@@ -34,6 +34,8 @@ class mutualrefine(object):
 
     def _build_dataset(self):
         self.Target_dataset = build_data(self.cfg.DATASETS.TARGET, self.cfg.DATASETS.DIR)
+        if self.cfg.MAX_LEN_DATASET > 0:
+            self.Target_dataset.train = random.sample(self.Target_dataset.train, self.cfg.MAX_LEN_DATA)
         self.Target_cluster_loader = build_loader(self.cfg, None, inputset=sorted(self.Target_dataset.train), is_train=False)
         self.Target_test_loader = build_loader(self.cfg, self.Target_dataset, is_train=False)
         self.num_classes = len(self.Target_dataset.train)
@@ -212,7 +214,7 @@ class mutualrefine(object):
 
     def eval_save(self, epoch):
         #offline-test
-        if self.cfg.OFFLINE_TEST:
+        if self.cfg.OFFLINE_TEST and epoch > 10:
             _state_dict = self.model_ema.module.state_dict()
 
             save_checkpoint({
@@ -223,7 +225,7 @@ class mutualrefine(object):
             }, False, False, fpath=osp.join(self.cfg.OUTPUT_DIR, 'model{}.pth.tar'.format(epoch+1)), remain=self.cfg.CHECKPOING.REMAIN_CLASSIFIER)
 
             self.logger.info('Finished epoch {:3d}\n -- offline test save!'.format(epoch + 1))            
-
+            return
 
 
         if (epoch+1) != self.cfg.OPTIM.EPOCHS and self.cfg.CHECKPOING.SAVE_STEP[0] > 0 and (epoch+1) not in self.cfg.CHECKPOING.SAVE_STEP:

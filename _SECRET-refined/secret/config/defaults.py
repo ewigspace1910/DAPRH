@@ -145,6 +145,7 @@ _C.TEST.RERANK.LAMBDA = 0.3
 # ---------------------------------------------------------------------------- #
 _C.MODE = "USL"
 _C.OFFLINE_TEST = False
+_C.MAX_LEN_DATA = -1
 _C.OUTPUT_DIR = "log/test"
 _C.RESUME = ""
 _C.PRINT_PERIOD = 100
