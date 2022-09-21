@@ -21,4 +21,6 @@ some popular repos I refined for my dataset and verify its effectiveness include
  5. HDCRL	- [Hybrid Dynamic Contrast and Probability Distillation for Unsupervised Person Re-Id ](https://github.com/zjy2050/HDCRL-ReID)
  6. CACL 	- [Cluster-guided Asymmetric Contrastive Learning for Unsupervised Person Re-Identification](https://github.com/MingkunLishigure/CACL)
  7. NFormer - [NFormer: Robust Person Re-identification with Neighbor Transformer](https://github.com/haochenheheda/NFormer)
+ 8. SECRET - [SECRET: Self-Consistent Pseudo Label Refinement for Unsupervised Domain Adaptive Person Re-Identification](https://github.com/LunarShen/SECRET)
+ 9. CDTrans - [CDTrans Cross-domain Transformer for Unsupervised Domain Adaptation](https://github.com/CDTrans/CDTrans)
 

@@ -368,3 +368,4 @@ class MMTwCaTrainer(object):
         inputs_2 = imgs_2.cuda()
         targets = pids.cuda()
         return inputs_1, inputs_2, targets
+

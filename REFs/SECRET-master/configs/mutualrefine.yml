@@ -8,6 +8,7 @@ OUTPUT_DIR: "log/duke2market/mutualrefine"
 GPU_Device: [0,1,2,3]
 
 MODE: "mutualrefine"
+OFFLINE_TEST: False
 
 CLUSTER:
   REFINE_K: 0.4

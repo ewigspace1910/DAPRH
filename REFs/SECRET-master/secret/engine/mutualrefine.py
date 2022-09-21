@@ -211,6 +211,21 @@ class mutualrefine(object):
                 self.Target_dataset.query, self.Target_dataset.gallery, use_cython = use_cython)
 
     def eval_save(self, epoch):
+        #offline-test
+        if self.cfg.OFFLINE_TEST:
+            _state_dict = self.model_ema.module.state_dict()
+
+            save_checkpoint({
+                'state_dict': _state_dict,
+                'epoch': epoch + 1,
+                'best_top1': 0,
+                'best_mAP': 0
+            }, False, False, fpath=osp.join(self.cfg.OUTPUT_DIR, 'model{}.pth.tar'.format(epoch+1)), remain=self.cfg.CHECKPOING.REMAIN_CLASSIFIER)
+
+            self.logger.info('Finished epoch {:3d}\n -- offline test save!'.format(epoch + 1))            
+
+
+
         if (epoch+1) != self.cfg.OPTIM.EPOCHS and self.cfg.CHECKPOING.SAVE_STEP[0] > 0 and (epoch+1) not in self.cfg.CHECKPOING.SAVE_STEP:
             return
         elif (epoch+1) != self.cfg.OPTIM.EPOCHS and self.cfg.CHECKPOING.SAVE_STEP[0] < 0  and (epoch+1) % -self.cfg.CHECKPOING.SAVE_STEP[0] != 0:
