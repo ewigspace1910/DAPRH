@@ -1,17 +1,23 @@
 from __future__ import absolute_import
 import torch
 
-from .resnet import resnet50
+from .resnet import resnet50, resnet34, resnet18, resnet101, resnet152
 
 __factory = {
+    'resnet18': resnet18,
+    'resnet34': resnet34,
     'resnet50': resnet50,
+    'resnet101': resnet101,
+    'resnet152': resnet152,
+
+    "":None
 }
 
 def names():
     return sorted(__factory.keys())
 
 
-def create_model(cfg, num_classes, num_feature, **kwargs):
+def create(name, *args, **kwargs):
     """
     Create a model instance.
 
@@ -42,7 +48,6 @@ def create_model(cfg, num_classes, num_feature, **kwargs):
         If positive, will append a Linear layer at the end as the classifier
         with this number of output units. Default: 0
     """
-    if cfg.MODEL.ARCH not in __factory:
-        raise KeyError("Unknown model:", cfg.MODEL.ARCH)
-    model = __factory[cfg.MODEL.ARCH](cfg, num_classes, num_feature=num_feature, **kwargs).cuda()
-    return model
+    if name not in __factory:
+        raise KeyError("Unknown model:", name)
+    return __factory[name](*args, **kwargs)

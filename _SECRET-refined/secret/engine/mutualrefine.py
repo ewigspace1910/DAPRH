@@ -41,8 +41,12 @@ class mutualrefine(object):
         self.num_classes = len(self.Target_dataset.train)
 
     def _build_model(self):
-        self.model = create_model(self.cfg, self.num_classes, self.cfg.MODEL.NUM_FEATURE
-        self.model_ema = create_model(self.cfg, self.num_classes, self.cfg.MODEL.NUM_FEATURE)
+        self.model = create_model(self.cfg.MODEL.ARCH, 
+                    cfg=self.cfg, num_classes=self.num_classes, num_features=self.cfg.MODEL.NUM_FEATURE, dropout=0, 
+                    pretrained=True)
+        self.model_ema = create_model(self.cfg.MODEL.ARCH, 
+                    cfg=self.cfg, num_classes=self.num_classes, num_features=self.cfg.MODEL.NUM_FEATURE, dropout=0, 
+                    pretrained=True)
 
 
         if self.cfg.CHECKPOING.PRETRAIN_PATH:

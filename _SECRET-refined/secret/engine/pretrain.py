@@ -32,7 +32,9 @@ class pretrain(object):
         self.num_classes = self.Source_dataset.num_train_pids
 
     def _build_model(self):
-        self.model = create_model(self.cfg, self.num_classes, self.cfg.MODEL.NUM_FEATURE)
+        self.model = create_model(self.cfg.MODEL.ARCH, 
+                    cfg=self.cfg, num_classes=self.num_classes, num_features=self.cfg.MODEL.NUM_FEATURE, dropout=0, 
+                    pretrained=True)
 
         start_epoch = 0
 

@@ -6,7 +6,8 @@ from torch.nn import init
 import torchvision
 import torch
 
-__all__ = ['resnet50']
+__all__ = ['resnet50', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
+           'resnet152']
 
 def conv3x3(in_planes, out_planes, stride=1, groups=1, dilation=1):
     """3x3 convolution with padding"""
@@ -99,10 +100,14 @@ class Bottleneck(nn.Module):
 
 class ResNet(nn.Module):
     __factory = {
+        18: torchvision.models.resnet18,
+        34: torchvision.models.resnet34,
         50: torchvision.models.resnet50,
+        101: torchvision.models.resnet101,
+        152: torchvision.models.resnet152,
     }
 
-    def __init__(self, depth, cfg, num_classes, num_features=0, dropout=0):
+    def __init__(self, depth, cfg, num_classes, num_features=0, dropout=0, pretrained=True):
         super(ResNet, self).__init__()
 
         self.pretrained = cfg.MODEL.BACKBONE.PRETRAIN
@@ -113,12 +118,13 @@ class ResNet(nn.Module):
         # Construct base (pretrained) resnet
         if depth not in ResNet.__factory:
             raise KeyError("Unsupported depth:", depth)
-        resnet = ResNet.__factory[depth](pretrained=self.pretrained)
-        resnet.layer4[0].conv2.stride = (1,1)
-        resnet.layer4[0].downsample[0].stride = (1,1)
-        self.base = nn.Sequential(
-            resnet.conv1, resnet.bn1, resnet.relu, resnet.maxpool,
-            resnet.layer1, resnet.layer2, resnet.layer3, resnet.layer4)
+        if depth >= 50:
+            resnet = ResNet.__factory[depth](weights="IMAGENET1K_V2") #(pretrained=pretrained)
+        else:
+            resnet = ResNet.__factory[depth](pretrained=pretrained)
+        if depth >= 50:
+            resnet.layer4[0].conv2.stride = (1,1)
+            resnet.layer4[0].downsample[0].stride = (1,1)
         self.gap = nn.AdaptiveAvgPool2d(1)
 
         # self.num_features = resnet.fc.in_features
@@ -263,5 +269,21 @@ class ResNet(nn.Module):
         self.base[6].load_state_dict(resnet.layer3.state_dict())
         self.base[7].load_state_dict(resnet.layer4.state_dict())
 
-def resnet50(cfg, num_classes, **kwargs):
-    return ResNet(50, cfg, num_classes, **kwargs)
+def resnet18(**kwargs):
+    return ResNet(18, **kwargs)
+
+
+def resnet34(**kwargs):
+    return ResNet(34, **kwargs)
+
+
+def resnet50(**kwargs):
+    return ResNet(50, **kwargs)
+
+
+def resnet101(**kwargs):
+    return ResNet(101, **kwargs)
+
+
+def resnet152(**kwargs):
+    return ResNet(152, **kwargs)
