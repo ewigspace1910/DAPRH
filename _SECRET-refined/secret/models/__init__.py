@@ -25,7 +25,7 @@ def names():
     return sorted(__factory.keys())
 
 
-def create(name, *args, **kwargs):
+def create_model(name, *args, **kwargs):
     """
     Create a model instance.
 

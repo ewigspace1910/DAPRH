@@ -8,7 +8,7 @@ A tiny repo Re-implementing some solutions for reID problem.
 
 ## MixFrameworks:
 	
-- My own effort to enrich reID solution for my project.
+- My own effort to enrich reID solution for my project by combining some repos.
 
 ## In Refer:
 

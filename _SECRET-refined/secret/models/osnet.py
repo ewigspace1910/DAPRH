@@ -6,17 +6,17 @@ from torch.nn import init
 import torchvision
 import torch
 from . layers import MyBatchNorm1D, Bottleneck, conv1x1, conv3x3
-import .orginal
+from .orginal import osnet_ibn_x1_0, osnet_x1_0, osnet_x0_25, osnet_x0_5, osnet_x0_75
 
 __all__ = [  "OSNet", "osnet0_25", "osnet0_5",   "osnet0_75",   "osnet1_0",   "osnet1_0ibt" ]
 
 class OSNet(nn.Module):
     __factory = {
-        "1_0": orginal.osnet_x1_0,
-        "1_0ibn": orginal.osnet_ibn_x1_0,
-        "0_75": orginal.osnet_x0_75,
-        "0_5": orginal.osnet_x0_5,
-        "0_25": orginal.osnet_x0_25       
+        "1_0": osnet_x1_0,
+        "1_0ibn": osnet_ibn_x1_0,
+        "0_75": osnet_x0_75,
+        "0_5": osnet_x0_5,
+        "0_25": osnet_x0_25       
     }
 
     def __init__(self, depth, cfg, num_classes, num_features=0, dropout=0, pretrained=True,
@@ -65,7 +65,7 @@ class OSNet(nn.Module):
         #####part#########
         norm_layer = nn.BatchNorm2d
         block = Bottleneck
-        planes = 512 / 4
+        planes = 128
         if self.has_embedding:
             self.part_num_features = num_features
         else:
@@ -197,4 +197,4 @@ def osnet1_0(**kwargs):
     return OSNet("1_0", **kwargs)
 
 def osnet1_0ibt(**kwargs):
-    return OSNet("1_0ibt", **kwargs)
+    return OSNet("1_0ibn", **kwargs)
