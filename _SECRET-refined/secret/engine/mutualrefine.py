@@ -34,15 +34,15 @@ class mutualrefine(object):
 
     def _build_dataset(self):
         self.Target_dataset = build_data(self.cfg.DATASETS.TARGET, self.cfg.DATASETS.DIR)
-        if self.cfg.MAX_LEN_DATASET > 0:
+        if self.cfg.MAX_LEN_DATA > 0:
             self.Target_dataset.train = random.sample(self.Target_dataset.train, self.cfg.MAX_LEN_DATA)
         self.Target_cluster_loader = build_loader(self.cfg, None, inputset=sorted(self.Target_dataset.train), is_train=False)
         self.Target_test_loader = build_loader(self.cfg, self.Target_dataset, is_train=False)
         self.num_classes = len(self.Target_dataset.train)
 
     def _build_model(self):
-        self.model = create_model(self.cfg, self.num_classes)
-        self.model_ema = create_model(self.cfg, self.num_classes)
+        self.model = create_model(self.cfg, self.num_classes, self.cfg.MODEL.NUM_FEATURE
+        self.model_ema = create_model(self.cfg, self.num_classes, self.cfg.MODEL.NUM_FEATURE)
 
 
         if self.cfg.CHECKPOING.PRETRAIN_PATH:

@@ -21,6 +21,7 @@ class pretrain(object):
         self.logger = logging.getLogger('UnReID')
         self.best_mAP = 0
         self.best_top1 = 0
+        
 
     def _build_dataset(self):
         self.Source_dataset = build_data(self.cfg.DATASETS.SOURCE, self.cfg.DATASETS.DIR)
@@ -31,7 +32,7 @@ class pretrain(object):
         self.num_classes = self.Source_dataset.num_train_pids
 
     def _build_model(self):
-        self.model = create_model(self.cfg, self.num_classes)
+        self.model = create_model(self.cfg, self.num_classes, self.cfg.MODEL.NUM_FEATURE)
 
         start_epoch = 0
 

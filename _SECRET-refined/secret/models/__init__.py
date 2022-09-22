@@ -11,7 +11,7 @@ def names():
     return sorted(__factory.keys())
 
 
-def create_model(cfg, num_classes, **kwargs):
+def create_model(cfg, num_classes, num_feature, **kwargs):
     """
     Create a model instance.
 
@@ -44,5 +44,5 @@ def create_model(cfg, num_classes, **kwargs):
     """
     if cfg.MODEL.ARCH not in __factory:
         raise KeyError("Unknown model:", cfg.MODEL.ARCH)
-    model = __factory[cfg.MODEL.ARCH](cfg, num_classes, **kwargs).cuda()
+    model = __factory[cfg.MODEL.ARCH](cfg, num_classes, num_feature=num_feature, **kwargs).cuda()
     return model

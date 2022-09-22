@@ -30,6 +30,7 @@ _C.MODEL.BACKBONE = CN()
 # If use ImageNet pretrain model
 _C.MODEL.BACKBONE.PRETRAIN = True
 _C.MODEL.PART_DETACH = False
+_C.MODEL.NUM_FEATURE = 0
 
 # ---------------------------------------------------------------------------- #
 # REID LOSSES options

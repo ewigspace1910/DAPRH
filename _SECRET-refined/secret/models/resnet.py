@@ -102,11 +102,14 @@ class ResNet(nn.Module):
         50: torchvision.models.resnet50,
     }
 
-    def __init__(self, depth, cfg, num_classes):
+    def __init__(self, depth, cfg, num_classes, num_features=0, dropout=0):
         super(ResNet, self).__init__()
 
         self.pretrained = cfg.MODEL.BACKBONE.PRETRAIN
         self.depth = depth
+        self.num_features = num_features
+        self.has_embedding = num_features > 0
+        self.dropout = dropout
         # Construct base (pretrained) resnet
         if depth not in ResNet.__factory:
             raise KeyError("Unsupported depth:", depth)
@@ -118,16 +121,21 @@ class ResNet(nn.Module):
             resnet.layer1, resnet.layer2, resnet.layer3, resnet.layer4)
         self.gap = nn.AdaptiveAvgPool2d(1)
 
-        self.num_features = resnet.fc.in_features
+        # self.num_features = resnet.fc.in_features
         self.num_classes = num_classes
-
         out_planes = resnet.fc.in_features
 
         # Append new layers
-        self.num_features = out_planes
         self.part_detach = cfg.MODEL.PART_DETACH
-
-        self.feat_bn = nn.BatchNorm1d(self.num_features)
+        # Append new layers
+        if self.has_embedding:
+            self.feat = nn.Linear(out_planes, self.num_features)
+            self.feat_bn = nn.BatchNorm1d(self.num_features)
+            init.kaiming_normal_(self.feat.weight, mode='fan_out')
+            init.constant_(self.feat.bias, 0)
+        else:
+            self.num_features = out_planes
+            self.feat_bn = nn.BatchNorm1d(self.num_features)
         self.feat_bn.bias.requires_grad_(False)
         init.constant_(self.feat_bn.weight, 1)
         init.constant_(self.feat_bn.bias, 0)
@@ -135,20 +143,33 @@ class ResNet(nn.Module):
         self.classifier = nn.Linear(self.num_features, self.num_classes, bias=False)
         init.normal_(self.classifier.weight, std=0.001)
 
+        #####part#########
         norm_layer = nn.BatchNorm2d
         block = Bottleneck
         planes = 512
-        self.planes = planes
+        if self.has_embedding:
+            self.part_num_features = num_features
+        else:
+            self.part_num_features = planes * block.expansion
+
         downsample = nn.Sequential(
-            conv1x1(out_planes, planes * block.expansion),
-            norm_layer(planes * block.expansion),
+            conv1x1(out_planes, block.expansion * planes),
+            norm_layer(block.expansion * planes),
         )
         self.part_bottleneck = block(
                 out_planes, planes, downsample = downsample, norm_layer = norm_layer
             )
 
-        self.part_num_features = planes * block.expansion
         self.part_pool = nn.AdaptiveAvgPool2d((2,1))
+
+        if self.has_embedding:
+            self.part_num_features = self.num_features
+            self.partup_feat = nn.Linear(out_planes, self.num_features, bias=False)
+            self.partdown_feat = nn.Linear(out_planes, self.num_features, bias=False)
+        else:
+            
+            # Change the num_features to CNN output channels
+            self.num_features = self.part_num_features
 
         self.partup_feat_bn = nn.BatchNorm1d(self.part_num_features)
         self.partup_feat_bn.bias.requires_grad_(False)
@@ -159,7 +180,7 @@ class ResNet(nn.Module):
         self.partdown_feat_bn.bias.requires_grad_(False)
         init.constant_(self.partdown_feat_bn.weight, 1)
         init.constant_(self.partdown_feat_bn.bias, 0)
-
+            #classifier for part
         self.classifier_partup = nn.Linear(self.part_num_features, self.num_classes, bias = False)
         init.normal_(self.classifier_partup.weight, std=0.001)
         self.classifier_partdown = nn.Linear(self.part_num_features, self.num_classes, bias = False)
@@ -174,25 +195,34 @@ class ResNet(nn.Module):
         x = self.gap(featuremap)
         x = x.view(x.size(0), -1)
 
-        bn_x = self.feat_bn(x)
-
+        if self.has_embedding:
+            bn_x = self.feat_bn(self.feat(x))
+        else:
+            bn_x = self.feat_bn(x) #[bs, 2048] #global feature
+        if self.training is False and finetune is False:
+            bn_x = F.normalize(bn_x)
+            return [bn_x]
+        ##########part#############
         if self.part_detach:
             part_x = self.part_bottleneck(featuremap.detach())
         else:
             part_x = self.part_bottleneck(featuremap)
 
         part_x = self.part_pool(part_x)
-        part_up = part_x[:, :, 0, :]
-        part_up = part_up.view(part_up.size(0), -1)
-        bn_part_up = self.partup_feat_bn(part_up)
 
+        part_up = part_x[:, :, 0, :]
         part_down = part_x[:, :, 1, :]
+
+        part_up = part_up.view(part_up.size(0), -1)
         part_down = part_down.view(part_down.size(0), -1)
+
+        if self.has_embedding:
+            part_up = self.partup_feat(part_up)
+            part_down = self.partdown_feat(part_down)
+
+        bn_part_up = self.partup_feat_bn(part_up)  
         bn_part_down = self.partdown_feat_bn(part_down)
 
-        if self.training is False and finetune is False:
-            bn_x = F.normalize(bn_x)
-            return [bn_x]
 
         prob = self.classifier(bn_x)
         prob_part_up = self.classifier_partup(bn_part_up)
@@ -223,14 +253,15 @@ class ResNet(nn.Module):
                 if m.bias is not None:
                     init.constant_(m.bias, 0)
 
-        resnet = PartResNet.__factory[self.depth](pretrained=self.pretrained)
+        resnet = ResNet.__factory[self.depth](pretrained=self.pretrained)
         self.base[0].load_state_dict(resnet.conv1.state_dict())
         self.base[1].load_state_dict(resnet.bn1.state_dict())
-        self.base[2].load_state_dict(resnet.maxpool.state_dict())
-        self.base[3].load_state_dict(resnet.layer1.state_dict())
-        self.base[4].load_state_dict(resnet.layer2.state_dict())
-        self.base[5].load_state_dict(resnet.layer3.state_dict())
-        self.base[6].load_state_dict(resnet.layer4.state_dict())
+        self.base[2].load_state_dict(resnet.relu.state_dict())
+        self.base[3].load_state_dict(resnet.maxpool.state_dict())
+        self.base[4].load_state_dict(resnet.layer1.state_dict())
+        self.base[5].load_state_dict(resnet.layer2.state_dict())
+        self.base[6].load_state_dict(resnet.layer3.state_dict())
+        self.base[7].load_state_dict(resnet.layer4.state_dict())
 
 def resnet50(cfg, num_classes, **kwargs):
     return ResNet(50, cfg, num_classes, **kwargs)
