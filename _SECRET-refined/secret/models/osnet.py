@@ -6,44 +6,43 @@ from torch.nn import init
 import torchvision
 import torch
 from . layers import MyBatchNorm1D, Bottleneck, conv1x1, conv3x3
-__all__ = ['resnet50', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
-           'resnet152']
+import .orginal
 
+__all__ = [  "OSNet", "osnet0_25", "osnet0_5",   "osnet0_75",   "osnet1_0",   "osnet1_0ibt" ]
 
-
-class ResNet(nn.Module):
+class OSNet(nn.Module):
     __factory = {
-        18: torchvision.models.resnet18,
-        34: torchvision.models.resnet34,
-        50: torchvision.models.resnet50,
-        101: torchvision.models.resnet101,
-        152: torchvision.models.resnet152,
+        "1_0": orginal.osnet_x1_0,
+        "1_0ibn": orginal.osnet_ibn_x1_0,
+        "0_75": orginal.osnet_x0_75,
+        "0_5": orginal.osnet_x0_5,
+        "0_25": orginal.osnet_x0_25       
     }
 
     def __init__(self, depth, cfg, num_classes, num_features=0, dropout=0, pretrained=True,
-                is_export=False):
-        super(ResNet, self).__init__()
+                is_export=False, **kwargs):
+        super(OSNet, self).__init__()
+        #for onnx
+        self.my_norm = MyBatchNorm1D()
+        self.is_export = is_export
 
         self.pretrained = cfg.MODEL.BACKBONE.PRETRAIN
         self.depth = depth
         self.num_features = num_features
         self.has_embedding = num_features > 0
         self.dropout = dropout
-        # Construct base (pretrained) resnet
-        if depth not in ResNet.__factory:
+        # Construct base (pretrained) model
+        if depth not in OSNet.__factory:
             raise KeyError("Unsupported depth:", depth)
-        if depth >= 50:
-            resnet = ResNet.__factory[depth](weights="IMAGENET1K_V2") #(pretrained=pretrained)
-        else:
-            resnet = ResNet.__factory[depth](pretrained=pretrained)
-        if depth >= 50:
-            resnet.layer4[0].conv2.stride = (1,1)
-            resnet.layer4[0].downsample[0].stride = (1,1)
+        model = OSNet.__factory[depth]()
+
+        self.base = nn.Sequential(model.conv1, model.maxpool, model.conv2, model.conv3,
+                            model.conv4, model.conv5) #ignore last relu layer 
         self.gap = nn.AdaptiveAvgPool2d(1)
 
         # self.num_features = resnet.fc.in_features
         self.num_classes = num_classes
-        out_planes = resnet.fc.in_features
+        out_planes = model.classifier.in_features
 
         # Append new layers
         self.part_detach = cfg.MODEL.PART_DETACH
@@ -66,7 +65,7 @@ class ResNet(nn.Module):
         #####part#########
         norm_layer = nn.BatchNorm2d
         block = Bottleneck
-        planes = 512
+        planes = 512 / 4
         if self.has_embedding:
             self.part_num_features = num_features
         else:
@@ -109,7 +108,7 @@ class ResNet(nn.Module):
         if not self.pretrained:
             self.reset_params()
 
-    def forward(self, x, finetune = False):
+    def forward(self, x, finetune=False):
         featuremap = self.base(x)
 
         x = self.gap(featuremap)
@@ -173,31 +172,29 @@ class ResNet(nn.Module):
                 if m.bias is not None:
                     init.constant_(m.bias, 0)
 
-        resnet = ResNet.__factory[self.depth](pretrained=self.pretrained)
-        self.base[0].load_state_dict(resnet.conv1.state_dict())
-        self.base[1].load_state_dict(resnet.bn1.state_dict())
-        self.base[2].load_state_dict(resnet.relu.state_dict())
-        self.base[3].load_state_dict(resnet.maxpool.state_dict())
-        self.base[4].load_state_dict(resnet.layer1.state_dict())
-        self.base[5].load_state_dict(resnet.layer2.state_dict())
-        self.base[6].load_state_dict(resnet.layer3.state_dict())
-        self.base[7].load_state_dict(resnet.layer4.state_dict())
-
-def resnet18(**kwargs):
-    return ResNet(18, **kwargs)
+        model = OSNet.__factory[self.depth](pretrained=self.pretrained)
+        
+        self.base[0].load_state_dict(model.conv1.state_dict())
+        self.base[1].load_state_dict(model.maxpool.state_dict())
+        self.base[2].load_state_dict(model.conv2.state_dict())
+        self.base[3].load_state_dict(model.conv3.state_dict())
+        self.base[4].load_state_dict(model.conv4.state_dict())
+        self.base[5].load_state_dict(model.conv5.state_dict())
 
 
-def resnet34(**kwargs):
-    return ResNet(34, **kwargs)
 
+####------------------------------####
+def osnet0_25(**kwargs):
+    return OSNet("0_25", **kwargs)
 
-def resnet50(**kwargs):
-    return ResNet(50, **kwargs)
+def osnet0_5(**kwargs):
+    return OSNet("0_5", **kwargs)
 
+def osnet0_75(**kwargs):
+    return OSNet("0_75", **kwargs)
 
-def resnet101(**kwargs):
-    return ResNet(101, **kwargs)
+def osnet1_0(**kwargs):
+    return OSNet("1_0", **kwargs)
 
-
-def resnet152(**kwargs):
-    return ResNet(152, **kwargs)
+def osnet1_0ibt(**kwargs):
+    return OSNet("1_0ibt", **kwargs)

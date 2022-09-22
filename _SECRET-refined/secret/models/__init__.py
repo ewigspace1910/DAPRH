@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import torch
 
 from .resnet import resnet50, resnet34, resnet18, resnet101, resnet152
+from .osnet import osnet0_25, osnet0_5, osnet0_75, osnet0_25, osnet1_0ibt, osnet1_0
 
 __factory = {
     'resnet18': resnet18,
@@ -9,7 +10,14 @@ __factory = {
     'resnet50': resnet50,
     'resnet101': resnet101,
     'resnet152': resnet152,
+    #OSnet
+    "osnet0_5"      : osnet0_5,   
+    "osnet0_75"     : osnet0_75,  
+    "osnet1_0"      : osnet1_0,   
+    "osnet1_0ibt"   : osnet1_0ibt,
 
+
+    #NONE
     "":None
 }
 
