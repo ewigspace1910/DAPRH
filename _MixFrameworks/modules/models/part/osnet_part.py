@@ -7,7 +7,7 @@ from torch.nn import functional as F
 from torch.nn import init
 import torchvision
 import torch
-from orginal import Bottleneck
+s
 __all__ = [  "OSNetpart", "osnet0_25part", "osnet0_5part",   "osnet0_75part",   "osnet1_0part",   "osnet1_0ibtpart" ]
 
 class OSNetpart(nn.Module):
@@ -63,7 +63,20 @@ class OSNetpart(nn.Module):
                 init.normal_(self.classifier.weight, std=0.001)
             init.constant_(self.feat_bn.weight, 1)
             init.constant_(self.feat_bn.bias, 0)
-        
+        #########################
+        #extra bottleneck
+        self.extra_bn = extra_bn
+        norm_layer = nn.BatchNorm2d
+        block = Bottleneck
+        planes = 512
+
+        downsample = nn.Sequential(
+            nn.Conv2d(out_planes, block.expansion * planes, kernel_size=1, stride=1, bias=False),
+            norm_layer(block.expansion * planes),
+        )
+        self.part_bottleneck = block(
+                out_planes, planes, downsample = downsample, norm_layer = norm_layer
+            )
         ##########################
         #ADD ideal in PPLR 
         #https://github.com/ewigspace1910/Paper-Notes-Deep-Learning/blob/main/Computer%20Vision/3.Person%20ReID/PPLR.md
@@ -115,7 +128,10 @@ class OSNetpart(nn.Module):
             bn_x_ = self.drop(bn_x)
         logits_g = self.classifier(bn_x_)
 
-        f_p = self.rap(x)
+        if self.extra_bn: 
+            f_p = self.part_bottleneck(x)
+            f_p = self.rap(f_p)
+        else: f_p = self.rap(f_p)
         f_p = f_p.view(f_p.size(0), f_p.size(1), -1)
 
         logits_p = []
@@ -172,7 +188,10 @@ class OSNetpart(nn.Module):
             bn_x = self.feat_bn(f_g) #[bs, 2048]
         f_g = F.normalize(bn_x)
 
-        f_p = self.rap(x)
+        if self.extra_bn: 
+            f_p = self.part_bottleneck(x)
+            f_p = self.rap(f_p)
+        else: f_p = self.rap(f_p)
         f_p = f_p.view(f_p.size(0), f_p.size(1), -1)
 
         fs_p = []

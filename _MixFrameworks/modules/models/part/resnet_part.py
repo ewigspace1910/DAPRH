@@ -5,7 +5,7 @@ from torch.nn import functional as F
 from torch.nn import init
 import torchvision
 import torch
-from orginal import Bottleneck
+from .orginal import *
 
 
 __all__ = ['ResNetPart', 'resnet18part', 'resnet34part', 'resnet50part', 'resnet101part',
@@ -28,7 +28,7 @@ class ResNetPart(nn.Module):
         self.pretrained = pretrained
         self.depth = depth
         self.cut_at_pooling = cut_at_pooling
-        self.extra_bn = extra_bn
+
         # Construct base (pretrained) resnet
         if depth not in ResNetPart.__factory:
             raise KeyError("Unsupported depth:", depth)
@@ -73,6 +73,7 @@ class ResNetPart(nn.Module):
         init.constant_(self.feat_bn.bias, 0)
         #########################
         #extra bottleneck
+        self.extra_bn = extra_bn
         norm_layer = nn.BatchNorm2d
         block = Bottleneck
         planes = 512

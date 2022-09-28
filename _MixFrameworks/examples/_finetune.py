@@ -222,7 +222,7 @@ def main_worker(args):
     del dict_f, cf_1, cf_2
 
 
-    print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
+    if args.fast_kmeans == args.dbscan == True: assert False, "only set --fast-kmeans or --dbscan or non call both options"
     if args.fast_kmeans:
         km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=3500).fit(cf)        
         model_1.module.classifier.weight.data.copy_(torch.from_numpy(normalize(km.cluster_centers_, axis=1)).float().cuda())
@@ -267,6 +267,7 @@ def main_worker(args):
         optimizer = torch.optim.Adam(params)
 
         if args.flag_ca: 
+            assert not args.dbscan, "U shouldnt use both --flag-ca and --dbscan at time, waiting next update"
             ###############################################
             #Calculate cross agreements on refined sample
             """
@@ -334,20 +335,55 @@ def main_worker(args):
         del dict_f, cf_1, cf_2
         # using select cf to update centers
         print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
-        if args.fast_kmeans:
-            km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=3500).fit(cf) 
-            centers = normalize(km.cluster_centers_, axis=1)
-            target_label = km.labels_
+
+        if args.dbscan:
+            if epoch==0: cluster = DBSCAN(eps=args.eps, min_samples=4, metric='precomputed', n_jobs=2)
+            pseudo_labels, num_class = generate_pseudo_dbscan(epoch=epoch, cf=cf, cluster=cluster)
+            # generate new dataset with pseudo-labels
+            num_outliers = 0
+            new_cf = np.array([])
+            pids = np.array([])
+            for i, (fea, label) in enumerate(zip(cf, pseudo_labels)):
+                pid = label.item()
+                if pid >= num_class:  # append data except outliers
+                    num_outliers += 1
+                else:
+                    new_cf = np.vstack((new_cf,fea))
+                    pids = np.hstack((pids, pid))
+
+            # statistics of clusters and un-clustered instances
+            print('==> Statistics for epoch {}: {} clusters, {} un-clustered instances'.format(epoch, num_class,
+                                                                                            num_outliers))
+            # compute cluster centroids
+            centers = []
+            for pid in sorted(np.unique(pids)):  # loop all pids
+                idxs_p = np.where(pids == pid)[0]
+                centers.append(new_cf[idxs_p].mean(0))
+
+            centers = normalize(torch.stack(centers), axis=1)
+            target_label = pids
+            # model_1.module.classifier.weight.data[:num_class].copy_(centroids_g)
+            # model_2.module.classifier.weight.data[:num_class].copy_(centroids_g)
+            model_1.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+            model_2.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+            model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+            model_2_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+        
         else:
-            km = KMeans(n_clusters=args.num_clusters, random_state=args.seed,max_iter=400).fit(cf)
-            centers = normalize(km.cluster_centers_, axis=1)
-            target_label = km.labels_
-                
-        model_1.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-        model_2.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-        model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-        model_2_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-        del km       
+            if args.fast_kmeans:
+                km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=3000).fit(cf) 
+                centers = normalize(km.cluster_centers_, axis=1)
+                target_label = km.labels_
+            else:
+                km = KMeans(n_clusters=args.num_clusters, random_state=args.seed,max_iter=400).fit(cf)
+                centers = normalize(km.cluster_centers_, axis=1)
+                target_label = km.labels_
+                    
+            model_1.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+            model_2.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+            model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+            model_2_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+            del km       
         # else:
         #     for id in range(args.num_clusters):
         #         indexs = select_pseudo_samples[np.where(select_pseudo_samples_labels==id)]
@@ -408,6 +444,26 @@ def compute_cross_agreement(features_g, features_p, k, search_option=0):
 
 
 
+def generate_pseudo_dbscan(self, epoch, cf, cluster, k1=30, k2=6):
+    """
+    cf: center features
+    """
+    mat_dist = compute_jaccard_distance(cf, k1=k1, k2=6)
+    ids = cluster.fit_predict(mat_dist)
+    num_ids = len(set(ids)) - (1 if -1 in ids else 0)
+
+    labels = []
+    outliers = 0
+    for i, id in enumerate(ids):
+        if id != -1:
+            labels.append(id)
+        else:
+            labels.append(num_ids + outliers)
+            outliers += 1
+
+    return torch.Tensor(labels).long().detach(), num_ids
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="MMT Training")
     # dataset
@@ -442,7 +498,7 @@ if __name__ == '__main__':
     parser.add_argument('--soft-ce-weight', type=float, default=0.5)
     parser.add_argument('--soft-tri-weight', type=float, default=0.8)
     parser.add_argument('--epochs', type=int, default=40)
-    parser.add_argument('--iters', type=int, default=800)
+    parser.add_argument('--iters', type=int, default=400)
     # training configs
     parser.add_argument('--init-1', type=str, default='', metavar='PATH')
     parser.add_argument('--init-2', type=str, default='', metavar='PATH')
@@ -461,7 +517,7 @@ if __name__ == '__main__':
                         help="starting epoch for agreement-aware label smoothing")
 
     #Secret
-    parser.add_argument('--extra-botteneck', action='store_true',
+    parser.add_argument('--extra-bottleneck', action='store_true',
                         help='add a bottelneck before split into feature parts')   
     # path
     working_dir = osp.dirname(osp.abspath(__file__))
@@ -470,10 +526,17 @@ if __name__ == '__main__':
     parser.add_argument('--logs-dir', type=str, metavar='PATH',
                         default=osp.join(working_dir, 'logs'))
     #clustering
-    parser.add_argument('--fast_kmeans', action='store_true',
+    parser.add_argument('--fast-kmeans', action='store_true',
                         help='using fast clustering with --fast_kmeans')
     parser.add_argument('--dbscan', action='store_true',
                         help='using dbscan instead of default kmean')
+    parser.add_argument('--dbscan-k1', type=int, default=30,
+                        help="hyperparameter for jaccard distance")
+    parser.add_argument('--dbscan-k2', type=int, default=6,
+                        help="hyperparameter for jaccard distance")
+    parser.add_argument('--dbscan-eps', type=float, default=0.5,
+                        help="distance threshold for DBSCAN")
+
 
     parser.add_argument('--offline_test', action='store_true',
                         help='offline test models')
