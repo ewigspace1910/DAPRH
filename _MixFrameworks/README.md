@@ -5,6 +5,7 @@ I try to combine ideals from 3 papers:
 -   [PPLR](https://github.com/yoonkicho/pplr): MMT, Uncertainty modeling
 -   [P2LR](https://github.com/JeyesHan/P2LR): Cross agreements
 -   [FL2](https://github.com/DJEddyking/LF2): MiniBatchKmeans, local features.
+-   [SCRET](https://github.com/LunarShen/SECRET.git): Extra bottleneck
 
 # Installation
 ```python

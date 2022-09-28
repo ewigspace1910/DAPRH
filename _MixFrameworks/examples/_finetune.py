@@ -134,12 +134,18 @@ def get_test_loader(dataset, height, width, batch_size, workers, testset=None):
     return test_loader
 
 def create_model(args):
-    model_1 = models.create(args.arch, num_features=args.features, dropout=args.dropout, num_classes=args.num_clusters, num_parts=args.part)
-    model_2 = models.create(args.arch, num_features=args.features, dropout=args.dropout, num_classes=args.num_clusters, num_parts=args.part)
-
-    model_1_ema = models.create(args.arch, num_features=args.features, dropout=args.dropout, num_classes=args.num_clusters, num_parts=args.part)
-    model_2_ema = models.create(args.arch, num_features=args.features, dropout=args.dropout, num_classes=args.num_clusters, num_parts=args.part)
-
+    model_1 = models.create(args.arch, num_features=args.features, dropout=args.dropout, 
+                            num_classes=args.num_clusters, num_parts=args.part,
+                            extra_bn=args.extra_bottleneck)
+    model_2 = models.create(args.arch, num_features=args.features, dropout=args.dropout, 
+                            num_classes=args.num_clusters, num_parts=args.part,
+                            extra_bn=args.extra_bottleneck)
+    model_1_ema = models.create(args.arch, num_features=args.features, dropout=args.dropout, 
+                            num_classes=args.num_clusters, num_parts=args.part,
+                            extra_bn=args.extra_bottleneck)
+    model_2_ema = models.create(args.arch, num_features=args.features, dropout=args.dropout, 
+                            num_classes=args.num_clusters, num_parts=args.part,
+                            extra_bn=args.extra_bottleneck)
     model_1.cuda()
     model_2.cuda()
     model_1_ema.cuda()
@@ -319,8 +325,6 @@ def main_worker(args):
 
 
         ######################################
-        #Extract new cf to refine samples in next inter
-        #
         dict_f, _ = extract_features(model_1_ema, cluster_loader, print_freq=50)
         cf_1 = torch.stack(list(dict_f.values())).numpy()
         dict_f, _ = extract_features(model_2_ema, cluster_loader, print_freq=50)
@@ -330,7 +334,6 @@ def main_worker(args):
         del dict_f, cf_1, cf_2
         # using select cf to update centers
         print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
-        # if args.multiple_kmeans:
         if args.fast_kmeans:
             km = MiniBatchKMeans(n_clusters=args.num_clusters, max_iter=250, batch_size=300, init_size=3500).fit(cf) 
             centers = normalize(km.cluster_centers_, axis=1)
@@ -447,7 +450,7 @@ if __name__ == '__main__':
     parser.add_argument('--print-freq', type=int, default=10)
     parser.add_argument('--eval-step', type=int, default=1)
     # cross agreement configs
-    parser.add_argument('--flag_ca', action='store_true',
+    parser.add_argument('--flag-ca', action='store_true',
                         help='using cross agreement')
     parser.add_argument('--part', type=int, default=3, help="number of part")
     parser.add_argument('--k', type=int, default=20,
@@ -456,16 +459,22 @@ if __name__ == '__main__':
                         help="weighting parameter for part-guided label refinement")
     parser.add_argument('--aals-epoch', type=int, default=5,
                         help="starting epoch for agreement-aware label smoothing")
+
+    #Secret
+    parser.add_argument('--extra-botteneck', action='store_true',
+                        help='add a bottelneck before split into feature parts')   
     # path
     working_dir = osp.dirname(osp.abspath(__file__))
     parser.add_argument('--data-dir', type=str, metavar='PATH',
                         default=osp.join(working_dir, 'data'))
     parser.add_argument('--logs-dir', type=str, metavar='PATH',
                         default=osp.join(working_dir, 'logs'))
+    #clustering
     parser.add_argument('--fast_kmeans', action='store_true',
                         help='using fast clustering with --fast_kmeans')
+    parser.add_argument('--dbscan', action='store_true',
+                        help='using dbscan instead of default kmean')
+
     parser.add_argument('--offline_test', action='store_true',
                         help='offline test models')
-    # parser.add_argument('--multiple_kmeans', action='store_true',
-    #                     help='using kmeans to update centers')
     main()

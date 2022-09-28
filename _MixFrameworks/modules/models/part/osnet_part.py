@@ -7,7 +7,7 @@ from torch.nn import functional as F
 from torch.nn import init
 import torchvision
 import torch
-
+from orginal import Bottleneck
 __all__ = [  "OSNetpart", "osnet0_25part", "osnet0_5part",   "osnet0_75part",   "osnet1_0part",   "osnet1_0ibtpart" ]
 
 class OSNetpart(nn.Module):
@@ -20,7 +20,8 @@ class OSNetpart(nn.Module):
     }
 
     def __init__(self, depth, pretrained=True, cut_at_pooling=False,
-                num_parts=3, num_features=0, norm=False, dropout=0, num_classes=0, **kwargs):
+                num_classes=0, num_features=0, norm=False, dropout=0, 
+                num_parts=3, extra_bn=False, **kwargs):
         super(OSNetpart, self).__init__()
         self.pretrained = pretrained
         self.depth = depth

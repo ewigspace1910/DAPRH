@@ -7,7 +7,7 @@ import torchvision
 import torch
 
 from .orginal.resnet_ibn_a import resnet50_ibn_a, resnet101_ibn_a
-
+from orginal import Bottleneck
 
 __all__ = ['ResNetIBNpart', 'resnet_ibn50apart', 'resnet_ibn101apart']
 
@@ -19,7 +19,8 @@ class ResNetIBNpart(nn.Module):
     }
 
     def __init__(self, depth, pretrained=True, cut_at_pooling=False,
-                num_parts=3, num_features=0, norm=False, dropout=0, num_classes=0,**kwargs):
+                num_classes=0, num_features=0, norm=False, dropout=0, 
+                num_parts=3, extra_bn=False, **kwargs):
         super(ResNetIBNpart, self).__init__()
 
         self.depth = depth

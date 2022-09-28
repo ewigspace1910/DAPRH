@@ -5,6 +5,7 @@ from torch.nn import functional as F
 from torch.nn import init
 import torchvision
 import torch
+from orginal import Bottleneck
 
 
 __all__ = ['ResNetPart', 'resnet18part', 'resnet34part', 'resnet50part', 'resnet101part',
@@ -21,11 +22,13 @@ class ResNetPart(nn.Module):
     }
 
     def __init__(self, depth, pretrained=True, cut_at_pooling=False,
-                num_parts=3, num_classes=0, num_features=0, norm=False, dropout=0, **kwargs):
+                num_classes=0, num_features=0, norm=False, dropout=0, 
+                num_parts=3, extra_bn=False, **kwargs):
         super(ResNetPart, self).__init__()
         self.pretrained = pretrained
         self.depth = depth
         self.cut_at_pooling = cut_at_pooling
+        self.extra_bn = extra_bn
         # Construct base (pretrained) resnet
         if depth not in ResNetPart.__factory:
             raise KeyError("Unsupported depth:", depth)
@@ -68,10 +71,22 @@ class ResNetPart(nn.Module):
                 init.normal_(self.classifier.weight, std=0.001)
         init.constant_(self.feat_bn.weight, 1)
         init.constant_(self.feat_bn.bias, 0)
+        #########################
+        #extra bottleneck
+        norm_layer = nn.BatchNorm2d
+        block = Bottleneck
+        planes = 512
+
+        downsample = nn.Sequential(
+            nn.Conv2d(out_planes, block.expansion * planes, kernel_size=1, stride=1, bias=False),
+            norm_layer(block.expansion * planes),
+        )
+        self.part_bottleneck = block(
+                out_planes, planes, downsample = downsample, norm_layer = norm_layer
+            )
 
         ##########################
-        #ADD ideal in PPLR 
-        #https://github.com/ewigspace1910/Paper-Notes-Deep-Learning/blob/main/Computer%20Vision/3.Person%20ReID/PPLR.md
+        #ADD ideal in PPLR https://github.com/ewigspace1910/Paper-Notes-Deep-Learning/blob/main/Computer%20Vision/3.Person%20ReID/PPLR.md
         self.num_parts = num_parts
         self.rap = nn.AdaptiveAvgPool2d((self.num_parts, 1))
 
@@ -123,7 +138,10 @@ class ResNetPart(nn.Module):
             bn_x_ = self.drop(bn_x)
         logits_g = self.classifier(bn_x_)
 
-        f_p = self.rap(x)
+        if self.extra_bn: 
+            f_p = self.part_bottleneck(x)
+            f_p = self.rap(f_p)
+        else: f_p = self.rap(f_p)
         f_p = f_p.view(f_p.size(0), f_p.size(1), -1)
 
         logits_p = []
@@ -170,7 +188,10 @@ class ResNetPart(nn.Module):
             bn_x = self.feat_bn(f_g) #[bs, 2048]
         f_g = F.normalize(bn_x)
 
-        f_p = self.rap(x)
+        if self.extra_bn: 
+            f_p = self.part_bottleneck(x)
+            f_p = self.rap(f_p)
+        else: f_p = self.rap(f_p)
         f_p = f_p.view(f_p.size(0), f_p.size(1), -1)
 
         fs_p = []

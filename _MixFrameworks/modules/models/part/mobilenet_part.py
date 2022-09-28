@@ -5,7 +5,7 @@ from torch.nn import functional as F
 from torch.nn import init
 import torchvision
 import torch
-
+from orginal import Bottleneck
 
 __all__ = ['MobileNetpart', 'mobilenetLpart', 'mobilenetSpart']
 
@@ -17,7 +17,8 @@ class MobileNetv3part(nn.Module):
     }
 
     def __init__(self, depth, pretrained=True, cut_at_pooling=False,
-                num_parts=3, num_features=0, norm=False, dropout=0, num_classes=0, **kwargs):
+                num_classes=0, num_features=0, norm=False, dropout=0, 
+                num_parts=3, extra_bn=False, **kwargs):
         super(MobileNetv3part, self).__init__()
         self.pretrained = pretrained
         self.depth = depth
