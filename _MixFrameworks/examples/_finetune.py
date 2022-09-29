@@ -334,22 +334,23 @@ def main_worker(args):
         cf = normalize(cf, axis=1)
         del dict_f, cf_1, cf_2
         # using select cf to update centers
-        print('\n Clustering into {} classes \n'.format(args.num_clusters))  # num_clusters=500
+        print('\n\t---- Clustering into new classes ----\n')  # num_clusters=500
 
         if args.dbscan:
-            if epoch==0: cluster = DBSCAN(eps=args.eps, min_samples=4, metric='precomputed', n_jobs=2)
-            pseudo_labels, num_class = generate_pseudo_dbscan(epoch=epoch, cf=cf, cluster=cluster)
+            if epoch==0: cluster = DBSCAN(eps=args.dbscan_eps, min_samples=4, metric='precomputed', n_jobs=2)
+            cf = torch.from_numpy(cf)
+            pseudo_labels, num_class = generate_pseudo_dbscan(epoch=epoch, cf=cf, cluster=cluster, k1=args.dbscan_k1, k2=args.dbscan_k2)
             # generate new dataset with pseudo-labels
             num_outliers = 0
-            new_cf = np.array([])
-            pids = np.array([])
+            new_cf = None
+            pids = None
             for i, (fea, label) in enumerate(zip(cf, pseudo_labels)):
                 pid = label.item()
                 if pid >= num_class:  # append data except outliers
                     num_outliers += 1
                 else:
-                    new_cf = np.vstack((new_cf,fea))
-                    pids = np.hstack((pids, pid))
+                    new_cf = np.vstack((new_cf,fea)) if not new_cf is None else fea[None, :].detach().numpy()
+                    pids = np.hstack((pids, pid)) if not pids is None else np.array([pid])
 
             # statistics of clusters and un-clustered instances
             print('==> Statistics for epoch {}: {} clusters, {} un-clustered instances'.format(epoch, num_class,
@@ -359,15 +360,16 @@ def main_worker(args):
             for pid in sorted(np.unique(pids)):  # loop all pids
                 idxs_p = np.where(pids == pid)[0]
                 centers.append(new_cf[idxs_p].mean(0))
-
-            centers = normalize(torch.stack(centers), axis=1)
+            centers = np.array(centers)
+            centers = normalize(centers, axis=1)
             target_label = pids
+            cf = new_cf
             # model_1.module.classifier.weight.data[:num_class].copy_(centroids_g)
             # model_2.module.classifier.weight.data[:num_class].copy_(centroids_g)
-            model_1.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-            model_2.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-            model_1_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
-            model_2_ema.module.classifier.weight.data.copy_(torch.from_numpy(centers).float().cuda())
+            model_1.module.classifier.weight.data[:num_class].copy_(torch.from_numpy(centers).float().cuda())
+            model_2.module.classifier.weight.data[:num_class].copy_(torch.from_numpy(centers).float().cuda())
+            model_1_ema.module.classifier.weight.data[:num_class].copy_(torch.from_numpy(centers).float().cuda())
+            model_2_ema.module.classifier.weight.data[:num_class].copy_(torch.from_numpy(centers).float().cuda())
         
         else:
             if args.fast_kmeans:
@@ -444,11 +446,11 @@ def compute_cross_agreement(features_g, features_p, k, search_option=0):
 
 
 
-def generate_pseudo_dbscan(self, epoch, cf, cluster, k1=30, k2=6):
+def generate_pseudo_dbscan(epoch, cf, cluster, k1=30, k2=6):
     """
     cf: center features
     """
-    mat_dist = compute_jaccard_distance(cf, k1=k1, k2=6)
+    mat_dist = compute_jaccard_distance(cf, k1=k1, k2=k2)
     ids = cluster.fit_predict(mat_dist)
     num_ids = len(set(ids)) - (1 if -1 in ids else 0)
 

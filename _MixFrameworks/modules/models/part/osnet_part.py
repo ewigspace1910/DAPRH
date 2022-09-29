@@ -7,7 +7,7 @@ from torch.nn import functional as F
 from torch.nn import init
 import torchvision
 import torch
-s
+
 __all__ = [  "OSNetpart", "osnet0_25part", "osnet0_5part",   "osnet0_75part",   "osnet1_0part",   "osnet1_0ibtpart" ]
 
 class OSNetpart(nn.Module):

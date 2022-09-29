@@ -31,7 +31,8 @@ def compute_jaccard_distance(target_features, k1=20, k2=6, print_flag=True, sear
         print('Computing jaccard distance...')
 
     ngpus = faiss.get_num_gpus()
-    N = target_features.size(0)
+    try:    N = target_features.size(0)
+    except : N = target_features.shape[0]
     mat_type = np.float16 if use_float16 else np.float32
 
     if (search_option==0):
