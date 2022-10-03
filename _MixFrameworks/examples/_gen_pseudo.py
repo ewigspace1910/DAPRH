@@ -111,7 +111,7 @@ def get_train_loader(dataset, height, width, batch_size, workers,
                    shuffle=not rmgs_flag, pin_memory=True, drop_last=True), length=iters)
     if save:
         print("Save pseudo-data")
-        with open("pseudo-label-samples.txt", "w") as f:
+        with open("pseudo-label-{}-samples.txt".format(len(train_set)), "w") as f:
             for x in train_set: f.write(str(x) + "\n")
         print("!saved in pseudo-label-samples.txt")
 
@@ -236,7 +236,7 @@ def main_worker(args):
         print('Current epoch selects {:.4f} unlabeled data'.format(pt))
         train_loader_target, _, _ = get_train_loader(dataset_target,
                                                             args.height, args.width, args.batch_size, args.workers,
-                                                            args.num_instances, iters, centers,target_label, cf, pt, save=epoch==args.epochs-1)
+                                                            args.num_instances, iters, centers,target_label, cf, pt, save= epoch % args.eval_step == 1)
         del cf, centers
         # Setting Optimizer
         params = []
