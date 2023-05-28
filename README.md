@@ -26,7 +26,7 @@ pip install -r requirements.txt
 1. Download the object re-ID datasets Market-1501, Duke-MTMC, MSMT17 from [here](https://github.com/michuanhaohao/reid-strong-baseline/tree/master), then move to /datasets. The directory should look like:
 
 ```
-DAPRH4PersonReID/data
+DAPRH/data
 ├── Market-1501-v15.09.15
 ├── DukeMTMC-reID
 ├── MSMT17
@@ -38,7 +38,7 @@ DAPRH4PersonReID/data
 2. To prepare data for GAN, we setup into /datasets/4Gan as following:
 
 ```
-DAPRH4PersonReID/data/4Gan
+DAPRH/data/4Gan
 ├── duke2market
 |   ├──train
 |   |   ├──dukemtmc
@@ -171,24 +171,10 @@ conda activate DAPRH
 ```
 
 ### Phase 1: Pretrain
-- training on label domain **without** systhetic data(data from GAN)
-
-```bash
-#for example
-python _source_pretrain.py \
-    -ds "dukemtmc" -dt "market1501" \
-    -a "resnet50" --feature 0 --iters 200 --print-freq 200\
-	--num-instances 4 -b 128 -j 4 --seed 123 --margin 0.3 \
-    --warmup-step 10 --lr 0.00035 --milestones 40 70  --epochs 80 --eval-step 1 \
-	--logs-dir "../saves/reid/duke2market/S1/woGAN"
-    --data-dir "../datasets" \
-```
-
-
 - training on lable domain **with** both real and fake images + DIM:
 ```bash
 #for example
-python pretrain/_source_pretrain_mix.py \
+python _source_pretrain.py \
     -ds "dukemtmc" -dt "market1501" \
     -a "resnet50"  --iters 200 \
 	--num-instances 16 -b 128 --margin 0.3 \
@@ -199,7 +185,7 @@ python pretrain/_source_pretrain_mix.py \
     --ratio 4 1 \
     --dim --lamda 0.05
 
-python pretrain/_source_pretrain_mix.py \
+python _source_pretrain.py \
     -dt "dukemtmc" -ds "market1501" \
     -a "resnet50" --iters 200 \
 	--num-instances 16 -b 128  --margin 0.3 \
@@ -218,7 +204,7 @@ python pretrain/_source_pretrain_mix.py \
 ```bash
 ###              DUKE ---> MARKET              ####
  
-python target/_target_finetune.py \
+python _target_finetune.py \
 -dt "market1501" -b 128  --num-instances 16 \
 -a resnet50 --epochs 26 --iters 400 --npart 2 \
 --logs-dir "../saves/reid/duke2market/S2/finetune"   \
@@ -229,7 +215,7 @@ python target/_target_finetune.py \
 
 ###              MARKET ---> DUKE              ####
 
-python target/_target_finetune.py \
+python _target_finetune.py \
 -dt "dukemtmc" -b 128 --num-instances 16 \
 -a resnet50 --epochs 26 --iters 400  --npart 2 \
 --logs-dir "../saves/reid/market2duke/S2/finetune"   \
