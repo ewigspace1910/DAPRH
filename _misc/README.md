@@ -1,4 +1,5 @@
 # DESCRIBE
+This folder contains code used to reimplement some state-of-the-art solutions for person reid.
 
 I try to combine ideals from 3 papers:
 
