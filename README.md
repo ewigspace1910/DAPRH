@@ -253,7 +253,7 @@ python test_model.py \
 
 ## Results
 
-![fig](assets/sota.png)
+![fig](assets/table1.png)
 
 
 - you can also download pretrained model from [modelrepo](https://github.com/ewigspace1910/modelrepo)
