@@ -263,13 +263,6 @@ keywords = {Unsupervised person re-identification, Unsupervised domain adaptatio
 author="Nguyen, Anh D.
 and Pham, Dang H.
 and Nguyen, Hoa N.",
-editor="Nguyen, Ngoc Thanh
-and Botzheim, J{\'a}nos
-and Guly{\'a}s, L{\'a}szl{\'o}
-and N{\'u}{\~{n}}ez, Manuel
-and Treur, Jan
-and Vossen, Gottfried
-and Kozierkiewicz, Adrianna",
 title="GAN-Based Data Augmentation and Pseudo-label Refinement for Unsupervised Domain Adaptation Person Re-identification",
 booktitle="Computational Collective Intelligence",
 year="2023",
