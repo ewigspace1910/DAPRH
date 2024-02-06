@@ -4,7 +4,7 @@ Official PyTorch implementation of [GAN-based Data Augmentation and Pseudo-Label
 
 # Updates
 *   [05/2023] Push Initial rep on Github and Release unofficial code, results, pretrained models
-*   [__/____] Citation, official code (when the paper is accepted)
+*   [02/2023] Citation, official code (when the paper is accepted)
 
 # Overview
 
@@ -247,6 +247,37 @@ python test_model.py \
 ## Citation
 If you find this code useful for your research, please consider citing our paper
 ````BibTex
+@article{PHAM2024111471,
+title = {GAN-based data augmentation and pseudo-label refinement with holistic features for unsupervised domain adaptation person re-identification},
+journal = {Knowledge-Based Systems},
+pages = {111471},
+year = {2024},
+issn = {0950-7051},
+doi = {https://doi.org/10.1016/j.knosys.2024.111471},
+url = {https://www.sciencedirect.com/science/article/pii/S0950705124001060},
+author = {Dang H. Pham and Anh D. Nguyen and Hoa N. Nguyen},
+keywords = {Unsupervised person re-identification, Unsupervised domain adaptation, GAN-based data augmentation, Pseudo-label refinement}
+}
 
+@InProceedings{cDAUET-23,
+author="Nguyen, Anh D.
+and Pham, Dang H.
+and Nguyen, Hoa N.",
+editor="Nguyen, Ngoc Thanh
+and Botzheim, J{\'a}nos
+and Guly{\'a}s, L{\'a}szl{\'o}
+and N{\'u}{\~{n}}ez, Manuel
+and Treur, Jan
+and Vossen, Gottfried
+and Kozierkiewicz, Adrianna",
+title="GAN-Based Data Augmentation and Pseudo-label Refinement for Unsupervised Domain Adaptation Person Re-identification",
+booktitle="Computational Collective Intelligence",
+year="2023",
+publisher="Springer Nature Switzerland",
+address="Cham",
+doi={10.1007/978-3-031-41456-5_45},
+pages="591--605",
+isbn="978-3-031-41456-5"
+}
 ````
 
