@@ -80,7 +80,7 @@ conda activate DAPRH
 LABEL_DIM=7
 CROP_SIZE=128
 IMG_SIZE=128
-TRAIN_IMG_DIR="../../datasets/ReidGan/duke2mark/train"
+TRAIN_IMG_DIR="../../datasets/4Gan/duke2mark/train"
 BATCHSIZE=16
 Lidt=1
 Lrec=10
@@ -103,7 +103,7 @@ python main.py --mode train --dataset RaFD --rafd_crop_size $CROP_SIZE --image_s
 LABEL_DIM=7
 CROP_SIZE=128
 IMG_SIZE=128
-TRAIN_IMG_DIR="../../datasets/ReidGan/market2duke/train"
+TRAIN_IMG_DIR="../../datasets/4Gan/market2duke/train"
 BATCHSIZE=16
 Lidt=1
 Lrec=10
