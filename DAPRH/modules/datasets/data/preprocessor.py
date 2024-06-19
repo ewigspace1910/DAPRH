@@ -129,7 +129,7 @@ class TargetPreprocessor(Dataset):
             return self._get_single_item(indices)
 
     def _get_single_item(self, new_idx):
-        fname, pid, camid, old_idx, _ = self.dataset[new_idx]
+        fname, pid, camid, old_idx, _ = self.dataset[new_idx] 
         fpath = fname
         if self.root is not None:
             fpath = osp.join(self.root, fname)
@@ -142,7 +142,7 @@ class TargetPreprocessor(Dataset):
         return img, fname, pid, camid, (old_idx, new_idx)
 
     def _get_mutual_item(self, new_idx):
-        fname, pid, camid, old_idx, _ = self.dataset[new_idx]
+        fname, pid, camid, old_idx, _ = self.dataset[new_idx] # (fname, pid, cid, i, rpid)
         fpath = fname
         if self.root is not None:
             fpath = osp.join(self.root, fname)

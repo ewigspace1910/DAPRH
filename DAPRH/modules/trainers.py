@@ -396,7 +396,7 @@ class FTTrainer(object):
 
         self.criterion_ce = CrossEntropyLabelSmooth(num_cluster_list, epsilon = ce_epsilon).cuda()
         self.criterion_stri = SoftTripletLoss(margin=0).cuda() 
-        self.criterion_dauet = UET2(alpha=uetal).cuda()
+        self.criterion_dauet = UET(alpha=uetal).cuda()
 
         self.criterion_tri_soft = SoftTripletLoss(margin=None).cuda()
         self.criterion_ce_soft = KLDivLoss().cuda()
@@ -414,8 +414,6 @@ class FTTrainer(object):
         losses_tr_ema = AverageMeter()
         losses_total = AverageMeter()
 
-        ptw    = tri_weights 
-        assert len(ptw) == self.num_parts
 
         for i in range(train_iters):
             target_inputs = data_loader_target.next()
@@ -423,23 +421,21 @@ class FTTrainer(object):
 
             [x, part], [prob, _] = self.model(inputs[0].cuda())
             [x_ema, part_ema], [prob_ema, _] = self.model_ema(inputs[1].cuda())
-            prob = prob[:,:self.num_clusters[0]]
-            prob_ema = prob_ema[:,:self.num_clusters[0]]
+            prob = prob[:,:self.num_clusters]
+            prob_ema = prob_ema[:,:self.num_clusters]
             
         #####################################################
         #                           LOSSES                  #
 
         #ID Loss global 
-            gloss_ce    = self.criterion_dauet(logits=prob, targets=targets[0], aff_score=gcentroidW, alphas=alphas)
+            gloss_ce    = self.criterion_dauet(logits=prob, targets=targets, aff_score=gcentroidW, alphas=alphas)
 
         #Tri loss
-            gloss_tri  = self.criterion_stri(x, x, targets[0]) if gtw > 0 else 0
-            ploss_tri  = 0
-            for i in range(self.num_parts):
-                if ptw[i] > 0:
-                    ploss_tri += self.criterion_stri(part[:,:, i], part[:, :, i], targets[1][i]) * ptw[i]
+            gloss_tri  = self.criterion_stri(x, x, targets) 
+            ploss_tri  = 0 # we may try using triplet loss for subbranches oneday in future :') 
+            # for i in range(self.num_parts):
+            #         ploss_tri += self.criterion_stri(part[:,:, i], part[:, :, i], targets[1][i]) * ptw[i]
                
-
         #ema loss:  
             if self.model_ema is None:
                 loss_ce      = gloss_ce
@@ -485,12 +481,11 @@ class FTTrainer(object):
         return [x, part, prob], [x_ema, part_ema, prob_ema]
 
     def _parse_data(self, inputs):
-        imgs, _, gpids, ppids, (_, newidx) = inputs #img, fname, gpids, ppids, (old_idx, new_idx)
-        targets = pids.cuda()
-        ptargets = [x.cuda() for x in ppids]
+        imgs, _, gpids, _, (_, newidx) = inputs #(img_1, img_2), fname, pid, camid, (old_idx, new_idx)
+        targets = gpids.cuda()
         aga = self.cent_uncertainty[newidx].cuda()
         alpha = self.alpha_score[newidx].cuda() if not self.alpha_score is None else None
-        return imgs , (targets, ptargets), aga, alpha
+        return imgs , targets, aga, alpha
 
     def _update_ema_variables(self, model, ema_model, alpha=0.99, global_step=0):
         alpha = min(1 - 1 / (global_step + 1), alpha)

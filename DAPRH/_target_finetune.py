@@ -214,7 +214,7 @@ def gen_psuedo_labels(target_dataset, models, epoch, cfg):
     features_g = gfeatures[idxs, :]
     features_p = pfeatures[idxs, :]
     silhouettes_g = silhouette_samples(features_g, pids)
-    #statistic(silhouettes_g, name="Global-Silhouette", logger=logger)
+    #statistic(silhouettes_g, name="Global-Silhouette", logger=logger) #let try exploring what happens when uncomment this :)
     # statistic(silhouettes_p, name="Partial-Silhouette", logger=logger)
 
     pho = cfg.pho
@@ -270,7 +270,7 @@ def main_worker(args):
     args.max_clusters = len(dataset_target.train)
 
     # Create model
-    assert args.arch.find("jpart") >= 0 or args.arch.find("mulpart") >= 0, "only use [network]_jpart or [network_mulpart]"
+    assert args.arch.find("mulpart") >= 0, "only use [network]_mulpart backbone for the finetune stage"
     model, model_ema = create_model(args)
 
     # Load from checkpoint

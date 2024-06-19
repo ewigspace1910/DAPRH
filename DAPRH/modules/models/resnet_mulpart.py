@@ -65,19 +65,19 @@ class ResNetMulpart(nn.Module):
         init.constant_(self.feat_bn.weight, 1)
         init.constant_(self.feat_bn.bias, 0)
 
-        ##########################3
-
         self.feat_bn_concat = nn.BatchNorm1d(self.num_features * self.num_parts)
         self.feat_bn_concat.bias.requires_grad_(False)
         init.constant_(self.feat_bn_concat.weight, 1)
-        init.constant_(self.feat_bn_concat.bias, 0)    
-
+        init.constant_(self.feat_bn_concat.bias, 0)            
         if self.num_classes > 0:
             self.classifier_concat = nn.Linear(self.num_features * self.num_parts, self.num_classes, bias=False)
             init.normal_(self.classifier_concat.weight, std=0.001)      
 
-        if not pretrained:
-            self.reset_params()
+        # sub branches
+        self.hrap = nn.AdaptiveAvgPool2d((self.num_parts, 1)) 
+        self.hrmp = nn.AdaptiveMaxPool2d((self.num_parts, 1)) 
+
+        if not pretrained: self.reset_params()
 
     def forward(self, x, finetune=False, joint=False):
         '''Denotes: B-batchsize, C-number classes, K-number parts, D-dimention embd

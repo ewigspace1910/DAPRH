@@ -1,14 +1,16 @@
 # DAPRH : GAN-based Data Augmentation and Pseudo-Label Refinement with Holistic Features for Unsupervised Domain Adaptation Person Re-Identification
 
-Official PyTorch implementation of [GAN-based Data Augmentation and Pseudo-Label Refinement with Holistic Features for Unsupervised Domain Adaptation Person Re-Identification]() submitted to Knowledge-Based Systems journal (2023).
+Official PyTorch implementation of [GAN-based Data Augmentation and Pseudo-Label Refinement with Holistic Features for Unsupervised Domain Adaptation Person Re-Identification](https://doi.org/10.1016/j.knosys.2024.111471) (Knowledge-Based Systems journal) (2023).
 
 # Updates
+*   [06/2024] Official code is released.
+*   [04/2024] Great news!!! Our paper is published and available in Sciencedirect. Please check in the citation section [below](## Citation)
 *   [05/2023] Push Initial rep on Github and Release unofficial code, results, pretrained models
 *   [02/2023] Citation, official code (when the paper is accepted)
 
 # Overview
 
-![overview](assets/overview.png)
+![overview](assets/overview.png) 
 
 
 
@@ -80,7 +82,7 @@ conda activate DAPRH
 LABEL_DIM=7
 CROP_SIZE=128
 IMG_SIZE=128
-TRAIN_IMG_DIR="../../datasets/ReidGan/duke2mark/train"
+TRAIN_IMG_DIR="../../datasets/4GAN/duke2mark/train"
 BATCHSIZE=16
 Lidt=1
 Lrec=10
@@ -103,7 +105,7 @@ python main.py --mode train --dataset RaFD --rafd_crop_size $CROP_SIZE --image_s
 LABEL_DIM=7
 CROP_SIZE=128
 IMG_SIZE=128
-TRAIN_IMG_DIR="../../datasets/ReidGan/market2duke/train"
+TRAIN_IMG_DIR="../../datasets/4GAN/market2duke/train"
 BATCHSIZE=16
 Lidt=1
 Lrec=10
@@ -206,7 +208,7 @@ python _source_pretrain.py \
  
 python _target_finetune.py \
 -dt "market1501" -b 128  --num-instances 16 \
--a resnet50 --epochs 26 --iters 400 --npart 2 \
+-a resnet50mulpart --epochs 26 --iters 400 --npart 2 \
 --logs-dir "../saves/reid/duke2market/S2/finetune"   \
 --init "../saves/reid/duke2market/S1/R50Mix/model_best.pth.tar" \
 --data-dir "../datasets" \
@@ -217,7 +219,7 @@ python _target_finetune.py \
 
 python _target_finetune.py \
 -dt "dukemtmc" -b 128 --num-instances 16 \
--a resnet50 --epochs 26 --iters 400  --npart 2 \
+-a resnet50mulpart --epochs 26 --iters 400  --npart 2 \
 --logs-dir "../saves/reid/market2duke/S2/finetune"   \
 --init "../saves/reid/market2duke/S1/R50Mix/model_best.pth.tar" \
 --data-dir "../datasets" \
@@ -226,7 +228,7 @@ python _target_finetune.py \
 --ece 0.4 --etri 0.6 --ema 
 ```
 
-- for convenience, you can use directly scripts in `./DAPRH/scripts`
+- for convenience, you can reuse directly scripts in `./DAPRH/scripts`
 
 ### Evaluate
 ```bash
